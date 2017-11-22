@@ -6,9 +6,33 @@ When you want slack to turn into a tire fire.
 
 <img src="https://github.com/konecnyna/slack-cat/raw/master/core/tire-fire.gif" height="300px"/>
 
-### Modules
+# Getting Started
+
+It's ezpz.
+
+1. run `npm install`
+2. Add your slack api key to secrets.dat file in the root dir.
+3. node `index.js`
+
+Example `secrets.dat`:
+```
+{
+    "slackapi": "xxxx",
+    "darksky_api": "xxxxx"
+}
+```
+
+# Modules
 
 Look at the modules in the `modules/default` folder for examples.
+
+
+##### Usage:
+
+Assuming the above module was stored in the `modules/users/helloworld` path
+
+`?hellworld` or `?hello_world2` would return `Hello World!!!`
+
 
 ##### Example Module:
 
@@ -18,8 +42,9 @@ For example:
 
 ```
 ├── modules/
-│   └── hrviolation/
-|       └── index.js
+|   └── user/
+│       └── hrviolation/
+|           └── index.js
 ```
 
 Sending `?hrviolation` will trigger the `index.js` in the hrviolation directory. You can add custom aliases for commands by overriding the `aliases()` method in BaseModule.
@@ -33,8 +58,8 @@ Example Module `index.js` file:
 module.exports = class HelloWorld extends BaseModule {
   handle(data) {
     this.bot.postMessage(
-      data.channel, 
-      'Hello World!!!', 
+      data.channel,
+      'Hello World!!!',
       {
         icon_emoji: ':cat:'
       }
@@ -47,7 +72,7 @@ module.exports = class HelloWorld extends BaseModule {
 
   aliases() {
     return ['hello_world2']; // Now helloworld (folder name) or helloworld2 will trigger this module.
-  } 
+  }
 
   getType() {
     return BaseModule.TYPES.MODULE;
@@ -55,16 +80,15 @@ module.exports = class HelloWorld extends BaseModule {
 };
 ```
 
-
-##### Usage:
-
-Assuming the above module was stored in the `modules/users/helloworld` path
-
-`?hellworld` or `?hello_world2` would return `Hello World!!!`
-
+| Type  | Desc  |
+|---|---|
+| MODULE | This is the default type. Use this when making a new cmd and call with `?<your_cmd_name> <args>`   |
+| OVERFLOW\_CMD | This module type is to handle commands that the router doesn't know how to handle. See `LearnOverflowAlises` for an example.   |
+| REACTION | This module is for handling when a user reacts to a post with an emoji. See the `Reactions` module for mnore info.  |
 
 
-### Debugging
+
+# Debugging
 
 If you are testing you will often get rate limited. In order to test your cmd from the command line run
 
@@ -74,3 +98,7 @@ eg:
 `node index.js ?summon test`
 
 Will summon a google image matching test keyword.
+
+# Enivorments
+
+`NODE_ENV="production" node index.js` will start the app in production mode which will use `db.sqlite`. Otherwise it will use `db-dev.sqlite`. This is useful in tests as not to corrupt production data.
