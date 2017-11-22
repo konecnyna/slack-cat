@@ -1,0 +1,34 @@
+{
+  "name": "slack-cat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --timeout 15000",
+    "install": "./install.sh",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/konecnyna/slack-cat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/konecnyna/slack-cat/issues"
+  },
+  "homepage": "https://github.com/konecnyna/slack-cat#readme",
+  "dependencies": {
+    "request": "^2.83.0",
+    "require-dir": "^0.3.2",
+    "slackbots": "^1.1.0",
+    "sequelize": "^4.22.5",
+    "sqlite3": "^3.1.13"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
+  }
+}
