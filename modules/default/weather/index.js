@@ -2,6 +2,8 @@
 
 const DarkSky = require('dark-sky');
 const util = require('util');
+const GoogleGeocode = require('./google-geocode-api.js');
+const geocoder = new GoogleGeocode();
 
 const darksky = new DarkSky(process.env.DARK_SKIES_API_KEY);
 const botParams = {
@@ -11,21 +13,31 @@ const botParams = {
 
 module.exports = class Weather extends BaseModule {
 
-  handle(data) {
-    if (!process.env.DARK_SKIES_API_KEY) {
-      this.bot.postMessage(data.channel, "Please put `darksky_api` key in secrets.dat");
+  async handle(data) {
+    if (!process.env.DARK_SKIES_API_KEY || !process.env.GOOGLE_GEOCODE_API_KEY) {
+      this.bot.postMessage(data.channel, "Please put `darksky_api` or `google_geocode_api` key in secrets.dat");
       return;
     }
 
-    
+    let query = data.user_text;
+    if (!query) {
+      query = "nyc";
+    }
+
+    const coords = await geocoder.getLongLat(query);
+    if (!coords) {
+      this.bot.postMessage(data.channel, "No location found.");
+      return;
+    }
+
     darksky
-      .latitude(40.7831) // required: latitude, string || float.
-      .longitude(-73.9712) // required: longitude, string || float.
+      .latitude(coords.lat) // required: latitude, string || float.
+      .longitude(coords.lng) // required: longitude, string || float.
       .exclude('minutely,daily') // optional: exclude, string || array, refer to API documentation.
       .extendHourly(true) // optional: extend, boolean, refer to API documentation.
       .get() // execute your get request.
       .then(weatherData => {
-        this.sendFormattedWeather(data, weatherData);
+        this.sendFormattedWeather(data, weatherData, coords.name);
       })
       .catch(err => {
         console.error(err);
@@ -37,16 +49,19 @@ module.exports = class Weather extends BaseModule {
     return 'Usage: `?weather` gives current forecast for NYC';
   }
 
-  sendFormattedWeather(data, weatherData) {
+  sendFormattedWeather(data, weatherData, location) {
     var title = util.format(
-      'Currently: %d°',
-      weatherData.currently.apparentTemperature
+      'Currently in %s: %d°',
+      location,
+      parseInt(weatherData.currently.apparentTemperature)
     );
+
+
     var summary = util.format(
-      '%s for the hour. %s\n\n %d%% humidity with wind speed of %d MPH',
+      'Forecast: %s for the hour. %s\n\n %d%% humidity with wind speed of %d MPH',
       weatherData.currently.summary,
       weatherData.hourly.summary,
-      weatherData.currently.humidity * 100,
+      parseInt(weatherData.currently.humidity * 100),
       weatherData.currently.windSpeed
     );
 
