@@ -15,21 +15,8 @@ const botParams = {
 
 module.exports = class GoogleImages extends BaseModule {
   async handle(data) {
-    var options = {
-      url: "https://www.google.com/search",
-      headers: {
-        'User-Agent': userAgent,
-      },
-      qs: this.buildParams(data)
-    };
+      const body = await this.getData(data);
     
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-
       if (data.args && data.args.includes("--top") || data.args && data.args.includes("-top")) {
         const urls = this.getUrls(body, data);
         this.bot.postMessageWithParams(data.channel, urls[0], botParams);        
@@ -44,8 +31,8 @@ module.exports = class GoogleImages extends BaseModule {
       }
 
 
-      this.bot.postMessageWithParams(data.channel, 'bad query.', botParams);
-    });
+      this.bot.postMessageWithParams(data.channel, 'No results. :slightly_frowning_face:', botParams);
+
   }
 
   aliases() {
@@ -56,13 +43,20 @@ module.exports = class GoogleImages extends BaseModule {
     return 'Usage: `?gif <gif search term>` or `?summon <image query>`';
   }
 
-  getRandomUrl(body, data) {    
+  getRandomUrl(body, data) {
     const urls = this.getUrls(body, data);
-    return urls[Math.floor(Math.random() * urls.length)];    
+    console.log(urls.length);
+    if (urls.length < 5) {
+      return urls[0];
+    }
+
+    // Only do random top 5 results.
+    return urls[Math.floor(Math.random() * 5)];    
   }
 
   getUrls(body, data) {
     var match = data.cmd === "gif" ? gifRegex.exec(body) : imgRegex.exec(body);
+
     if (match == null) {
       return false;
     }
@@ -73,10 +67,33 @@ module.exports = class GoogleImages extends BaseModule {
       // match start: match.index
       // capturing group n: match[n]
       urls.push(match[1]);
+
       match = data.cmd === "gif" ? gifRegex.exec(body) : imgRegex.exec(body)
     }
 
     return urls;
+  }
+
+  getData(data) {
+    var options = {
+      url: "https://www.google.com/search",
+      headers: {
+        'User-Agent': userAgent,
+      },
+      qs: this.buildParams(data)
+    };
+
+    return new Promise((resolve, reject) => {
+      request(options, (error, response, body) => {
+        if (error) {
+          reject(error);
+          console.error(error);
+          return;
+        }
+
+        resolve(body);
+      });
+    });  
   }
 
   buildParams(data) {
