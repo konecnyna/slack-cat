@@ -10,6 +10,11 @@ try {
 	if (secrets.darksky_api) {
 		process.env.DARK_SKIES_API_KEY = secrets.darksky_api;	
 	}
+
+	if (secrets.google_geocode_api) {
+		process.env.GOOGLE_GEOCODE_API_KEY = secrets.google_geocode_api;		
+	}
+
 } catch(err) {
 	throw new Error("Must provide slack api keys\n\n\n");
 }
