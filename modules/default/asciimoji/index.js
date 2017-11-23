@@ -379,6 +379,11 @@ module.exports = class Asciimoji extends BaseModule {
     const argsSplit = data.user_text.split(" ");
     const emoji_one = argsSplit[0];
     const emoji_two = argsSplit[1];
+    if (!emoji_one.includes(":") || !emoji_one.includes(":")) {
+      this.bot.postMessage(data.channel, this.help());
+      return;
+    }
+
     const text = argsSplit.splice(2, argsSplit.length).join(" ").toLowerCase();
 
     if (!emoji_one || !emoji_two || !text) {
