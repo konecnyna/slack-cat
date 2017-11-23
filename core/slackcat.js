@@ -17,18 +17,15 @@ const MSG_TIMEOUT = 250;
   *
   **/
 module.exports = class SlackCat extends SlackBot {
-  postMessage(channelId, msg) {
-    // Set default bot params.
-    setTimeout(() => {
-      super.postMessage(channelId, msg, botParams);
-    }, MSG_TIMEOUT);    
+  async postMessage(channelId, msg) {
+    // Set default bot params.    
+    await this.delayForScrollIssue();
+    super.postMessage(channelId, msg, botParams);
   }
 
-  postMessageWithParams(channelId, msg, params) {
-    setTimeout(() => {
-      super.postMessage(channelId, msg, params);
-    }, MSG_TIMEOUT);    
-
+  async postMessageWithParams(channelId, msg, params) {
+    await this.delayForScrollIssue();
+    super.postMessage(channelId, msg, params);
   }
 
   postMessageSequentially(data, messages) {
@@ -100,5 +97,14 @@ module.exports = class SlackCat extends SlackBot {
       .catch(err => {
         return err;
       });
+  }
+
+  delayForScrollIssue() {
+    return new Promise((resolve, reject) => {      
+      setTimeout(() => {
+        resolve()
+      }, MSG_TIMEOUT);    
+            
+    });
   }
 };
