@@ -67,7 +67,7 @@ module.exports = class GoogleImages extends BaseModule {
       // capturing group n: match[n]
       urls.push(match[1]);
 
-      match = data.cmd === "gif" ? gifRegex.exec(body) : imgRegex.exec(body)
+      match = imgRegex.exec(body)
     }
 
     return urls;
@@ -100,7 +100,7 @@ module.exports = class GoogleImages extends BaseModule {
 
     params['tbm'] = "isch";        
     if (data.cmd === 'gif') {  
-      params['tbs'] = "itm:animated";      
+      params['tbs'] = "itp:animated";      
     }
 
 
