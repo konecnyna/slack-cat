@@ -50,7 +50,7 @@ module.exports = class HrViolations extends BaseStorageModule {
 
   async getLeaderBoard(data) {
     const violations = await this.db.query(
-      'select name, count(*) as number from hrviolations GROUP BY 1', 
+      'select name, count(*) as number from hrviolations GROUP BY 1 order by number DESC', 
       { model: this.HrViolations }
     );
       
