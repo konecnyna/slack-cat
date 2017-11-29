@@ -43,14 +43,8 @@ module.exports = class GoogleImages extends BaseModule {
   }
 
   getRandomUrl(body, data) {
-    const urls = this.getUrls(body, data);
-    console.log(urls.length);
-    if (urls.length < 5) {
-      return urls[0];
-    }
-
-    // Only do random top 5 results.
-    return urls[Math.floor(Math.random() * 5)];    
+    const urls = this.getUrls(body, data);        
+    return urls[Math.floor(Math.random() * urls.length - 1)];    
   }
 
   getUrls(body, data) {
