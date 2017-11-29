@@ -15,24 +15,23 @@ const botParams = {
 
 module.exports = class GoogleImages extends BaseModule {
   async handle(data) {
-      const body = await this.getData(data);
+    const body = await this.getData(data);
     
-      if (data.args && data.args.includes("--top") || data.args && data.args.includes("-top")) {
-        const urls = this.getUrls(body, data);
-        this.bot.postMessageWithParams(data.channel, urls[0], botParams);        
-        return;
-      }
-
-
+    if (data.args && data.args.includes("--random")) {
       const randomUrl = this.getRandomUrl(body, data);
       if (randomUrl) {
         this.bot.postMessageWithParams(data.channel, randomUrl, botParams);
         return;
-      }
+      }              
+    }
 
+    const urls = this.getUrls(body, data);
+    if (urls.length) {
+      this.bot.postMessageWithParams(data.channel, urls[0], botParams);  
+      return;
+    }          
 
-      this.bot.postMessageWithParams(data.channel, 'No results. :slightly_frowning_face:', botParams);
-
+    this.bot.postMessageWithParams(data.channel, 'No results. :slightly_frowning_face:', botParams);
   }
 
   aliases() {
@@ -40,7 +39,7 @@ module.exports = class GoogleImages extends BaseModule {
   }
 
   help() {
-    return 'Usage: `?gif <gif search term>` or `?summon <image query>`';
+    return 'Usage: `?gif <gif search term>` or `?summon <image query>`\nFlags `--random`, `--nsfw`';
   }
 
   getRandomUrl(body, data) {
@@ -107,8 +106,10 @@ module.exports = class GoogleImages extends BaseModule {
 
     params['safe'] = "strict";
     if(data.args && data.args.includes("--nsfw")) {
-      // Process with caution...
+      // Proceed with caution...
       params['safe'] = "off";
+    } else {
+      params['safe'] = "active";
     }
 
     params["q"] = data.user_text;

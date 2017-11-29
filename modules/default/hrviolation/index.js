@@ -4,20 +4,10 @@ const util = require('util');
 module.exports = class HrViolations extends BaseStorageModule {
 
   async handle(data) {
-    if (!data.user_text) {
-      return;
-    }
-
     await this.replaceSlackUserWithUserName(data);
-
     if (data.cmd === "hrviolations") {
-      const violations = await this.getViolations(data.user_text);
-      if (violations) {
-        this.bot.postMessage(data.channel, util.format("*%s* has %d reported violations", data.user_text, violations.length));
-        return;
-      }
 
-      this.bot.postMessage(data.channel, "No reported HR Violations");
+      this.displayHrviolations(data);
       return;
     }
 
@@ -41,6 +31,39 @@ module.exports = class HrViolations extends BaseStorageModule {
 
   help() {
     return "";
+  }
+
+  async displayHrviolations(data) {
+    if (!data.user_text) {
+      this.getLeaderBoard(data);
+      return;
+    }
+
+    const violations = await this.getViolations(data.user_text);
+    if (violations) {
+      this.bot.postMessage(data.channel, util.format("*%s* has %d reported violations", data.user_text, violations.length));
+      return;
+    }
+
+    this.bot.postMessage(data.channel, "No reported HR Violations");
+  }
+
+  async getLeaderBoard(data) {
+    const violations = await this.db.query(
+      'select name, count(*) as number from hrviolations GROUP BY 1', 
+      { model: this.HrViolations }
+    );
+      
+    let msg = "";
+    violations.forEach( (violation, index) =>  {
+      let row = util.format("*%d. %s* - %d violations\n", index + 1, violation.get('name'), violation.get('number'));
+      msg += row;
+    });
+
+    this.bot.postMessageWithParams(data.channel, msg, {
+      icon_emoji: ':oncoming_police_car:',
+      username: 'HrViolations Leaderboard',
+    });
   }
 
   async getViolations(keyword) {
