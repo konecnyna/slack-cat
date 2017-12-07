@@ -8,7 +8,7 @@ chai.should();
 // Import the Rectangle class.
 const Router = require(path.join(__dirname + '/../core', 'router.js'));
 const MockBot = require(path.join(__dirname + '/../core', 'mock-bot.js'));
-const Secrets = require(path.join(__dirname + '/../core', 'secrets.js'));
+const Secrets = require(path.join(__dirname + '/../core', 'mock-secrets.js'));
 
 
 // Remove old dev db for tests.
