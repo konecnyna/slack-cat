@@ -1,10 +1,10 @@
 'use strict';
 const request = require('request');
+
 const imgRegex = new RegExp(
   /"ou":"([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))"/,
   'g'
 );
-
 const gifRegex = new RegExp(/"ou":"([a-z\-_0-9\/\:\.]*\.gif)"/, 'g');
 
 const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36';
