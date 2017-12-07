@@ -8,6 +8,7 @@ chai.should();
 // Import the Rectangle class.
 const Router = require(path.join(__dirname + '/../core', 'router.js'));
 const MockBot = require(path.join(__dirname + '/../core', 'mock-bot.js'));
+const Secrets = require(path.join(__dirname + '/../core', 'secrets.js'));
 
 
 // Remove old dev db for tests.
@@ -19,6 +20,7 @@ if (fs.existsSync(filePath)) {
 
 describe('Modules Test', () => {
   beforeEach(() => {
+    global.secrets = new Secrets();
     global.BaseModule = require('../core/base-module.js');
     global.BaseStorageModule = require('../core/storage-base-module.js');    
     router = new Router(new MockBot());

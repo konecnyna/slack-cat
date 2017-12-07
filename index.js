@@ -1,30 +1,14 @@
 // Load secrets needed.
 const fs = require('fs');
 const path = require('path');
-
-try {
-	const contents = fs.readFileSync('secrets.dat');
-	secrets = JSON.parse(contents);			
-	process.env.SLACK_API_KEY = secrets.slackapi;
-
-	if (secrets.darksky_api) {
-		process.env.DARK_SKIES_API_KEY = secrets.darksky_api;	
-	}
-
-	if (secrets.google_geocode_api) {
-		process.env.GOOGLE_GEOCODE_API_KEY = secrets.google_geocode_api;		
-	}
-
-} catch(err) {
-	throw new Error("Must provide slack api keys\n\n\n");
-}
-
+const Secrets = require('./core/secrets.js');
 
 
 // Start app.
 const Router = require('./core/router.js');
 
 // Global Base Modules.
+global.secrets = new Secrets();
 global.BaseModule = require('./core/base-module.js');
 global.BaseStorageModule = require('./core/storage-base-module.js');
 
@@ -54,7 +38,7 @@ if (process.argv.length > 2) {
 
 const SlackCat = require('./core/slackcat.js');
 const bot = new SlackCat({
-  token: process.env.SLACK_API_KEY, // Add a bot https://my.slack.com/services/new/bot and put the token
+  token: secrets.getKey('slackapi'), // Add a bot https://my.slack.com/services/new/bot and put the token
   name: 'SlackCat',
 });
 const router = new Router(bot);

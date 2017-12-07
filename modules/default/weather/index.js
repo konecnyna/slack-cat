@@ -5,7 +5,7 @@ const util = require('util');
 const GoogleGeocode = require('./google-geocode-api.js');
 const geocoder = new GoogleGeocode();
 
-const darksky = new DarkSky(process.env.DARK_SKIES_API_KEY);
+const darksky = new DarkSky(secrets.getKey('darksky_api'));
 const botParams = {
   icon_emoji: ':cat:',
   username: 'WeatherCat',
@@ -14,7 +14,7 @@ const botParams = {
 module.exports = class Weather extends BaseModule {
 
   async handle(data) {
-    if (!process.env.DARK_SKIES_API_KEY || !process.env.GOOGLE_GEOCODE_API_KEY) {
+    if (!secrets.getKey('darksky_api') || !secrets.getKey('google_geocode_api')) {
       this.bot.postMessage(data.channel, "Please put `darksky_api` or `google_geocode_api` key in secrets.dat");
       return;
     }

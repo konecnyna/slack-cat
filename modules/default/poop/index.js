@@ -52,6 +52,6 @@ module.exports = class Poop extends BaseStorageModule {
   }
 
   help() {
-    return 'The bot should respond with pong. For debugging purposes';
+    return 'YOU JUST GOT POOPED!!! :poop:';
   }
 };
