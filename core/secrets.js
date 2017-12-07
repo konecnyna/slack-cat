@@ -1,9 +1,11 @@
 'use strict';
 const fs = require('fs');
+const path = require('path');
 
 module.exports = class Secrets {
   constructor() {
-    const contents = fs.readFileSync(__dirname + '/../secrets.dat');
+    const dir = path.join(__dirname + "/../", 'secrets.dat');
+    const contents = fs.readFileSync(dir);
     this.secrets = JSON.parse(contents);
     
     if (!this.getKey('slackapi')) {
