@@ -4,8 +4,8 @@ const request = require('request');
 
 module.exports = class PagerDuty extends BaseModule {
   async handle(data) {
-    if (!secrets.getKey('pager_duty')) {
-      this.bot.postMessage(data.channel, "Please add key `pager_duty` key to secrets.dat");      
+    if (!secrets.getKey('pager_duty_api')) {
+      this.bot.postMessage(data.channel, "Please add key `pager_duty_api` key to secrets.dat");      
       return;
     }
 
@@ -65,7 +65,7 @@ module.exports = class PagerDuty extends BaseModule {
     var options = {
       url: "https://api.pagerduty.com/oncalls",
       headers: {
-        "Authorization": "Token token=" + secrets.getKey('pager_duty'),
+        "Authorization": "Token token=" + secrets.getKey('pager_duty_api'),
         "Content-Type": "application/json",
         "Accept": "application/vnd.pagerduty+json;version=2"
       }
