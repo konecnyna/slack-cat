@@ -42,26 +42,31 @@ module.exports = class Jira extends BaseModule {
 	sendJiraStatus(data, issue) {
 		const fields = [
 			{
-	            "title": "Issue:",
-	            "value": issue.self,
+	            "title": "Assignee:",
+	            "value": issue.fields.assignee.displayName,
 	            "short": true
-	        },
+        	},
 	        {
-	            "title": "Status ",
+	            "title": "Status:",
 	            "value": issue.fields.status.name,
 	            "short": true
-        	}                    
+        	},
+    		{	
+	            "title": "Issue:",
+	            "value": issue.self,
+	            "short": false
+	        }
 		]
 
 	    this.bot.postRawMessage(
 	      data.channel,
 	      {
 	      	"icon_emoji": ":cat:",
+	      	"username": "JiraCat",
 	        "attachments": [
 	            {
-	                "color": "#36a64f",
-	                "author_name": "JiraCat",
-	                "title": issue.key,
+	                "color": "#6338aa",
+	                "title": issue.key + ": " + issue.fields.summary,
 	                "fields": fields,
 	                "footer": "jira... amirite?",                
 	            }
