@@ -42,12 +42,13 @@ module.exports = class PagerDuty extends BaseModule {
     this.bot.postRawMessage(
       data.channel,
       {
+        "icon_emoji": ":cat:",
+        "username": "PagerDutyCat",
         "attachments": [
             {
                 "color": "#36a64f",
-                "author_name": "PagerDutyCat",
                 "author_icon": "https://cdn6.aptoide.com/imgs/9/6/a/96ac16c7e70a7cf636ad85f8b5c7d5b2_icon.png?w=256",
-                "title": "Pager Duty on call list",
+                "title": "Pager Duty on call list:",
                 "fields": Object.values(map),
                 "footer": ":fire: lets hope nothings on fire :fire:",                
             }
