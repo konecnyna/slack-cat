@@ -75,7 +75,7 @@ module.exports = class RequireDir {
 
           // For dirs we use the index.js as entry file.
           path = Path.resolve(path, 'index.js');
-          if (FS.existsSync(path)) {
+          if (FS.existsSync(path)) {            
             map[base] = require(path);
           }
         } else {
@@ -92,7 +92,7 @@ module.exports = class RequireDir {
         }
 
         // if a file exists with this extension, we'll require() it:
-        var file = base + ext;
+        var file = base + ".js";        
         var path = filesMinusDirs[file];
         if (path) {
           // ignore TypeScript declaration files. They should never be

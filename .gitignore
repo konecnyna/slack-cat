@@ -60,3 +60,5 @@ typings/
 secrets.dat
 .DS_Store
 *.sqlite
+
+modules/user/*
