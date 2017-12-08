@@ -17,8 +17,15 @@ It's ezpz.
 Example `secrets.dat`:
 ```
 {
-    "slackapi": "xxxx",
-    "darksky_api": "xxxxx"
+    "slack_api": "xxx",
+    "darksky_api": "xxx",
+    "google_geocode_api": "xxx",
+    "pager_duty_api": "xxx",
+    "jira_api": {
+    	"host": "xxx",
+    	"username": "xxx",
+    	"password": "xxx"
+    }
 }
 ```
 
