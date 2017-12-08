@@ -96,7 +96,7 @@ describe('Modules Test', () => {
     };
 
     router.bot.setCallback(data => {
-      data.should.equal("Learned test ");
+      data.should.equal("Learned test");
       done();
     });
 

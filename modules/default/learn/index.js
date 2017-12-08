@@ -20,23 +20,39 @@ module.exports = class Learn extends BaseStorageModule {
 
   async handle(data) {
     if (data.cmd === 'learns') {
-      const userData = this.getUserArg(data);
-      const msgs = await this.getLearns(data.user_text, 5, true, false);      
-      if (msgs) {
-        this.bot.postMessage(data.channel, msgs.join("\n"));  
-      }      
+      this.displayLearns(data)      
       return;
     }
 
-    this.insertLearn(data);
+    if (data.cmd === 'unlearn') {
+      this.unlearn(data);
+      return;
+    }
+
+    this.handleLearn(data);
   }
 
   aliases() {
-    return ['learns'];
+    return ['learns', 'unlearn'];
   }
 
-  async getLearn(keyword, index) {
+  async displayLearns(data) {
+    const msgs = await this.getLearns(data.user_text, 5, true, false);      
+    if (msgs) {
+      this.bot.postMessage(data.channel, msgs.join("\n"));  
+    }    
+  }
 
+  unlearn(data) {    
+    const input = this.sanatizeInput(data.user_text);
+    this.LearnsModel.destroy({
+      where: {
+        name: input.name,
+        learn: input.text
+      }
+    });
+
+    this.bot.postMessage(data.channel, "Unlearned " + input.name);
   }
 
   async getLearns(keyword, limit, random, index) {
@@ -79,66 +95,66 @@ module.exports = class Learn extends BaseStorageModule {
     return msgs;    
   }
 
-  async insertLearn(data) {
+  async handleLearn(data) {
     const userData = this.getUserArg(data);
 
-    if (!userData || !userData.text || data.user_text.indexOf('|') === -1) {
+    if (!userData || !userData.text) {
       this.bot.postMessage(data.channel, this.help());
       return;
     }
 
-    if (!userData.matches) {
-      this.learnGeneral(data);
-      return;
-    }
-
-    if (userData.matches) {
-      this.learnUser(data, userData);
-      return;
-    }
-
-    this.bot.postMessage(data.channel, this.help());
+    
+    const name = await this.learnGeneral(data, userData);
+    this.bot.postMessage(data.channel, 'Learned ' + name); 
   }
 
-  async learnGeneral(data) {
-    const split = data.user_text.split('|');
+  async learnGeneral(data, userData) {
     const authorData = await this.bot.userDataPromise(data.user);
-    let learnType = this.LearnType.QUOTE;
-    if (data.user_text.indexOf('http') === 0) {
-      learnType = this.LearnType.IMAGE;
+    const input = this.sanatizeInput(data.user_text);
+
+    let name = input.name;    
+    if (userData.matches) {
+      const userDetails = await this.bot.userDataPromise(userData.matches[1]);
+      name = userDetails.user.name;        
     }
-
-    const learnData = {
-      name: split[0].trim(),
-      learn: split.splice(1, split.length).join(' '),
-      learn_type: learnType,
-      learned_by: authorData.user.name,
-    };
-
-    this.LearnsModel.create(learnData);
-    this.bot.postMessage(data.channel, 'Learned ' + split[0]);
+    
+    this.insertLearn(data, userData, name, authorData.user.name);
+    return name;
   }
 
   async learnUser(data, userData) {
-    let learnType = this.LearnType.QUOTE;
+    const authorData = await this.bot.userDataPromise(data.user);
+    const targetData = await this.bot.userDataPromise(userData.matches[1]);
+    this.insertLearn(data, userData, targetData.user.name, authorData.user.name);
+  }
+
+
+  async insertLearn(data, userData, name, learnedby) {
+   let learnType = this.LearnType.QUOTE;
     if (userData.text.indexOf('http') === 0) {
       learnType = this.LearnType.IMAGE;
     }
 
-    const authorData = await this.bot.userDataPromise(data.user);
-    const targetData = await this.bot.userDataPromise(userData.matches[1]);
+    const input = this.sanatizeInput(data.user_text);
     
-    const split = data.user_text.split('|');    
     const learnData = {
-      name: targetData.user.name,
-      learn: split.splice(1, split.length).join(' '),
+      name: name,
+      learn: input.text,
       learn_type: learnType,
-      learned_by: authorData.user.name,
+      learned_by: learnedby,
     };
 
-    this.LearnsModel.create(learnData);
 
-    this.bot.postMessage(data.channel, 'Learned ' + targetData.user.name);
+    this.LearnsModel.create(learnData);    
+  }
+
+  sanatizeInput(user_text) {
+    const split = user_text.includes("|") ? user_text.split('|') : user_text.split(' ');
+    
+    return {
+      "name": split[0].trim(),
+      "text": split.splice(1, split.length).join(' ').trim()
+    }
   }
 
   help() {
