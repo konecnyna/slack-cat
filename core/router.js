@@ -19,7 +19,8 @@ module.exports = class Router {
     this.registerModules();
   }
 
-    handle(data) {
+  
+  handle(data) {
     // Websocket starting up...
     if (data.type === 'hello') {
       return;
@@ -44,6 +45,7 @@ module.exports = class Router {
     }
   }
 
+  
   registerModules() {
     // Core modules
     const loadedModules = moduleResolver.loadDefaultModules();
