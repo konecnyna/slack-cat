@@ -38,7 +38,7 @@ if (process.argv.length > 2) {
 
 const SlackCat = require('./core/slackcat.js');
 const bot = new SlackCat({
-  token: secrets.getKey('slackapi'), // Add a bot https://my.slack.com/services/new/bot and put the token
+  token: secrets.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
   name: 'SlackCat',
 });
 const router = new Router(bot);
