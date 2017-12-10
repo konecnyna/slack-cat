@@ -1,5 +1,7 @@
 'use strict';
 
+const LearnList = require('./learn-list.js');
+
 module.exports = class Learn extends BaseStorageModule {
   constructor(bot) {
     super(bot);
@@ -7,6 +9,8 @@ module.exports = class Learn extends BaseStorageModule {
       IMAGE: 'image',
       QUOTE: 'quote',
     };
+
+    this.list = new LearnList(bot, this.LearnsModel);
   }
 
   registerSqliteModel() {
@@ -29,11 +33,16 @@ module.exports = class Learn extends BaseStorageModule {
       return;
     }
 
+    if (data.cmd === 'list') {
+      this.list.getLearns(data);
+      return;
+    }
+
     this.handleLearn(data);
   }
 
   aliases() {
-    return ['learns', 'unlearn'];
+    return ['learns', 'unlearn', 'list'];
   }
 
   async displayLearns(data) {
