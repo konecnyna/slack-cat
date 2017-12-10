@@ -1,4 +1,5 @@
 'use strict';
+const util = require('util');
 
 module.exports = class LearnsList {
 
@@ -17,10 +18,11 @@ module.exports = class LearnsList {
 
 		const userData = await this.bot.userDataPromise(data.user);    
 	    const learnData = await this.LearnsModel.findAll(params);
-	    
-	    learnData.map(row => {
-	      	this.bot.postMessageToUser(userData.user.name, row.get('learn'));
+	    await this.bot.postMessage(data.channel, "I just PMed them to you.");
+	    await this.bot.postMessageToUser(userData.user.name, "------------*Learns for _" + data.user_text + "_*------------");
+	    learnData.forEach( async (row, index) => {
+	    	const message = util.format("%d. %s", index + 1, row.get('learn'));
+	      	await this.bot.postMessageToUser(userData.user.name, message);
 	    });
 	}
-
 }
