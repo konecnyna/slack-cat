@@ -84,7 +84,7 @@ module.exports = class Jira extends BaseModule {
 	}
 
 	help() {
-		return 'The bot should respond with pong. For debugging purposes';
+		return 'Usage: `?jira <ticket-number>`.';
 	}
 
 	aliases() {

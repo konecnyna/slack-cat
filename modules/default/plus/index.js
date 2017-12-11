@@ -4,9 +4,22 @@ const util = require('util');
 const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 
 module.exports = class Plus extends BaseStorageModule {
-  handle(data) {
+  async handle(data) {
     if (!data.user_text) {
       return
+    }
+
+
+    if (data.cmd === 'pluses') {
+      const pluses = await this.PlusModel.findOne({
+        where: {
+          name: data.user_text
+        }
+      });
+
+      const msg = util.format("%s has %d pluses!", data.user_text, pluses.get('pluses'));
+      this.bot.postMessage(data.channel, msg);
+      return;
     }
 
     
@@ -19,26 +32,23 @@ module.exports = class Plus extends BaseStorageModule {
 
     if (!matches || matches.length < 2) {
       // No user was refs so plus the raw text.]
-      this.plusUser(
-          data.channel, 
-          data.user_text.toLowerCase()
-        );
+      this.plusUser(data.channel, data.user_text.toLowerCase());
       return;
     }
     
 
     // Resolve slack handle.
-    this.bot
-      .getUserNameFromId(matches[1])
-      .then(userData => {
-        this.plusUser(data.channel, 
-          userData.user.display_name ? userData.user.display_name : userData.user.name
-        );
-      })
-      .catch(err => {
-        console.error(err);
-        this.postErrorMessage(data);
-      });
+    try {
+      const userData = await this.bot.getUserNameFromId(matches[1]);  
+      this.plusUser(
+        data.channel, 
+        userData.user.display_name ? userData.user.display_name : userData.user.name
+      );
+    } catch(e) {
+      console.error(e);
+      this.postErrorMessage(data);
+    }
+  
   }
 
   help() {
@@ -53,7 +63,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   aliases() {
-    return ['++', '+'];
+    return ['++', '+', 'pluses'];
   }
 
   postErrorMessage(data) {
