@@ -58,7 +58,7 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   help() {
-    return 'The bot should respond with pong. For debugging purposes';
+    return 'Pager duty command will return the on call list.';
   }
 
 

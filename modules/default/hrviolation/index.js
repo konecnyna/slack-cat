@@ -4,9 +4,12 @@ const util = require('util');
 module.exports = class HrViolations extends BaseStorageModule {
 
   async handle(data) {
+    if (!data.user_text) {
+      return
+    }
+    
     await this.replaceSlackUserWithUserName(data);
     if (data.cmd === "hrviolations") {
-
       this.displayHrviolations(data);
       return;
     }
