@@ -86,8 +86,4 @@ module.exports = class Jira extends BaseModule {
 	help() {
 		return 'Usage: `?jira <ticket-number>`.';
 	}
-
-	aliases() {
-		return [];
-	}
 };
