@@ -14,10 +14,11 @@ module.exports = class GoogleGeocodeApi {
       return {
         lat: location.lat,
         lng: location.lng,
-        name: response.results[0].address_components[0].long_name
+        name: response.results[0].formatted_address
       }
 
     } catch(err) {
+      console.error(err);
       return false;
     }    
   }
