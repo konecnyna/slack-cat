@@ -1,14 +1,13 @@
-// Load secrets needed.
 const fs = require('fs');
 const path = require('path');
-const Secrets = require('./core/secrets.js');
+const Config = require('./core/config.js');
 
 
 // Start app.
 const Router = require('./core/router.js');
 
 // Global Base Modules.
-global.secrets = new Secrets();
+global.config = new Config();
 global.BaseModule = require('./core/base-module.js');
 global.BaseStorageModule = require('./core/storage-base-module.js');
 
@@ -38,7 +37,7 @@ if (process.argv.length > 2) {
 
 const SlackCat = require('./core/slackcat.js');
 const bot = new SlackCat({
-  token: secrets.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
+  token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
   name: 'SlackCat',
 });
 const router = new Router(bot);

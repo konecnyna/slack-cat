@@ -2,11 +2,11 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = class Secrets {
+module.exports = class Config {
   constructor() {
-    const dir = path.join(__dirname + "/../", 'secrets.dat');
+    const dir = path.join(__dirname + "/../", 'config.dat');
     const contents = fs.readFileSync(dir);
-    this.secrets = JSON.parse(contents);
+    this.config = JSON.parse(contents);
     
     if (!this.getKey('slack_api')) {
       throw new Error("Must provide slack api keys\n\n\n");
@@ -14,8 +14,8 @@ module.exports = class Secrets {
   }
 
   getKey(key) {
-    if (this.secrets[key]) {
-      return this.secrets[key];
+    if (this.config[key]) {
+      return this.config[key];
     }
 
     return false;

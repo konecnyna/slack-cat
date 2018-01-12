@@ -1,6 +1,6 @@
 'use strict';
 const JiraApi = require('jira-client');
-const jiraSecrets = secrets.getKey('jira_api');
+const jiraSecrets = config.getKey('jira_api');
 const jira = new JiraApi({
 	protocol: 'https',
 	host: jiraSecrets.host,
