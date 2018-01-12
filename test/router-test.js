@@ -11,9 +11,11 @@ require('events').EventEmitter.defaultMaxListeners = Infinity;
 // Import the Rectangle class.
 const Router = require(path.join(__dirname + '/../core', 'router.js'));
 const MockBot = require(path.join(__dirname + '/../core', 'mock-bot.js'));
+const Config = require(path.join(__dirname + '/../core', 'mock-config.js'));
 
 describe('Router Test', () => {
   beforeEach(() => {
+    global.config = new Config();
     global.BaseModule = require('../core/base-module.js');
     global.BaseStorageModule = require('../core/storage-base-module.js');
     router = new Router(new MockBot());
@@ -32,6 +34,26 @@ describe('Router Test', () => {
 
     expect(modules, 'Loaded less then 10 commands').to.be.gt(10);
   });
+
+
+
+  it('Router blacklist test', () => {
+    const keys = Object.keys(router.modules);
+    
+    expect(keys.indexOf("poop") > -1, "Poop Module doesnt exsist").to.equal(true);
+
+    // Set blacklist.
+    config.blacklist = ["poop"];
+    router = new Router(new MockBot());    
+    const keysWithBlackList = Object.keys(router.modules);
+    expect(keysWithBlackList.indexOf("poop") > -1, "Poop Module doesnt exsist").to.equal(false);    
+
+
+    // Cleanup.
+    config.blacklist = [];
+    router = new Router(new MockBot());
+  });
+
 
   it('Test ping command', () => {
     const pingCmdData = {

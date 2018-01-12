@@ -55,6 +55,11 @@ module.exports = class Router {
         console.error('Failed to instaniate module: ' + key);
         return;
       }
+
+      if (config.getKey('modules_blacklist') && config.getKey('modules_blacklist').indexOf(key) === 0) {
+        console.log("Skipping: ", key, " in blacklist.");
+        return;
+      }
       
       // Add all modules types to cmd array.  
       if (moduleObj.getType() === BaseModule.TYPES.MODULE) {       
