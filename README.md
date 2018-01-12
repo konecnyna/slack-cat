@@ -14,7 +14,7 @@ It's ezpz.
 2. Add your slack api key to secrets.dat file in the root dir.
 3. node `index.js`
 
-Example `secrets.dat`:
+Example `config.dat`:
 ```
 {
     "slack_api": "xxx",
@@ -25,13 +25,16 @@ Example `secrets.dat`:
     	"host": "xxx",
     	"username": "xxx",
     	"password": "xxx"
-    }
+    },
+    "modules_blacklist": []
 }
 ```
 
 # Modules
 
-Look at the modules in the `modules/default` folder for examples.
+Look at the modules in the `modules/default` folder for examples. If there are core modules that you wouldn't like in slackcat you can add them to the "modules_blacklist".
+
+For example: `"modules_blacklist": ["poop"]` in `config.dat` file would exclude the `?poop` command from slackcat.
 
 
 ##### Usage:
