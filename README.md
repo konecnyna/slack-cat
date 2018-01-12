@@ -11,7 +11,7 @@ When you want slack to turn into a tire fire.
 It's ezpz.
 
 1. run `npm install`
-2. Add your slack api key to secrets.dat file in the root dir.
+2. Add your slack api key to config.dat file in the root dir.
 3. node `index.js`
 
 Example `config.dat`:
