@@ -18,9 +18,9 @@ module.exports = class Jira extends BaseModule {
 				data.channel,
 				"Please add ```'jira_api': {\n\
     		'host': 'stashinvest.atlassian.net',\n\
-    		'username': 'nkonecny@stashinvest.com',\n\
-    		'password': 'crossword1'\n\
-    		}``` to `secrets.dat`"
+    		'username': 'user@kewldomain.com',\n\
+    		'password': 'xxxxxxxxxxx'\n\
+    		}``` to `config.dat`"
 			);
 			return;
 		}
