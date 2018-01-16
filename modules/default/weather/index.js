@@ -15,7 +15,7 @@ module.exports = class Weather extends BaseModule {
 
   async handle(data) {
     if (!config.getKey('darksky_api') || !config.getKey('google_geocode_api')) {
-      this.bot.postMessage(data.channel, "Please put `darksky_api` or `google_geocode_api` key in secrets.dat");
+      this.bot.postMessage(data.channel, "Please put `darksky_api` or `google_geocode_api` key in `config.dat`");
       return;
     }
 

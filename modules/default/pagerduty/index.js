@@ -5,7 +5,7 @@ const request = require('request');
 module.exports = class PagerDuty extends BaseModule {
   async handle(data) {
     if (!config.getKey('pager_duty_api')) {
-      this.bot.postMessage(data.channel, "Please add key `pager_duty_api` key to secrets.dat");      
+      this.bot.postMessage(data.channel, "Please add key `pager_duty_api` key to `config.dat`");      
       return;
     }
 
