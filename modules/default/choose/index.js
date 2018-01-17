@@ -1,7 +1,7 @@
 'use strict';
 
 
-module.exports = class HelloWorld extends BaseModule {
+module.exports = class Choose extends BaseModule {
   async handle(data) {
   	try {  		
     	const userData = await this.bot.getChannelById(data.channel);
