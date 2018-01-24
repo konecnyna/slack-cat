@@ -5,7 +5,6 @@ const imgRegex = new RegExp(
   /"ou":"([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))"/,
   'g'
 );
-const gifRegex = new RegExp(/"ou":"([a-z\-_0-9\/\:\.]*\.gif)"/, 'g');
 
 const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36';
 const botParams = {
@@ -48,7 +47,7 @@ module.exports = class GoogleImages extends BaseModule {
   }
 
   getUrls(body, data) {
-    var match = data.cmd === "gif" ? gifRegex.exec(body) : imgRegex.exec(body);
+    var match = imgRegex.exec(body);
 
     if (match == null) {
       return false;
