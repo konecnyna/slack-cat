@@ -8,8 +8,9 @@ const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 const moduleResolver = new requireDir();
 
 module.exports = class Router {
-  constructor(bot) {
+  constructor(bot, pathToModules) {
     this.bot = bot;
+    this.pathToModules = pathToModules;
 
     this.modules = {};
     this.overflowModules = {};
@@ -48,7 +49,7 @@ module.exports = class Router {
   
   registerModules() {
     // Core modules
-    const loadedModules = moduleResolver.loadDefaultModules();
+    const loadedModules = moduleResolver.loadModules();
     Object.keys(loadedModules).forEach(key => {
       const moduleObj = new loadedModules[key](this.bot);
       if (!moduleObj) {

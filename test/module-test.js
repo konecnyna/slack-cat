@@ -21,6 +21,7 @@ if (fs.existsSync(filePath)) {
 describe('Modules Test', () => {
   beforeEach(() => {
     global.config = new Config();
+    global.STORAGE_PATH = "./storage/db-dev.sqlite";
     global.BaseModule = require('../core/base-module.js');
     global.BaseStorageModule = require('../core/storage-base-module.js');    
     router = new Router(new MockBot());

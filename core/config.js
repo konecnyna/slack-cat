@@ -3,9 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = class Config {
-  constructor() {
-    const dir = path.join(__dirname + "/../", 'config.dat');
-    const contents = fs.readFileSync(dir);
+  constructor(configPath) {
+    console.log(configPath, "hi");
+    const contents = fs.readFileSync(configPath);
     this.config = JSON.parse(contents);
     
     if (!this.getKey('slack_api')) {
