@@ -4,7 +4,6 @@ const path = require('path');
 
 module.exports = class Config {
   constructor(configPath) {
-    console.log(configPath, "hi");
     const contents = fs.readFileSync(configPath);
     this.config = JSON.parse(contents);
     
