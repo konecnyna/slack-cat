@@ -14,6 +14,19 @@ It's ezpz.
 2. Add your slack api key to config.dat file in the root dir.
 3. node `index.js`
 
+
+```
+const SlackCat = require('slack-cat');
+const Path = require('path');
+
+
+const configPath = Path.join(__dirname, 'config.dat')
+const dbPath = Path.join(__dirname, 'db.sqlite');
+
+new SlackCat('',configPath, dbPath).start();
+```
+
+
 Example `config.dat`:
 ```
 {
