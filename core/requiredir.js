@@ -132,14 +132,16 @@ module.exports = class RequireDir {
     return map;
   }
 
-  loadDefaultModules() {
-    // Load user modules first so they can overload default modules
-    const userModulesPath = Path.join(__dirname + '/../modules/user');    
-
+  loadModules(userModulesPath) {
     // Load core modules.
-    const coreModulesPath = Path.join(__dirname + '/../modules/default');
+    const coreModulesPath = Path.join(__dirname + '/../modules');
 
-    const paths = [userModulesPath, coreModulesPath];
+    
+    // Load core modules.
+    const paths = [coreModulesPath];
+    if (userModulesPath) {
+      paths.push(userModulesPath);
+    }
     
     const allModules = {};
     paths.map(path => {   

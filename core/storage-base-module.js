@@ -7,16 +7,11 @@ module.exports = class BaseStorageModule extends BaseModule {
       throw new TypeError('Cannot construct Abstract instances directly');
     }
 
-    this.Sequelize = require('sequelize');
-
-    let storagePath = "./storage/db-dev.sqlite"
-    if (process.env.NODE_ENV === "production") {
-      storagePath = "./storage/db.sqlite";
-    }
+    this.Sequelize = require('sequelize');        
 
     this.db = new this.Sequelize(null, null, null, {
       dialect: 'sqlite',
-      storage: storagePath,
+      storage: STORAGE_PATH, // global.
       logging: false,
       operatorsAliases: false,
       pool: {

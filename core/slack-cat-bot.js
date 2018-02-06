@@ -16,7 +16,7 @@ const MSG_TIMEOUT = 250;
   * there is strange behavior where slack won't scroll to the newest msg.
   *
   **/
-module.exports = class SlackCat extends SlackBot {
+module.exports = class SlackCatBot extends SlackBot {
   async postMessage(channelId, msg) {
     // Set default bot params.    
     await this.delayForScrollIssue();
