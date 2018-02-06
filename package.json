@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --timeout 15000",
-    "install": "./install.sh",
     "start": "node index.js"
   },
   "repository": {
@@ -23,7 +22,9 @@
     "require-dir": "^0.3.2",
     "slackbots": "^1.1.0",
     "sequelize": "^4.22.5",
-    "sqlite3": "^3.1.13"
+    "sqlite3": "^3.1.13",
+    "jira-client": "^6.4.1",
+    "dark-sky": "^1.1.2"
   },
   "devDependencies": {
     "babel": "^6.23.0",
