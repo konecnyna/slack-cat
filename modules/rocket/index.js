@@ -52,17 +52,17 @@ module.exports = class Rocket extends BaseModule {
   handle(data) {
     let rocketShip = rocket 
     
-    if (data.cmd === 'alcon-heavy') {
+    if (data.cmd === 'falcon-heavy') {
       rocketShip = falconHeavy;
     }
 
     for (let i = 0; i < 40; i++) {
-        	rocket += "\n   000000";
+        	rocketShip += "\n   000000";
         }
 
-        rocket += "\n```";
+        rocketShip += "\n```";
 
-        this.bot.postMessage(data.channel, rocket, {
+        this.bot.postMessage(data.channel, rocketShip, {
     	  icon_emoji: ':rocket:',
     	});	
     }
