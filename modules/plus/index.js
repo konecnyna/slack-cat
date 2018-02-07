@@ -9,6 +9,11 @@ module.exports = class Plus extends BaseStorageModule {
       return
     }
 
+    if (data.cmd === '--') {
+      const userData = await this.bot.getUserNameFromId(data.user);
+      this.bot.postMessage(data.channel, "Don't be a meanie " + (userData.user.display_name ? userData.user.display_name : userData.user.name));
+      return;
+    }
 
     if (data.cmd === 'pluses') {
       const pluses = await this.PlusModel.findOne({
@@ -63,7 +68,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   aliases() {
-    return ['++', '+', 'pluses'];
+    return ['++', '+', 'pluses', '--'];
   }
 
   postErrorMessage(data) {

@@ -24,18 +24,6 @@ const testMsg = {
 }
 
 
-// Run debug cmds.
-if (process.argv.length > 2) {	
-	testMsg.text = process.argv.splice(2, process.argv.length - 1).join(" ");
-	console.log("Executing: " + testMsg.text);
-	const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'));
-	const router = new Router(new MockBot());
-	router.handle(testMsg);
-	return;
-} 
-
-
-
 
 // Require after debug so we don't spin up the server if we are debugging.
 const SlackCatBot = require('./core/slack-cat-bot.js');
@@ -50,7 +38,17 @@ class SlackCat {
      }
 
 
-     start() {     	
+     start() {
+     	// Run debug cmds.
+		if (process.argv.length > 2) {	
+			testMsg.text = process.argv.splice(2, process.argv.length - 1).join(" ");
+			console.log("Executing: " + testMsg.text);
+			const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'));
+			const router = new Router(new MockBot());
+			router.handle(testMsg);
+			return;
+		} 
+     	     	
 		const bot = new SlackCatBot({
 		  token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
 		  name: 'SlackCat',
