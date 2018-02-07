@@ -5,4 +5,4 @@ const Path = require('path');
 const configPath = Path.join(__dirname, 'config.dat')
 const dbPath = Path.join(__dirname, 'db.sqlite');
 
-new SlackCat('',configPath, dbPath).start();
+new SlackCat('', configPath, dbPath).start();

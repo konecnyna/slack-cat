@@ -1,10 +1,30 @@
 'use strict';
 
+  const rocket = "```\n\
+     /\\      \n\
+    /  \\      \n\
+    |==|      \n\
+    |  |      \n\
+    |  |      \n\
+    |  |      \n\
+   /____\\      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+   |    |      \n\
+  /| |  |\\      \n\
+ / | |  | \\      \n\
+/__|_|__|__\\      \n\
+   /_\\/_\\    ";
 
-
-module.exports = class Rocket extends BaseModule {
-  handle(data) {
-	let rocket = "```\n\
+const falconHeavy = "```\n\
+   :car:     \n\
      /\\      \n\
     /  \\      \n\
     |==|      \n\
@@ -28,16 +48,28 @@ module.exports = class Rocket extends BaseModule {
    /_\\/_\\    ";
 
 
-
-    for(let i = 0; i < 40; i++) {
-    	rocket += "\n   000000";
+module.exports = class Rocket extends BaseModule {
+  handle(data) {
+    let rocketShip = rocket 
+    
+    if (data.cmd === 'alcon-heavy') {
+      rocketShip = falconHeavy;
     }
 
-    rocket += "\n```";
+    for (let i = 0; i < 40; i++) {
+        	rocket += "\n   000000";
+        }
 
-    this.bot.postMessage(data.channel, rocket, {
-	  icon_emoji: ':rocket:',
-	});	
+        rocket += "\n```";
+
+        this.bot.postMessage(data.channel, rocket, {
+    	  icon_emoji: ':rocket:',
+    	});	
+    }
+
+
+  aliases() {
+    return ['falcon-heavy'];
   }
 
   help() {
