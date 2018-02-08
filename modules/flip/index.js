@@ -2,7 +2,7 @@
 
 const flipTable = {
         "a" : "ɐ", "b" : "q", "c" : "ɔ", "d" : "p", "e" : "ǝ", "f" : "ɟ", "g" : "ƃ", "h" : "ɥ",
-        "i" : "ı", "j" : "ɾ", "k" : "ʞ", "l" : "ן", "m" : "ɯ", "n" : "u", "r" : "ɹ", "t" : "ʇ",
+        "i" : "ı", "j" : "ɾ", "k" : "ʞ", "l" : "ן", "m" : "ɯ", "n" : "u", "r" : "ɹ", "s": "s", "t" : "ʇ",
         "v" : "ʌ", "w" : "ʍ", "y" : "ʎ", "." : "˙", "[" : "]", "(" : ")", "{" : "}", "?" : "¿",
         "!" : "¡", "'" : ",", "<" : ">", "_" : "‾", "\"" : "„", "\\" : "/", "/" : "\\", ";" : "؛",
         "‿" : "⁀", "⁅" : "⁆", "∴" : "∵", "ɐ" : "a", "q" : "b", "ɔ" : "c", "p" : "d", "ǝ" : "e",
@@ -17,7 +17,10 @@ const flipTable = {
 
 module.exports = class Flip extends BaseModule {
   handle(data) {
-    console.log(this.getFlippedString("flip"));
+    this.bot.postMessage(
+      data.channel, 
+      this.getFlippedString(data.user_text)    
+    );  
   }
 
 
