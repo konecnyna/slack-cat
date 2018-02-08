@@ -1,4 +1,4 @@
-const SlackCat = require('slack-cat');
+const SlackCat = require('../index.js');
 const Path = require('path');
 
 
