@@ -15,7 +15,7 @@ module.exports = class Flip extends BaseModule {
   handle(data) {
     this.bot.postMessage(
       data.channel, 
-      this.getFlippedString(data.user_text)    
+      this.getFlippedString(data.user_text.toLowerCase())    
     );  
   }
 
