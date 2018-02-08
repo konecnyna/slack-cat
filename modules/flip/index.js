@@ -32,7 +32,7 @@ module.exports = class Flip extends BaseModule {
   		output += flipTable[char];
   	});
 
-  	return output;
+    return `(╯°□°）╯︵ ┻━${output}━┻`  	
   }
 
   help() {
