@@ -76,6 +76,15 @@ const flippers = [
 
 module.exports = class Flip extends BaseModule {
   handle(data) {
+    if (data.cmd === "unflip") {
+      this.bot.postMessage(
+        data.channel, 
+        `┬─${data.user_text.toLowerCase()}─┬◡ﾉ(° -°ﾉ)`
+      );
+      return;
+    }
+
+
     this.bot.postMessage(
       data.channel, 
       this.getFlippedString(data.user_text.toLowerCase())    
@@ -101,7 +110,11 @@ module.exports = class Flip extends BaseModule {
     return `${flipper}︵ ┻━${output}━┻`  	
   }
 
+  aliases() {
+    return ['unflip'];
+  }
+
   help() {
-    return "Usage: `?flip <text>`";
+    return "Usage: `?flip <text>` or `?unflip <text>`";
   }
 };
