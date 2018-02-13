@@ -19,6 +19,11 @@ module.exports = class Weather extends BaseModule {
       return;
     }
 
+    if (this.aliases().includes(data.cmd)) {
+      this.handleRadar(data);
+      return;
+    }
+
     let query = data.user_text;
     if (!query) {
       query = "nyc";
@@ -45,8 +50,33 @@ module.exports = class Weather extends BaseModule {
       });
   }
 
+  handleRadar(data) {
+    let img = ""
+    switch (data.cmd) {
+      case 'us-radar':
+        img = "http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif";
+        break;
+
+      case 'radar':
+      case 'ne-radar':
+      case 'nyc-radar':
+        img = "http://images.intellicast.com/WxImages/RadarLoop/hfd_None_anim.gif";
+        break;
+
+      default:
+        img = 'No radar found';        
+    }
+
+
+    this.bot.postMessage(data.channel, img);    
+  }
+
   help() {
-    return 'Usage: `?weather` gives current forecast for NYC';
+    return 'Usage: `?weather` gives current forecast for NYC. More cmds: ' + this.aliases() ;
+  }
+
+  aliases() {
+    return ['us-radar', 'ne-radar', 'nyc-radar', 'radar'];
   }
 
   sendFormattedWeather(data, weatherData, location) {
