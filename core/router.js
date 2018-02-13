@@ -49,7 +49,7 @@ module.exports = class Router {
   
   registerModules() {
     // Core modules
-    const loadedModules = moduleResolver.loadModules();
+    const loadedModules = moduleResolver.loadModules(this.pathToModules);    
     Object.keys(loadedModules).forEach(key => {
       const moduleObj = new loadedModules[key](this.bot);
       if (!moduleObj) {
