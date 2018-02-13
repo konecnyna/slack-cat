@@ -44,7 +44,7 @@ class SlackCat {
 			testMsg.text = process.argv.splice(2, process.argv.length - 1).join(" ");
 			console.log("Executing: " + testMsg.text);
 			const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'));
-			const router = new Router(new MockBot());
+			const router = new Router(new MockBot(), this.pathToModules);
 			router.handle(testMsg);
 			return;
 		} 
@@ -53,6 +53,7 @@ class SlackCat {
 		  token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
 		  name: 'SlackCat',
 		});
+
 		const router = new Router(bot, this.pathToModules);
 
 		bot.on('start', () => {
