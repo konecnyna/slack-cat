@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "slack-cat": "git+https://github.com/konecnyna/slack-cat.git",
+    "sqlite3": "^3.1.13"
+  }
 }
