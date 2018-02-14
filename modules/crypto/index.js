@@ -9,7 +9,30 @@ const lightCoin = "LTC";
 
 module.exports = class Crypto extends BaseModule {
   async handle(data) {
-	this.postFancyData(data);
+    if (data.user_text.length > 0) {
+      this.getSingleCrpto(data);
+      return;
+    }
+
+    this.postFancyData(data);
+  }
+
+
+  async getSingleCrpto(data) {
+    
+    try {
+      const cryptoData = await this.getCryptoPrice(data.user_text);
+      const fields = [
+        { 
+            "title": data.user_text,
+            "value": `$${cryptoData.USD}`,
+            "short": false
+        }
+      ];
+      this.postFancyMessage(data, fields, "#4CAF50");
+    } catch(e) {
+      this.bot.postMessage(data.channel, `${data.user_text} not found. :(`);
+    }
   }
 
 
@@ -19,24 +42,29 @@ module.exports = class Crypto extends BaseModule {
   	const lightCoinPrice = await this.getCryptoPrice(lightCoin);
     
     const fields = [
-      {
-              "title": "Bitcoin:",
-              "value": `$${bitcoinPrice.USD}`,
-              "short": false
-          },
-          {
-              "title": "Ethereum:",
-              "value": `$${ethereumPrice.USD}`,
-              "short": false
-          },
-          { 
-              "title": "LightCoin:",
-              "value": `$${lightCoinPrice.USD}`,
-              "short": false
-          }
+        {
+            "title": "Bitcoin:",
+            "value": `$${bitcoinPrice.USD}`,
+            "short": false
+        },
+        {
+            "title": "Ethereum:",
+            "value": `$${ethereumPrice.USD}`,
+            "short": false
+        },
+        { 
+            "title": "LightCoin:",
+            "value": `$${lightCoinPrice.USD}`,
+            "short": false
+        }
           
-    ]
+    ];
+    
+  
+    this.postFancyMessage(data, fields, "#FFC107");
+  }
 
+  postFancyMessage(data, fields, color) {    
     this.bot.postRawMessage(
         data.channel,
         {
@@ -44,19 +72,18 @@ module.exports = class Crypto extends BaseModule {
           "username": "CryptoCat",
           "attachments": [
               {
-                  "color": "#90c564",
+                  "color": color,
                   "fields": fields,
-                  "footer": "brochaco",                
+                  "footer": "More symbols: https://www.cryptocompare.com/coins/list/USD/1",                
               }
           ]
         }
       );
-  
   }
 
   getCryptoPrice(id) {
     var options = {
-      url: util.format(BASE_URL, id),      
+      url: util.format(BASE_URL, id.toUpperCase()),      
     };
 
     return new Promise((resolve, reject) => {
@@ -74,6 +101,6 @@ module.exports = class Crypto extends BaseModule {
 
 
   help() {
-    return 'Get duh latest crypto info.';
+    return 'Get duh latest crypto info. `?crypto <symbol name>`. List of symbols: https://www.cryptocompare.com/coins/list/USD/1';
   }
 }
