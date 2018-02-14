@@ -21,17 +21,17 @@ module.exports = class Crypto extends BaseModule {
     const fields = [
       {
               "title": "Bitcoin:",
-              "value": bitcoinPrice.USD,
+              "value": `$${bitcoinPrice.USD}`,
               "short": false
           },
           {
               "title": "Ethereum:",
-              "value": ethereumPrice.USD,
+              "value": `$${ethereumPrice.USD}`,
               "short": false
           },
           { 
               "title": "LightCoin:",
-              "value": lightCoinPrice.USD,
+              "value": `$${lightCoinPrice.USD}`,
               "short": false
           }
           
