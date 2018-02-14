@@ -74,6 +74,6 @@ module.exports = class Crypto extends BaseModule {
 
 
   help() {
-    return 'Pager duty command will return the on call list.';
+    return 'Get duh latest crypto info.';
   }
 }
