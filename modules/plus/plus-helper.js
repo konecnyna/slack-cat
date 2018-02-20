@@ -32,12 +32,11 @@ module.exports = class PlusHelper {
     this.context.bot.postRawMessage(
         data.channel,
         {
-          "icon_emoji": ":cat:",
+          "icon_emoji": ":chart_with_upwards_trend:",
           "username": "LeaderBoardCat",
           "attachments": [
               {
                   "color": "#90c564",
-                  "title": "Leader Board:",
                   "fields": fields,                  
               }
           ]
