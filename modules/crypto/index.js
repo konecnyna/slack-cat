@@ -53,7 +53,7 @@ module.exports = class Crypto extends BaseModule {
             "short": false
         },
         { 
-            "title": "LightCoin:",
+            "title": "LiteCoin:",
             "value": `$${lightCoinPrice.USD}`,
             "short": false
         }
