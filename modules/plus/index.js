@@ -2,28 +2,24 @@
 
 const util = require('util');
 const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
+const PlusHelper = require('./plus-helper.js');
+
 
 module.exports = class Plus extends BaseStorageModule {
   async handle(data) {
-    if (!data.user_text) {
-      return
-    }
-
+    const plusHelper = new PlusHelper(this);
     if (data.cmd === '--') {
-      const userData = await this.bot.getUserNameFromId(data.user);
-      this.bot.postMessage(data.channel, "Don't be a meanie " + (userData.user.display_name ? userData.user.display_name : userData.user.name));
+      plusHelper.displayBeingMeanMsg(data);
       return;
     }
 
     if (data.cmd === 'pluses') {
-      const pluses = await this.PlusModel.findOne({
-        where: {
-          name: data.user_text
-        }
-      });
+      plusHelper.displayPlusesForUser(data);
+      return;
+    }
 
-      const msg = util.format("%s has %d pluses!", data.user_text, pluses.get('pluses'));
-      this.bot.postMessage(data.channel, msg);
+    if (data.cmd === 'leaderboard') {
+      plusHelper.displayLeaderBoard(data);
       return;
     }
 
@@ -37,7 +33,7 @@ module.exports = class Plus extends BaseStorageModule {
 
     if (!matches || matches.length < 2) {
       // No user was refs so plus the raw text.]
-      this.plusUser(data.channel, data.user_text.toLowerCase());
+      plusHelper.plusUser(data.channel, data.user_text.toLowerCase());
       return;
     }
     
@@ -45,7 +41,7 @@ module.exports = class Plus extends BaseStorageModule {
     // Resolve slack handle.
     try {
       const userData = await this.bot.getUserNameFromId(matches[1]);  
-      this.plusUser(
+      plusHelper.plusUser(
         data.channel, 
         userData.user.display_name ? userData.user.display_name : userData.user.name
       );
@@ -57,7 +53,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   help() {
-    return 'Show people love by plusing them!';
+    return 'Show people love <3 by plusing them!';
   }
 
   registerSqliteModel() {
@@ -68,31 +64,11 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   aliases() {
-    return ['++', '+', 'pluses', '--'];
+    return ['++', '+', 'pluses', '--', 'leaderboard'];
   }
 
   postErrorMessage(data) {
     this.bot.postMessage(data.channel, 'Something went wrong...');
   }
 
-  async plusUser(channel, userName) {
-    const pluses = await this.upsert(
-      this.PlusModel,
-      { where: { name: userName } },
-      {
-        name: userName,
-        pluses: 1,
-      },
-      {
-        pluses: this.db.literal('pluses + 1'),
-      }
-    );
-
-    const msg = util.format(
-      '%s now has %d pluses!',
-      userName,
-      pluses.get('pluses')
-    );
-    this.bot.postMessage(channel, msg);
-  }
 };
