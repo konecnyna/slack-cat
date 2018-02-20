@@ -25,7 +25,7 @@ module.exports = class Crypto extends BaseModule {
       const fields = [
         { 
             "title": data.user_text,
-            "value": `$${cryptoData.USD}`,
+            "value": `$${cryptoData.USD.toFixed(2)}`,
             "short": false
         }
       ];
@@ -44,17 +44,17 @@ module.exports = class Crypto extends BaseModule {
     const fields = [
         {
             "title": "Bitcoin:",
-            "value": `$${bitcoinPrice.USD}`,
+            "value": `$${bitcoinPrice.USD.toFixed(2)}`,
             "short": false
         },
         {
             "title": "Ethereum:",
-            "value": `$${ethereumPrice.USD}`,
+            "value": `$${ethereumPrice.USD.toFixed(2)}`,
             "short": false
         },
         { 
             "title": "LiteCoin:",
-            "value": `$${lightCoinPrice.USD}`,
+            "value": `$${lightCoinPrice.USD.toFixed(2)}`,
             "short": false
         }
           
