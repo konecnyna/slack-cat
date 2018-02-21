@@ -17,7 +17,7 @@ module.exports = class Stock extends BaseModule {
       return;
     }
 
-		this.bot.postMessage(data.channel, `${stockData.name} -  $${stockData.l}`);		
+		this.postFancyData(data.channel, stockData);
 	}
 
 
@@ -37,6 +37,50 @@ module.exports = class Stock extends BaseModule {
         resolve(JSON.parse(body.replace("//", ""))[0]);
       });
     });  
+  }
+
+
+  async postFancyData(channel, stockData) {  
+    
+    const fields = [
+        {
+            "title": "Currently trading at:",
+            "value": `$${stockData.l}`,
+            "short": false
+        },
+        {
+            "title": "High:",
+            "value": `$${stockData.hi}`,
+            "short": true
+        },
+        {
+            "title": "Low:",
+            "value": `$${stockData.lo}`,
+            "short": true
+        }
+          
+    ];
+    
+  
+    this.postFancyMessage(stockData, channel, fields, "#3F51B5");
+  }
+
+  postFancyMessage(stockData, channel, fields, color) {    
+    this.bot.postRawMessage(
+        channel,
+        {
+          "icon_emoji": ":chart_with_upwards_trend:",
+          "username": "StockCat",
+          "attachments": [
+              {
+                "title": stockData.name,                  
+                "color": color,
+                "fields": fields,
+                "footer": (stockData.summary) ? stockData.summary[0].url : "",                
+              }
+          ]
+        }
+      );
   }
 
 
