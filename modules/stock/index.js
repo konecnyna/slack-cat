@@ -45,7 +45,7 @@ module.exports = class Stock extends BaseModule {
     const fields = [
         {
             "title": "Currently trading at:",
-            "value": `$${stockData.l}`,
+            "value": `$${stockData.l} (${stockData.c.includes("+") ? `▲ ${stockData.c}` : `▼ ${stockData.c}`})`,
             "short": false
         },
         {
