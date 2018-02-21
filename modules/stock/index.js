@@ -41,26 +41,34 @@ module.exports = class Stock extends BaseModule {
 
 
   async postFancyData(channel, stockData) {  
-    
-    const fields = [
-        {
-            "title": "Currently trading at:",
-            "value": `$${stockData.l} (${stockData.c.includes("+") ? `▲ ${stockData.c}` : `▼ ${stockData.c}`})`,
-            "short": false
-        },
-        {
-            "title": "High:",
-            "value": `$${stockData.hi}`,
-            "short": true
-        },
-        {
-            "title": "Low:",
-            "value": `$${stockData.lo}`,
-            "short": true
-        }
-          
-    ];
-    
+    const fields = []
+    let titleString = `$${stockData.l} (${stockData.c.includes("+") ? `▲ ${stockData.c}` : `▼ ${stockData.c}`})`;
+    if (!stockData.c) {
+        titleString = `$${stockData.l}`;
+    }
+
+    fields.push({
+      "title": "Currently trading at:",
+      "value": titleString,
+      "short": false
+    });
+
+    if (stockData.hi) {
+      fields.push({
+        "title": "High:",
+        "value": `$${stockData.hi}`,
+        "short": false
+      });
+    }
+
+    if (stockData.lo) {
+      fields.push({
+        "title": "Low:",
+        "value": `$${stockData.lo}`,
+        "short": false
+      });
+    }
+  
   
     this.postFancyMessage(stockData, channel, fields, "#3F51B5");
   }
