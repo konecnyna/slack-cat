@@ -70,7 +70,7 @@ module.exports = class Stock extends BaseModule {
     }
   
   
-    this.postFancyMessage(stockData, channel, fields, "#3F51B5");
+    this.postFancyMessage(stockData, channel, fields, "#DDDDDD");
   }
 
   postFancyMessage(stockData, channel, fields, color) {    
