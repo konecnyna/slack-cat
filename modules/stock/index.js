@@ -23,7 +23,7 @@ module.exports = class Stock extends BaseModule {
 
   getData(symbol) {
     var options = {
-      url: `https://finance.google.com/finance?q=NASDAQ:${symbol}&output=json`
+      url: `https://finance.google.com/finance?q=${symbol}&output=json`
     };
 
     return new Promise((resolve, reject) => {
@@ -48,7 +48,7 @@ module.exports = class Stock extends BaseModule {
     }
 
     fields.push({
-      "title": "Currently trading at:",
+      "title": "Last:",
       "value": titleString,
       "short": false
     });
@@ -73,7 +73,8 @@ module.exports = class Stock extends BaseModule {
     this.postFancyMessage(stockData, channel, fields, "#DDDDDD");
   }
 
-  postFancyMessage(stockData, channel, fields, color) {    
+  async postFancyMessage(stockData, channel, fields, color) {    
+    
     this.bot.postRawMessage(
         channel,
         {
@@ -84,11 +85,16 @@ module.exports = class Stock extends BaseModule {
                 "title": stockData.name,                  
                 "color": color,
                 "fields": fields,
-                "footer": (stockData.summary) ? stockData.summary[0].url : "",                
+                "footer": await this.getDJIIndex(),                
               }
           ]
         }
       );
+  }
+
+  async getDJIIndex() {
+    const dow = await this.getData('DJI');
+    return `Dow Jones Industrial - ${dow.l} (${dow.c})`;
   }
 
 
