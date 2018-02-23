@@ -38,14 +38,15 @@ module.exports = class Stock extends BaseModule {
 
   async postFancyData(channel, stockData) {
     const fields = [];
-    const isPositive = stockData.c.includes('+');
+    let isPositive = false;
+    let titleString = `$${stockData.l}`;
 
-    let titleString = `$${stockData.l} (${
-      isPositive ? `${stockData.c}` : `${stockData.c}`
-    })`;
+    if (stockData.c) {
+      titleString = `$${stockData.l} (${
+        isPositive ? `${stockData.c}` : `${stockData.c}`
+      })`;
 
-    if (!stockData.c) {
-      titleString = `$${stockData.l}`;
+      isPositive = !stockData.c.includes('-');
     }
 
     fields.push({
@@ -83,12 +84,28 @@ module.exports = class Stock extends BaseModule {
       attachments: [
         {
           title: stockData.name,
-          color: '#dddddd',
+          color: this.getStockStatusColor(stockData),
           fields: fields,
           footer: await this.getDJIIndex(),
         },
       ],
     });
+  }
+
+  getStockStatusColor(stockData) {
+    if (!stockData || !stockData.c) {
+      return '#dddddd';
+    }
+
+    if (stockData.c.includes('+')) {
+      return '#4CAF50';
+    }
+
+    if (stockData.c.includes('-')) {
+      return '#F44336';
+    }
+
+    return '#dddddd';
   }
 
   async getDJIIndex() {
