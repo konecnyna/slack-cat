@@ -36,13 +36,14 @@ module.exports = class Stock extends BaseModule {
 
         resolve(JSON.parse(body.replace("//", ""))[0]);
       });
-    });  
+    });
   }
 
 
-  async postFancyData(channel, stockData) {  
-    const fields = []
-    let titleString = `$${stockData.l} (${stockData.c.includes("+") ? `▲ ${stockData.c}` : `▼ ${stockData.c}`})`;
+  async postFancyData(channel, stockData) {
+      const fields = [];
+      const isPositive = stockData.c.includes("+");
+    let titleString = `$${stockData.l} (${isPositive ? `${stockData.c}` : `${stockData.c}`})`;
     if (!stockData.c) {
         titleString = `$${stockData.l}`;
     }
@@ -68,24 +69,24 @@ module.exports = class Stock extends BaseModule {
         "short": false
       });
     }
-  
-  
-    this.postFancyMessage(stockData, channel, fields, "#DDDDDD");
+
+
+    this.postFancyMessage(stockData, channel, fields, isPositive);
   }
 
-  async postFancyMessage(stockData, channel, fields, color) {    
-    
-    this.bot.postRawMessage(
+  async postFancyMessage(stockData, channel, fields, isPositive) {
+      const icon = isPositive ?  ":chart_with_upwards_trend:" :  ":chart_with_downwards_trend:";
+          this.bot.postRawMessage(
         channel,
         {
-          "icon_emoji": ":chart_with_upwards_trend:",
+          "icon_emoji": icon,
           "username": "StockCat",
           "attachments": [
               {
-                "title": stockData.name,                  
-                "color": color,
+                "title": stockData.name,
+                "color": "#dddddd",
                 "fields": fields,
-                "footer": await this.getDJIIndex(),                
+                "footer": await this.getDJIIndex(),
               }
           ]
         }
