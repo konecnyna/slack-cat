@@ -10,7 +10,7 @@ module.exports = class Plus extends BaseStorageModule {
     this.plusHelper = new PlusHelper(this);
   }
 
-  async handle(data) {    
+  async handle(data) {
     if (data.cmd === '--') {
       this.plusHelper.displayBeingMeanMsg(data);
       return;
@@ -40,7 +40,7 @@ module.exports = class Plus extends BaseStorageModule {
     }
 
     // Resolve slack handle.
-    try { 
+    try {
       const userData = await this.bot.getUserNameFromId(matches[1]);
       this.plusHelper.plusUser(
         data.channel,
@@ -53,7 +53,6 @@ module.exports = class Plus extends BaseStorageModule {
       this.postErrorMessage(data);
     }
   }
-
 
   plusUser(channel, userText) {
     this.plusHelper.plusUser(channel, userText);
@@ -71,7 +70,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   aliases() {
-    return ['++', '+', 'pluses', '--', 'leaderboard'];
+    return ['++', '+', 'pluses', '--', 'leaderboard', 'kudos'];
   }
 
   postErrorMessage(data) {
