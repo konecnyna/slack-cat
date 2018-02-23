@@ -10,10 +10,9 @@ const Router = require(path.join(__dirname + '/../core', 'router.js'));
 const MockBot = require(path.join(__dirname + '/../core', 'mock-bot.js'));
 const Config = require(path.join(__dirname + '/../core', 'mock-config.js'));
 
-
 // Remove old dev db for tests.
 const fs = require('fs');
-const filePath = path.join(__dirname + '/../storage', 'db-dev.sqlite'); 
+const filePath = path.join(__dirname + '/../storage', 'db-dev.sqlite');
 if (fs.existsSync(filePath)) {
   fs.unlinkSync(filePath);
 }
@@ -21,9 +20,9 @@ if (fs.existsSync(filePath)) {
 describe('Modules Test', () => {
   beforeEach(() => {
     global.config = new Config();
-    global.STORAGE_PATH = "./storage/db-dev.sqlite";
+    global.STORAGE_PATH = './storage/db-dev.sqlite';
     global.BaseModule = require('../core/base-module.js');
-    global.BaseStorageModule = require('../core/storage-base-module.js');    
+    global.BaseStorageModule = require('../core/storage-base-module.js');
     router = new Router(new MockBot());
   });
 
@@ -98,7 +97,7 @@ describe('Modules Test', () => {
     };
 
     router.bot.setCallback(data => {
-      data.should.equal("Learned test");
+      data.should.equal('Learned test');
       done();
     });
 
@@ -116,11 +115,10 @@ describe('Modules Test', () => {
       team: 'T5XMSKCAJ',
     };
 
-    router.bot.setCallback(data => {      
-      data.should.equal("Learned testuser");
+    router.bot.setCallback(data => {
+      data.should.equal('Learned testuser');
       done();
     });
-
 
     router.handle(learnCmdData);
   });
@@ -137,7 +135,7 @@ describe('Modules Test', () => {
     };
 
     router.bot.setCallback(data => {
-      data.includes("this is a test").should.equal(true);
+      data.includes('this is a test').should.equal(true);
       done();
     });
 
@@ -156,7 +154,7 @@ describe('Modules Test', () => {
     };
 
     router.bot.setCallback(data => {
-      data.includes("this is a test").should.equal(true);
+      data.includes('this is a test').should.equal(true);
       done();
     });
 

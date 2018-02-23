@@ -10,7 +10,7 @@ module.exports = class PlusHelper {
       },
     });
 
-    const msg = `${data.user_text} has ${pluses.get('pluses')} pluses!`;    
+    const msg = `${data.user_text} has ${pluses.get('pluses')} pluses!`;
     this.context.bot.postMessage(data.channel, msg);
   }
 
@@ -23,25 +23,23 @@ module.exports = class PlusHelper {
     const fields = [];
     pluses.forEach((plus, index) => {
       fields.push({
-           "title": `${index + 1}. ${plus.get('name')} (${plus.get('pluses')} pluses)`,
-           "short": false
-      })
+        title: `${index + 1}. ${plus.get('name')} (${plus.get(
+          'pluses'
+        )} pluses)`,
+        short: false,
+      });
     });
 
-
-    this.context.bot.postRawMessage(
-        data.channel,
+    this.context.bot.postRawMessage(data.channel, {
+      icon_emoji: ':chart_with_upwards_trend:',
+      username: 'LeaderBoardCat',
+      attachments: [
         {
-          "icon_emoji": ":chart_with_upwards_trend:",
-          "username": "LeaderBoardCat",
-          "attachments": [
-              {
-                  "color": "#90c564",
-                  "fields": fields,                  
-              }
-          ]
-        }
-      );
+          color: '#90c564',
+          fields: fields,
+        },
+      ],
+    });
   }
 
   async displayBeingMeanMsg(data) {
