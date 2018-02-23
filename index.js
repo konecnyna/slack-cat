@@ -4,67 +4,98 @@ const fs = require('fs');
 const path = require('path');
 const Config = require('./core/config.js');
 
-
 // Start app.
 const Router = require('./core/router.js');
 
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js');
 global.BaseStorageModule = require('./core/storage-base-module.js');
-    
 
-const testMsg = { 
+const testMsg = {
 	type: 'message',
 	channel: 'C7XPH1X8V',
 	user: 'U7YMR8S3H',
 	text: '',
 	ts: '1510420686.000031',
 	source_team: 'T7XPH1Q4V',
-	team: 'T7XPH1Q4V' 
-}
+	team: 'T7XPH1Q4V',
+};
 
+const testReaction = {
+	type: 'reaction_added',
+	user: 'U7YMR8S3H',
+	item: {
+		type: 'message',
+		channel: 'C7XPH1X8V',
+		ts: '1519401099.000639',
+	},
+	reaction: '',
+	item_user: 'U94UFE802',
+	event_ts: '1519405945.000295',
+	ts: '1519405945.000295',
+};
 
 
 // Require after debug so we don't spin up the server if we are debugging.
 const SlackCatBot = require('./core/slack-cat-bot.js');
 
 class SlackCat {
-     constructor(pathToModules, configPath, dbPath) {
-     	this.pathToModules = pathToModules;
-     	this.dbPath = dbPath;
+	constructor(pathToModules, configPath, dbPath) {
+		this.pathToModules = pathToModules;
+		this.dbPath = dbPath;
 
-     	global.STORAGE_PATH = dbPath;     	
-     	global.config = new Config(configPath);
-     }
+		global.STORAGE_PATH = dbPath;
+		global.config = new Config(configPath);
+	}
 
+	start() {
+		// Run debug cmds.
+		
+		// Reaction debug msg
+		if (process.argv.length === 3 && process.argv[2].includes(":")) {
+			testReaction.reaction = process.argv[2].replace(new RegExp(":", 'g'), "");
+			console.log('Executing reaction: ' + testReaction.reaction);
+			const MockBot = require(path.join(
+				__dirname + '/core',
+				'mock-bot.js'
+			));
+			const router = new Router(new MockBot(), this.pathToModules);
+			router.handle(testReaction);
+			return;
+		}
 
-     start() {
-     	// Run debug cmds.
-		if (process.argv.length > 2) {	
-			testMsg.text = process.argv.splice(2, process.argv.length - 1).join(" ");
-			console.log("Executing: " + testMsg.text);
-			const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'));
+		// Regular debug message
+		if (process.argv.length > 2) {
+			testMsg.text = process.argv
+				.splice(2, process.argv.length - 1)
+				.join(' ');
+			console.log('Executing message: ' + testMsg.text);
+			const MockBot = require(path.join(
+				__dirname + '/core',
+				'mock-bot.js'
+			));
 			const router = new Router(new MockBot(), this.pathToModules);
 			router.handle(testMsg);
 			return;
-		} 
-     	     	
+		}
+
 		const bot = new SlackCatBot({
-		  token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
-		  name: 'SlackCat',
+			token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
+			name: 'SlackCat',
 		});
 
 		const router = new Router(bot, this.pathToModules);
 
 		bot.on('start', () => {
-		  console.info('Starting server in ' + process.env.NODE_ENV + ' mode.');
+			console.info(
+				'Starting server in ' + process.env.NODE_ENV + ' mode.'
+			);
 		});
 
 		bot.on('message', data => {
-		  router.handle(data);
+			router.handle(data);
 		});
-     }
-
+	}
 }
 
 module.exports = SlackCat;

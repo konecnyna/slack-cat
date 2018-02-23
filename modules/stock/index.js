@@ -41,9 +41,10 @@ module.exports = class Stock extends BaseModule {
 
 
   async postFancyData(channel, stockData) {
-      const fields = [];
-      const isPositive = stockData.c.includes("+");
-    let titleString = `$${stockData.l} (${isPositive ? `${stockData.c}` : `${stockData.c}`})`;
+    const fields = [];
+    const isPositive = stockData.c.includes("+");
+    
+    let titleString = `$${stockData.l} (${isPositive ? `${stockData.c}` : `${stockData.c}`})`;  
     if (!stockData.c) {
         titleString = `$${stockData.l}`;
     }
@@ -76,7 +77,7 @@ module.exports = class Stock extends BaseModule {
 
   async postFancyMessage(stockData, channel, fields, isPositive) {
       const icon = isPositive ?  ":chart_with_upwards_trend:" :  ":chart_with_downwards_trend:";
-          this.bot.postRawMessage(
+      this.bot.postRawMessage(
         channel,
         {
           "icon_emoji": icon,

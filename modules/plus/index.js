@@ -5,20 +5,24 @@ const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 const PlusHelper = require('./plus-helper.js');
 
 module.exports = class Plus extends BaseStorageModule {
-  async handle(data) {
-    const plusHelper = new PlusHelper(this);
+  constructor(bot) {
+    super(bot);
+    this.plusHelper = new PlusHelper(this);
+  }
+
+  async handle(data) {    
     if (data.cmd === '--') {
-      plusHelper.displayBeingMeanMsg(data);
+      this.plusHelper.displayBeingMeanMsg(data);
       return;
     }
 
     if (data.cmd === 'pluses') {
-      plusHelper.displayPlusesForUser(data);
+      this.plusHelper.displayPlusesForUser(data);
       return;
     }
 
     if (data.cmd === 'leaderboard') {
-      plusHelper.displayLeaderBoard(data);
+      this.plusHelper.displayLeaderBoard(data);
       return;
     }
 
@@ -31,14 +35,14 @@ module.exports = class Plus extends BaseStorageModule {
 
     if (!matches || matches.length < 2) {
       // No user was refs so plus the raw text.]
-      plusHelper.plusUser(data.channel, data.user_text.toLowerCase());
+      this.plusHelper.plusUser(data.channel, data.user_text.toLowerCase());
       return;
     }
 
     // Resolve slack handle.
-    try {
+    try { 
       const userData = await this.bot.getUserNameFromId(matches[1]);
-      plusHelper.plusUser(
+      this.plusHelper.plusUser(
         data.channel,
         userData.user.display_name
           ? userData.user.display_name
@@ -48,6 +52,11 @@ module.exports = class Plus extends BaseStorageModule {
       console.error(e);
       this.postErrorMessage(data);
     }
+  }
+
+
+  plusUser(channel, userText) {
+    this.plusHelper.plusUser(channel, userText);
   }
 
   help() {
