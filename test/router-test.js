@@ -35,25 +35,26 @@ describe('Router Test', () => {
     expect(modules, 'Loaded less then 10 commands').to.be.gt(10);
   });
 
-
-
   it('Router blacklist test', () => {
     const keys = Object.keys(router.modules);
-    
-    expect(keys.indexOf("poop") > -1, "Poop Module doesnt exsist").to.equal(true);
+
+    expect(keys.indexOf('poop') > -1, 'Poop Module doesnt exsist').to.equal(
+      true
+    );
 
     // Set blacklist.
-    config.blacklist = ["poop"];
-    router = new Router(new MockBot());    
+    config.blacklist = ['poop'];
+    router = new Router(new MockBot());
     const keysWithBlackList = Object.keys(router.modules);
-    expect(keysWithBlackList.indexOf("poop") > -1, "Poop Module doesnt exsist").to.equal(false);    
-
+    expect(
+      keysWithBlackList.indexOf('poop') > -1,
+      'Poop Module doesnt exsist'
+    ).to.equal(false);
 
     // Cleanup.
     config.blacklist = [];
     router = new Router(new MockBot());
   });
-
 
   it('Test ping command', () => {
     const pingCmdData = {
@@ -93,8 +94,8 @@ describe('Router Test', () => {
     };
 
     const matches = router.addExtras(dataWithArg);
-    matches[0].should.equal("?ping");
-    matches[1].should.equal("ping");
+    matches[0].should.equal('?ping');
+    matches[1].should.equal('ping');
     dataWithArg['cmd'].should.equal('ping');
     dataWithArg['user_text'].should.equal('test');
     dataWithArg['args'].length.should.equal(1);
