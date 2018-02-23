@@ -9,6 +9,10 @@ const botParams = {
 };
 
 module.exports = class MockBot {
+  constructor() {
+    this.name = 'defkon';
+  }
+
   postMessage(channelId, msg) {
     this.msg = msg;
     // Set default bot params.
@@ -75,14 +79,36 @@ module.exports = class MockBot {
   }
 
 
-  getUserNameFromId(user_id) {
-    return this._api('users.info', {
-      user: user_id,
-    });
+  postRawMessage(channel_id, args) {    
+    var params = extend(
+      {
+        channel: channel_id,
+        username: this.name,
+      },
+      args || {}
+    );
+
+    return this.callback(params);
   }
 
+  getUserNameFromId(user_id) {  
+    return this.getFakeUser();
+  }
+
+
+
+  async resolveUserNameFromId(user_id) {
+    const randUserData = await this.userDataPromise(user_id);          
+    return randUserData.user.profile.display_name ? randUserData.user.profile.display_name : randUserData.user.profile.real_name;      
+  }
+  
+
   userDataPromise(user_id) {
-    return   { 
+    return this.getFakeUser();
+  }
+
+  getFakeUser() {
+    return { 
       ok: true,
       user:
        { id: 'U7YMR8S3H',
@@ -95,7 +121,7 @@ module.exports = class MockBot {
          tz_label: 'Eastern Standard Time',
          tz_offset: -18000,
          profile:
-          { real_name: 'Nick ',
+          { real_name: 'Nick',
             display_name: 'defkon',
             avatar_hash: 'gf2cc379c725',
             first_name: 'Nick',
@@ -119,7 +145,7 @@ module.exports = class MockBot {
          updated: 1510253033,
          is_app_user: false 
       } 
-    };   
+    };  
   }
 
 

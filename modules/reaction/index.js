@@ -2,7 +2,7 @@
 const cache = require('memory-cache');
 
 module.exports = class Reactions extends BaseModule {
-  async handle(data, modules) {
+  async handle(data, modules) {    
     // Heavy plus will plus user!  
     if (
       data.reaction === 'heavy_plus_sign' &&
@@ -18,10 +18,12 @@ module.exports = class Reactions extends BaseModule {
       const userName = await module.bot.getUserNameFromId(data.item_user);
       module.plusUser(data.item.channel, userName.user.name);
       cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, ()=>{});
+      return;
     }
     
     if (data.reaction === "eggplant") {      
-      this.bot.postMessage(data.item.channel, "( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)");      
+      this.bot.postMessage(data.item.channel, "( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)");
+      return;     
     }
     
   }

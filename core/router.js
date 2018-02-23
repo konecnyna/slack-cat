@@ -28,7 +28,7 @@ module.exports = class Router {
     }
 
     // Handle reactions
-    if (data.type === 'reaction_added') {
+    if (data.type === 'reaction_added') {      
       this.handleReaction(data);
       return;
     }

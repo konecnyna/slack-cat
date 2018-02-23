@@ -27,7 +27,7 @@ describe('Modules Test', () => {
     router = new Router(new MockBot());
   });
 
-  it('Test ping command', () => {
+  it('Test ping command', done => {
     const pingCmdData = {
       type: 'message',
       channel: 'D7U2P6CE4',
@@ -40,6 +40,7 @@ describe('Modules Test', () => {
 
     router.bot.setCallback(data => {
       data.should.equal('pong');
+      done();
     });
 
     router.handle(pingCmdData);
