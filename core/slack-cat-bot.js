@@ -86,9 +86,7 @@ module.exports = class SlackCatBot extends SlackBot {
       user: user_id,
     });
   }
-
-
-
+  
   async resolveUserNameFromId(user_id) {
     const randUserData = await this.userDataPromise(user_id);          
     return randUserData.user.profile.display_name ? randUserData.user.profile.display_name : randUserData.user.profile.real_name;      
