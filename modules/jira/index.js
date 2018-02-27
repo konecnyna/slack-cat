@@ -54,6 +54,7 @@ module.exports = class Jira extends BaseModule {
 	async createJiraTicket(data) {
 		const matches = data.user_text.match(QUOTES_REGEX);
 		if (matches.length !== 2) {
+			this.displayHelp(data);
 			return;
 		}
 
@@ -141,7 +142,7 @@ module.exports = class Jira extends BaseModule {
 	}
 
 	help() {
-		return 'Usage: `?jira <ticket-number>`.\n`?jira-create "<title>" "<description>"';
+		return 'Usage:\n`?jira <ticket-number>`.\n`?jira-create "<title>" "<description>"`';
 	}
 
 	aliases() {
