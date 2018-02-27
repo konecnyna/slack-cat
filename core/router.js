@@ -69,7 +69,7 @@ module.exports = class Router {
       }
 
       // Add all modules types to cmd array.
-      if (moduleObj.getType() === BaseModule.TYPES.MODULE) {
+      if (moduleObj.getType().includes(BaseModule.TYPES.MODULE)) {
         this.modules[key] = moduleObj;
         moduleObj.aliases().map(alias => {
           this.modules[alias] = moduleObj;
@@ -77,17 +77,17 @@ module.exports = class Router {
       }
 
       // Overflow modules
-      if (moduleObj.getType() === BaseModule.TYPES.OVERFLOW_CMD) {
+      if (moduleObj.getType().includes(BaseModule.TYPES.OVERFLOW_CMD)) {
         this.overflowModules[key] = moduleObj;
       }
 
       // Reaction modules.
-      if (moduleObj.getType() === BaseModule.TYPES.REACTIONS) {
+      if (moduleObj.getType().includes(BaseModule.TYPES.REACTIONS)) {
         this.reactionModules[key] = moduleObj;
       }
 
       // User joined channel.
-      if (moduleObj.getType() === BaseModule.TYPES.MEMBER_JOINED_CHANNEL) {
+      if (moduleObj.getType().includes(BaseModule.TYPES.MEMBER_JOINED_CHANNEL)) {
         this.memberJoinedModules[key] = moduleObj;
       }
     });
@@ -101,7 +101,7 @@ module.exports = class Router {
 
   handleMemeberJoin(data) {
     Object.keys(this.memberJoinedModules).forEach(key => {
-      this.memberJoinedModules[key].handle(data, this.modules);
+      this.memberJoinedModules[key].handleMemeberJoin(data, this.modules);
     });
   }
 
