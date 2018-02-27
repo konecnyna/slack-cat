@@ -68,7 +68,8 @@ module.exports = class BaseModule {
     return {
       MODULE: "module",
       OVERFLOW_CMD: "overflow_cmd",
-      REACTION: "reaction"
+      REACTION: "reaction",
+      MEMBER_JOINED_CHANNEL: "member_joined_channel"
     };
   }
 
