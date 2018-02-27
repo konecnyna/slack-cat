@@ -7,4 +7,4 @@ const dbPath = Path.join(__dirname, 'db.sqlite');
 const modules = Path.join(__dirname, '/modules');
 
 // No modules in example.
-new SlackCat(modules, configPath, dbPath).start();
+new SlackCat('', configPath, dbPath).start();
