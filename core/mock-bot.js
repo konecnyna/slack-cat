@@ -87,8 +87,11 @@ module.exports = class MockBot {
       },
       args || {}
     );
-
-    return this.callback(params);
+    
+    if (this.callback) {
+      return this.callback(params);  
+    }
+    console.log(params);    
   }
 
   getUserNameFromId(user_id) {  

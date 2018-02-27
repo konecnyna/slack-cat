@@ -9,6 +9,7 @@ const jira = new JiraApi({
 	apiVersion: '2',
 	strictSSL: true,
 });
+const QUOTES_REGEX = new RegExp('("([^"]|"")*")', 'g');
 
 module.exports = class Jira extends BaseModule {
 	async handle(data) {
@@ -26,17 +27,73 @@ module.exports = class Jira extends BaseModule {
 		}
 
 		if (!data.user_text) {
-			this.bot.postMessage(data.channel, this.help());
+			this.displayHelp(data);
 			return;
 		}
 
+
+		if (data.cmd === 'jira-create') {
+			const newIssue = await this.createJiraTicket(data);
+			this.postIssue(data, newIssue);
+			return;
+		}
 
 		try {
 			const issue = await this.logIssueName(data.user_text);
 			this.sendJiraStatus(data, issue);
 		} catch (e) {
+			console.log(e);
 			this.bot.postMessage(data.channel, "Couldn't find anything matching: " + data.user_text);
 		}	
+	}
+
+	displayHelp(data) {
+		this.bot.postMessage(data.channel, this.help());
+	}
+
+	async createJiraTicket(data) {
+		const matches = data.user_text.match(QUOTES_REGEX);
+		if (matches.length !== 2) {
+			return;
+		}
+
+		try {		
+			return await jira.addNewIssue(
+				{
+				    "fields": {
+				       "project":
+				       { 
+				          "key": "STSH"
+				       },
+				       "summary": matches[0].replace(new RegExp('"', 'g'), ''),
+				       "description": matches[1].replace(new RegExp('"', 'g'), ''),
+				       "issuetype": {
+				          "name": "Bug"
+				       }
+				   }
+				}
+			);	
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	postIssue(data, issue) {
+	  this.bot.postRawMessage(
+	      data.channel,
+	      {
+	      	"icon_emoji": ":cat:",
+	      	"username": "JiraCat",
+	        "attachments": [
+	            {
+	                "color": "#6338aa",
+	                "title": `Created: ${issue.key}`,
+	                "title_link": `https://stashinvest.atlassian.net/browse/${issue.key}`,	                
+	                "footer": "jira... amirite?",                
+	            }
+	        ]
+	      }
+	    );
 	}
 
 	sendJiraStatus(data, issue) {
@@ -84,6 +141,10 @@ module.exports = class Jira extends BaseModule {
 	}
 
 	help() {
-		return 'Usage: `?jira <ticket-number>`.';
+		return 'Usage: `?jira <ticket-number>`.\n`?jira-create "<title>" "<description>"';
+	}
+
+	aliases() {
+		return ['jira-create'];
 	}
 };
