@@ -61,7 +61,7 @@ module.exports = class BaseModule {
   }
 
   getType() {
-    return BaseModule.TYPES.MODULE;
+    return [BaseModule.TYPES.MODULE];
   }
 
   static get TYPES() {

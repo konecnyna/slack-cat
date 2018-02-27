@@ -99,7 +99,7 @@ module.exports = class HelloWorld extends BaseModule {
   }
 
   getType() {
-    return BaseModule.TYPES.MODULE;
+    [return BaseModule.TYPES.MODULE];
   }
 };
 ```

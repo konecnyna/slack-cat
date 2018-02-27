@@ -34,7 +34,7 @@ module.exports = class Reactions extends BaseModule {
   }
 
   getType() {
-    return BaseModule.TYPES.REACTIONS;
+    return [BaseModule.TYPES.REACTIONS];
   }
 
   help() {

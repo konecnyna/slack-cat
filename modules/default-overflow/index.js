@@ -24,7 +24,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
   }
 
   getType() {
-    return BaseModule.TYPES.OVERFLOW_CMD;
+    return [BaseModule.TYPES.OVERFLOW_CMD];
   }
 
   help() {
