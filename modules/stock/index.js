@@ -38,15 +38,10 @@ module.exports = class Stock extends BaseModule {
 
   async postFancyData(channel, stockData) {
     const fields = [];
-    let isPositive = false;
     let titleString = `$${stockData.l}`;
 
     if (stockData.c) {
-      titleString = `$${stockData.l} (${
-        isPositive ? `${stockData.c}` : `${stockData.c}`
-      })`;
-
-      isPositive = !stockData.c.includes('-');
+      titleString = `$${stockData.l} (${stockData.c})`;
     }
 
     fields.push({
@@ -71,13 +66,17 @@ module.exports = class Stock extends BaseModule {
       });
     }
 
-    this.postFancyMessage(stockData, channel, fields, isPositive);
+    this.postFancyMessage(stockData, channel, fields);
   }
 
   async postFancyMessage(stockData, channel, fields, isPositive) {
-    const icon = isPositive
-      ? ':chart_with_upwards_trend:'
-      : ':chart_with_downwards_trend:';
+    let icon = ":bar_chart:";
+    if (stockData.c && stockData.c.includes('-')) {
+      icon = ':chart_with_downwards_trend:';
+    } else if (stockData.c && stockData.c.includes('+')) {
+      icon = ':chart_with_upwards_trend:';
+    }
+
     this.bot.postRawMessage(channel, {
       icon_emoji: icon,
       username: 'StockCat',
