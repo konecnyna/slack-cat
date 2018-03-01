@@ -101,8 +101,6 @@ module.exports = class GoogleImages extends BaseModule {
     if(data.args && data.args.includes("--nsfw")) {
       // Proceed with caution...
       params['safe'] = "off";
-    } else {
-      params['safe'] = "active";
     }
 
     params["q"] = data.user_text;
