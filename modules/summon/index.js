@@ -38,7 +38,7 @@ module.exports = class GoogleImages extends BaseModule {
   }
 
   help() {
-    return 'Usage: `?gif <gif search term>` or `?summon <image query>`\nFlags `--random`, `--nsfw`';
+    return 'Usage: `?gif <gif search term>` or `?summon <image query>`\nFlags `--random`';
   }
 
   getRandomUrl(body, data) {
