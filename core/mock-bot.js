@@ -67,9 +67,8 @@ module.exports = class MockBot {
 
     if (this.callback) {
       this.callback(params);  
-    } else {
-      console.log(params);
-    }    
+    }
+    console.log(JSON.stringify(params, null, 2));      
   }
 
 
@@ -91,7 +90,7 @@ module.exports = class MockBot {
     if (this.callback) {
       return this.callback(params);  
     }
-    console.log(params);    
+    console.log(JSON.stringify(params, null, 2));    
   }
 
   getUserNameFromId(user_id) {  
