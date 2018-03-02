@@ -11,6 +11,10 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handle(data) {
+    if (!data.user_text) {
+      return;
+    }
+    
     if (data.cmd === '--') {
       this.plusHelper.displayBeingMeanMsg(data);
       return;
