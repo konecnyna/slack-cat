@@ -3,7 +3,7 @@
 const WelcomeHelper = require('./welcome-helper.js');
 const columnMap = {
   '--enabled' : "enabled",
-  '--channelWelcomeMsgEnabled': 'generic_welcome'
+  '--channelMsgEnabled': 'generic_welcome'
 }
 
 const botParams = {
@@ -22,26 +22,26 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       return;
     }
 
-    if (data.args.includes('--displayMessage')) {
+    if (data.args.includes('--test')) {
       this.handleMemeberJoin(data);
       return;
     }
 
-    if (data.args.includes('--message')) {
+    if (data.args.includes('--msg')) {
       this.bot.postMessageWithParams(
         data.channel,
         `Set channel welcome message to: "${await this.welcomeHelper.setMessage(
           this,
-          data
+          data,
+          data.channel
         )}"`, 
         botParams
       );
       return;
     }
-
-    //TODO: Send attachments via dm?
+    
     if (this.cmds().includes(data.args[0])) {
-      if (data.args[0] === '--channelWelcomeMsgEnabled' || data.args[0] === '--enabled') {
+      if (data.args[0] === '--channelMsgEnabled' || data.args[0] === '--enabled') {
         data.user_text = (data.user_text === 'true');
       }
 
@@ -71,8 +71,8 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       
 
     if (welcomeMessage.get('generic_welcome')) {
-      const name = await this.bot.resolveUserNameFromId(data.user);
-      this.bot.postMessageWithParams(data.channel, `Hi ${name}! Welcome!`, botParams);  
+      const userData = await this.bot.userDataPromise(data.user);      
+      this.bot.postMessageWithParams(data.channel, `Hi <@${userData.user.id}>! Welcome!`, botParams);  
     }    
   }
 
@@ -95,10 +95,10 @@ module.exports = class WelcomeCat extends BaseStorageModule {
 
   cmds() {
     return [
-      '--displayMessage',
-      '--message',
+      '--test',
+      '--msg',
       '--enabled',
-      '--channelWelcomeMsgEnabled'      
+      '--channelMsgEnabled'      
     ];
   }
   help() {
@@ -110,6 +110,10 @@ That's it! Additional Arguments:
 \`${this.cmds().join(', ')}\``;
   }
 
+  aliases() {
+    return ['welcomebot'];
+  }
+  
   getType() {
     return [BaseModule.TYPES.MEMBER_JOINED_CHANNEL, BaseModule.TYPES.MODULE];
   }

@@ -5,12 +5,12 @@ module.exports = class WeclomeHelper {
     this.model = model;
   }
 
-  async setMessage(context, data) {
+  async setMessage(context, data, channel) {
     const message = await context.upsert(
       this.model,
-      { where: { channel: data.channel } },
+      { where: { channel: channel } },
       {
-        channel: data.channel,
+        channel: channel,
         message: data.user_text,
       },
       {
