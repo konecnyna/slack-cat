@@ -3,9 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const Config = require('./core/config.js');
-
-// Start app.
 const Router = require('./core/router.js');
+const SlackCatBot = require('./core/slack-cat-bot.js');
 
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js');
@@ -45,8 +44,6 @@ const testMemberJoin = {
   ts: '1519690078.000194',
 };
 
-// Require after debug so we don't spin up the server if we are debugging.
-const SlackCatBot = require('./core/slack-cat-bot.js');
 
 class SlackCat {
   constructor(pathToModules, configPath, dbPath) {

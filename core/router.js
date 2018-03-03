@@ -142,7 +142,7 @@ module.exports = class Router {
 
   showCmds(data) {
     let list = '';
-    Object.keys(this.modules).forEach((key, idx) => {
+    Object.keys(this.modules).sort().forEach((key, idx) => {
       list += idx + 1 + '. ' + key + '\n';
     });
     this.bot.postMessage(data.channel, 'List of cmds:\n```' + list + '```');
