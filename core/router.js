@@ -140,12 +140,15 @@ module.exports = class Router {
     });
   }
 
-  showCmds(data) {
+  async showCmds(data) {
     let list = '';
     Object.keys(this.modules).sort().forEach((key, idx) => {
       list += idx + 1 + '. ' + key + '\n';
     });
-    this.bot.postMessage(data.channel, 'List of cmds:\n```' + list + '```');
+    
+    const userData = await this.bot.userDataPromise(data.user);      
+    this.bot.postMessageToUser(userData.user.name, 'List of cmds:\n```' + list + '```');
+    this.bot.postMessage(data.channel, `<@${userData.user.id}> is just sent them to you.`);
   }
 
   addExtras(data) {
