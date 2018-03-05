@@ -7,17 +7,17 @@ const mta = new MTA();
 
 module.exports = class MTA extends BaseModule {
   async handle(data) {
-  	if (!data.user_text) {
-  		return;
-  	}
-
-  	if (data.args && data.args.includes('--stops')) {
-  		this.postStops(data);
+  	if (!data.args && !data.user_text) {
   		return;
   	}
 
   	if (data.cmd === 'mta-stop') {
-  		this.postStopData(data);
+  		if (data.args && data.args.includes('--list')) {
+			this.postStops(data);
+  		} else {
+  			this.postStopData(data);	
+  		}
+  		
   		return;
   	}
 
@@ -50,11 +50,11 @@ module.exports = class MTA extends BaseModule {
 		        {
 		            "color": mta.getSubwayColor(stopId[0]),
 		            fields: [{
-		            	title: "North Bound:",
+		            	title: "Next north bound trains:",
 						value: this.createDates(schedule, stopId, 'N'),
 						short: false,
 					},{
-		            	title: "South Bound:",
+		            	title: "Next south bound trains:",
 						value: this.createDates(schedule, stopId, 'S'),
 						short: false,
 					}],
@@ -68,7 +68,8 @@ module.exports = class MTA extends BaseModule {
 
   createDates(schedule, stopId, direction) {
   	const times = schedule.schedule[stopId][direction].slice(0, 3).map(train => {
-  		return new moment(train.arrivalTime * 1000).tz('America/New_York').format('h:mm a');	
+		const date = new moment(train.arrivalTime * 1000).tz('America/New_York');
+		return `In ${date.fromNow(true)} (${date.format('h:mm a')})`;	
   	});
   	
   	return times.join("\n");
