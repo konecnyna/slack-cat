@@ -12,11 +12,19 @@ module.exports = class MTA {
 		// Gist of all the stations
 		return "https://gist.github.com/konecnyna/07f0436ff8b4a89d9f814938b12a3c25";
 		
-		//const stops = await mta.stop();
-	  	// return Object.keys(stops).map(key => {
-	  	// 	const stop = stops[key];
-	  	// 	return `| ${stop.stop_name} |  ${stop.stop_id} |`
-	  	// });
+		// const stops = await mta.stop();
+	 //  	const output = Object.keys(stops).map(key => {
+	 //  		const stop = stops[key];
+	 //  		return `| ${stop.stop_id[0]} | ${stop.stop_name} |  ${stop.stop_id} |`
+	 //  	});
+	 //  	var fs = require('fs');
+		// fs.writeFile("stops.txt", output.join("\n"), function(err) {
+		//     if(err) {
+		//         return console.log(err);
+		//     }
+
+		//     console.log("The file was saved!");
+		// }); 
 	}
 
 	async status(input) {
