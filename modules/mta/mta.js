@@ -1,9 +1,11 @@
 'use strict';
 
 const Mta = require('mta-gtfs');
+const mtaKey = config.getKey('mta');
 const mta = new Mta({
-  key: '2dd40d377edde733d34cab03c597a670', // only needed for mta.schedule() method  
+  key: mtaKey, 
 });
+
 
 module.exports = class MTA {
 	async getStops() {
