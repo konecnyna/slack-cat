@@ -67,13 +67,23 @@ module.exports = class MTA extends BaseModule {
   }
 
   createDates(schedule, stopId, direction) {
-  	const times = schedule.schedule[stopId][direction].slice(0, 3).map(train => {
-		const date = new moment(train.arrivalTime * 1000).tz('America/New_York');
-		return `In ${date.fromNow(true)} (${date.format('h:mm a')})`;	
-  	});
+  	const trains = schedule.schedule[stopId][direction];
+  	const times = [];
+  	const now = new moment();
+  	for (let i=0; i < trains.length; i++) {
+  		const train = trains[i];
+  		const date = new moment(train.arrivalTime * 1000).tz('America/New_York');
+		if(new moment().diff(date) > 0) {
+			continue;
+		}
+
+		times.push(`In ${date.fromNow(true)} (${date.format('h:mm a')})`);	
+		if (times.length === 3) {
+			break;
+		}
+  	}
   	
-  	return times.join("\n");
-  
+  	return times.length ? times.join("\n") : "No data :(";  
   }
 
   async postStatus(data) {
