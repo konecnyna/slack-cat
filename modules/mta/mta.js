@@ -6,22 +6,16 @@ const mta = new Mta({
 });
 
 module.exports = class MTA {
-	constructor() {
-
-      
-	
-	
-	//console.log(query[0]);
-
-	//const stops = await mta.stop();
-  	//console.log(stops);	
-
-    	// console.log(await mta.schedule('636'));
-            
-    	// console.log(this.getFeedId("F"));
-
+	async getStops() {
+		// Gist of all the stations
+		return "https://gist.github.com/konecnyna/07f0436ff8b4a89d9f814938b12a3c25";
+		
+		//const stops = await mta.stop();
+	  	// return Object.keys(stops).map(key => {
+	  	// 	const stop = stops[key];
+	  	// 	return `| ${stop.stop_name} |  ${stop.stop_id} |`
+	  	// });
 	}
-
 
 	async status(input) {
 		const status = await mta.status();
@@ -30,7 +24,14 @@ module.exports = class MTA {
 		});
 	}
 
+	async getStopSchedule(stopId) {
+		return await mta.schedule(stopId, this.getFeedId(stopId[0]));
+	}
 
+	async getStopName(stopId) {
+		const stop = await mta.stop(stopId);
+		return stop.stop_name;		
+	}
 
 	getSubwayColor(train) {
 
