@@ -21,6 +21,7 @@
     "dark-sky": "^1.1.2",
     "jira-client": "^6.4.1",
     "memory-cache": "^0.2.0",
+    "mta-gtfs": "^1.1.0",
     "request": "^2.83.0",
     "require-dir": "^0.3.2",
     "sequelize": "^4.22.5",
