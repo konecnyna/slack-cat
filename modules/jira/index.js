@@ -104,7 +104,7 @@ module.exports = class Jira extends BaseModule {
 	                "fields":[{
 			            "title": `In progress tickets for ${data.user_text}`,
 			            "value": tix.join("\n"),
-			            "short": true
+			            "short": false
 			        }],		                
 	                "footer": "jira... amirite?",                
 	            }
