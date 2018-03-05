@@ -68,7 +68,7 @@ module.exports = class MTA extends BaseModule {
 
   createDates(schedule, stopId, direction) {
   	const times = schedule.schedule[stopId][direction].slice(0, 3).map(train => {
-  		return new moment(train.arrivalTime * 1000).format('h:mm a');	
+  		return new moment(train.arrivalTime * 1000).tz('America/New_York').format('h:mm a');	
   	});
   	
   	return times.join("\n");
