@@ -26,6 +26,7 @@ module.exports = class Jira extends BaseModule {
 			return;
 		}
 
+
 		if (!data.user_text) {
 			this.displayHelp(data);
 			return;
@@ -35,6 +36,15 @@ module.exports = class Jira extends BaseModule {
 		if (data.cmd === 'jira-create') {
 			const newIssue = await this.createJiraTicket(data);
 			this.postIssue(data, newIssue);
+			return;
+		}
+
+
+
+		if (data.cmd === 'jira-tix') {
+			const jql = `assignee = ${data.user_text} AND status in ('In Progress')`;
+			const searchResults = await jira.searchJira(jql, {maxResults: 10})
+			this.postUserTix(data, searchResults);
 			return;
 		}
 
@@ -79,6 +89,30 @@ module.exports = class Jira extends BaseModule {
 		}
 	}
 
+	postUserTix(data, searchResults) {
+		const tix = searchResults.issues.map(issue => {
+			return `${issue.key} - https://${jiraSecrets.host}/browse/${issue.key}`;
+		});
+	  	this.bot.postRawMessage(
+	      data.channel,
+	      {
+	      	"icon_emoji": ":cat:",
+	      	"username": "JiraCat",
+	        "attachments": [
+	            {
+	                "color": "#6338aa",
+	                "fields":[{
+			            "title": `In progress tickets for ${data.user_text}`,
+			            "value": tix.join("\n"),
+			            "short": true
+			        }],		                
+	                "footer": "jira... amirite?",                
+	            }
+	        ]
+	      }
+	    );
+	}
+
 	postIssue(data, issue) {
 	  this.bot.postRawMessage(
 	      data.channel,
@@ -89,7 +123,7 @@ module.exports = class Jira extends BaseModule {
 	            {
 	                "color": "#6338aa",
 	                "title": `Created: ${issue.key}`,
-	                "title_link": `https://stashinvest.atlassian.net/browse/${issue.key}`,	                
+	                "title_link": `https://${jiraSecrets.host}/browse/${issue.key}`,	                
 	                "footer": "jira... amirite?",                
 	            }
 	        ]
@@ -146,6 +180,6 @@ module.exports = class Jira extends BaseModule {
 	}
 
 	aliases() {
-		return ['jira-create'];
+		return ['jira-create', 'jira-tix'];
 	}
 };
