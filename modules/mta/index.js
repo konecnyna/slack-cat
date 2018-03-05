@@ -95,6 +95,11 @@ module.exports = class MTA extends BaseModule {
   }
 
 	postMsg(data, line) {	
+		let msg = line.status;
+		if (line.status !== 'GOOD SERVICE') {
+			msg = `${line.status}\nFor more info: http://www.mta.info/status/subway/${line.name}`
+		}
+
 		this.bot.postRawMessage(
 		  data.channel,
 		  {
@@ -105,7 +110,7 @@ module.exports = class MTA extends BaseModule {
 		            "color": mta.getSubwayColor(line.name),
 		            fields: [{
 		            	title: "Status:",
-						value: line.status,
+						value: msg,
 						short: false,
 					}],
 		            "footer": "ugh, the mta",                
