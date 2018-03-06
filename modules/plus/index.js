@@ -46,11 +46,10 @@ module.exports = class Plus extends BaseStorageModule {
     // Resolve slack handle.
     try {
       const userData = await this.bot.getUserNameFromId(matches[1]);
+      
       this.plusHelper.plusUser(
         data.channel,
-        userData.user.display_name
-          ? userData.user.display_name
-          : userData.user.name
+        userData.user.profile.display_name || userData.user.name        
       );
     } catch (e) {
       console.error(e);
