@@ -75,7 +75,7 @@ module.exports = class RequireDir {
 
           // For dirs we use the index.js as entry file.
           path = Path.resolve(path, 'index.js');
-          if (FS.existsSync(path)) {            
+          if (FS.existsSync(path)) {
             map[base] = require(path);
           }
         } else {
@@ -92,7 +92,7 @@ module.exports = class RequireDir {
         }
 
         // if a file exists with this extension, we'll require() it:
-        var file = base + ".js";        
+        var file = base + '.js';
         var path = filesMinusDirs[file];
         if (path) {
           // ignore TypeScript declaration files. They should never be
@@ -136,18 +136,17 @@ module.exports = class RequireDir {
     // Load core modules.
     const coreModulesPath = Path.join(__dirname + '/../modules');
 
-    
     // Load core modules.
     const paths = [coreModulesPath];
     if (userModulesPath) {
       paths.push(userModulesPath);
     }
-    
+
     const allModules = {};
-    paths.map(path => {   
+    paths.map(path => {
       const modules = this.getModules(path);
       this.warnDevAboutConflict(allModules, modules);
-      Object.assign(allModules, modules);      
+      Object.assign(allModules, modules);
     });
     return allModules;
   }
@@ -158,11 +157,10 @@ module.exports = class RequireDir {
     }
     Object.keys(allModules).map(key => {
       if (modules[key] !== undefined) {
-        console.error("*********************************");
-        console.error("* Warning: Overriting " + key + " cmd. *");
-        console.error("*********************************");
+        console.error('*********************************');
+        console.error('* Warning: Overriting ' + key + ' cmd. *');
+        console.error('*********************************');
       }
-      
     });
   }
 

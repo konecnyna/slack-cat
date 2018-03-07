@@ -87,7 +87,9 @@ module.exports = class Router {
       }
 
       // User joined channel.
-      if (moduleObj.getType().includes(BaseModule.TYPES.MEMBER_JOINED_CHANNEL)) {
+      if (
+        moduleObj.getType().includes(BaseModule.TYPES.MEMBER_JOINED_CHANNEL)
+      ) {
         this.memberJoinedModules[key] = moduleObj;
       }
     });
@@ -142,13 +144,21 @@ module.exports = class Router {
 
   async showCmds(data) {
     let list = '';
-    Object.keys(this.modules).sort().forEach((key, idx) => {
-      list += idx + 1 + '. ' + key + '\n';
-    });
-    
-    const userData = await this.bot.userDataPromise(data.user);      
-    this.bot.postMessageToUser(userData.user.name, 'List of cmds:\n```' + list + '```');
-    this.bot.postMessage(data.channel, `<@${userData.user.id}> is just sent them to you.`);
+    Object.keys(this.modules)
+      .sort()
+      .forEach((key, idx) => {
+        list += idx + 1 + '. ' + key + '\n';
+      });
+
+    const userData = await this.bot.userDataPromise(data.user);
+    this.bot.postMessageToUser(
+      userData.user.name,
+      'List of cmds:\n```' + list + '```'
+    );
+    this.bot.postMessage(
+      data.channel,
+      `<@${userData.user.id}> is just sent them to you.`
+    );
   }
 
   addExtras(data) {
