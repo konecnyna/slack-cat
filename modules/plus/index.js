@@ -3,6 +3,7 @@
 const util = require('util');
 const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 const PlusHelper = require('./plus-helper.js');
+const cache = require('memory-cache');
 
 module.exports = class Plus extends BaseStorageModule {
   constructor(bot) {
@@ -57,6 +58,37 @@ module.exports = class Plus extends BaseStorageModule {
     }
   }
 
+  async handleReaction(data) {
+    console.log('hi');
+    if (data.reaction === 'eggplant') {
+      this.bot.postMessage(data.item.channel, '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
+      return;
+    }
+
+    if (data.reaction !== 'heavy_plus_sign' || !data.item_user) {
+      return;
+    }
+    
+    if (cache.get(this.getPlusKey(data)) != null) {
+      // try to dup pluses
+      return;
+    }
+    console.log('bai');
+
+    const userName = await this.bot.getUserNameFromId(data.item_user);
+    this.plusUser(
+      data.item.channel,
+      userName.user.profile.display_name || userName.user.name
+    );
+    cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
+  }
+
+  getPlusKey(data) {
+    return `${data.item_user}${data.user}${data.item.channel}${
+      data.item.reaction
+    }`;
+  }
+
   plusUser(channel, userText) {
     this.plusHelper.plusUser(channel, userText);
   }
@@ -74,6 +106,10 @@ module.exports = class Plus extends BaseStorageModule {
 
   aliases() {
     return ['++', '+', 'pluses', '--', 'leaderboard', 'kudos'];
+  }
+
+  getType() {
+    return [BaseModule.TYPES.MODULE, BaseModule.TYPES.REACTION];
   }
 
   postErrorMessage(data) {

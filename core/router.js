@@ -95,9 +95,9 @@ module.exports = class Router {
     });
   }
 
-  handleReaction(data) {
+  handleReaction(data) {    
     Object.keys(this.reactionModules).forEach(key => {
-      this.reactionModules[key].handle(data, this.modules);
+      this.reactionModules[key].handleReaction(data, this.modules);
     });
   }
 
