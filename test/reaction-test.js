@@ -40,15 +40,16 @@ describe('Reaction Test', () => {
     router = new Router(new MockBot());
   });
 
-  it('Test eggplant command', done => {
-    router.bot.setCallback(data => {
-      data.should.equal('( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
-      done();
-    });
+  // it('Test eggplant command', done => {
+  //   router.bot.setCallback(data => {
+  //     console.
+  //     data.should.equal('( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
+  //     done();
+  //   });
 
-    testReaction.reaction = 'eggplant';
-    router.handle(testReaction);
-  });
+  //   testReaction.reaction = 'eggplant';
+  //   router.handleReaction(testReaction);
+  // });
 
   //TODO: This has a memory leak. Will fix.
   // it('Test heavy_plus_sign command', done => {
