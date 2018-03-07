@@ -59,7 +59,6 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handleReaction(data) {
-    console.log('hi');
     if (data.reaction === 'eggplant') {
       this.bot.postMessage(data.item.channel, '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
       return;
@@ -73,7 +72,6 @@ module.exports = class Plus extends BaseStorageModule {
       // try to dup pluses
       return;
     }
-    console.log('bai');
 
     const userName = await this.bot.getUserNameFromId(data.item_user);
     this.plusUser(

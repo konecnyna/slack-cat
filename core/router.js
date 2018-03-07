@@ -82,7 +82,7 @@ module.exports = class Router {
       }
 
       // Reaction modules.
-      if (moduleObj.getType().includes(BaseModule.TYPES.REACTIONS)) {
+      if (moduleObj.getType().includes(BaseModule.TYPES.REACTION)) {
         this.reactionModules[key] = moduleObj;
       }
 
