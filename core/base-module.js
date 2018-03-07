@@ -22,6 +22,14 @@ module.exports = class BaseModule {
       throw new TypeError('Child class must implement `help()` method');
     }
 
+    if (this.getType().includes(BaseModule.TYPES.REACTION) && this.handleReaction === undefined) {
+      throw new TypeError('Child class must implement `handleReaction()` if type is REACTION'); 
+    }
+
+    if (this.getType().includes(BaseModule.TYPES.MEMBER_JOINED_CHANNEL) && this.handleMemeberJoin === undefined) {
+      throw new TypeError('Child class must implement `handleMemeberJoin()` if type is MEMBER_JOINED_CHANNEL'); 
+    }
+
     this.bot = bot;
   }
 
