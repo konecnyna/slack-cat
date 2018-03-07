@@ -59,7 +59,8 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handleReaction(data) {
-    if (data.reaction === 'eggplant') {
+    if (data.reaction === 'eggplant' && cache.get(this.getPlusKey(data)) === null) {
+      cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
       this.bot.postMessage(data.item.channel, '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
       return;
     }
@@ -82,9 +83,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   getPlusKey(data) {
-    return `${data.item_user}${data.user}${data.item.channel}${
-      data.item.reaction
-    }`;
+    return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${data.item.reaction}`;
   }
 
   plusUser(channel, userText) {
