@@ -14,7 +14,7 @@ module.exports = class Poop extends BaseStorageModule {
     }
 
     const poopData = await this.updatePoop(data);
-    const msg = `*${poopData.user} just got pooped!!!* ${poopData.user} pooped ${poopData.poops} times.\nPlease lock your screen next time! http://osxdaily.com/2011/01/17/lock-screen-mac/\n`;
+    const msg = `*${poopData.user} just got pooped!!!* ${poopData.user} pooped _${poopData.poops} times_.\nPlease lock your screen next time! http://osxdaily.com/2011/01/17/lock-screen-mac/\n`;
     this.bot.postMessageWithParams(data.channel, msg, botParams);
   }
 
