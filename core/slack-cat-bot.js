@@ -11,14 +11,14 @@ const botParams = {
 const MSG_TIMEOUT = 250;
 
 /**
-  *
-  * The timeouts are for a scroll issue. When the bot responds in real time
-  * there is strange behavior where slack won't scroll to the newest msg.
-  *
-  **/
+ *
+ * The timeouts are for a scroll issue. When the bot responds in real time
+ * there is strange behavior where slack won't scroll to the newest msg.
+ *
+ **/
 module.exports = class SlackCatBot extends SlackBot {
   async postMessage(channelId, msg) {
-    // Set default bot params.    
+    // Set default bot params.
     await this.delayForScrollIssue();
     super.postMessage(channelId, msg, botParams);
   }
@@ -30,23 +30,28 @@ module.exports = class SlackCatBot extends SlackBot {
 
   postMessageSequentially(data, messages) {
     const promiseSerial = funcs =>
-      funcs.reduce((promise, func) =>
-      promise.then(result => func().then(Array.prototype.concat.bind(result))),
-    Promise.resolve([]));
+      funcs.reduce(
+        (promise, func) =>
+          promise.then(result =>
+            func().then(Array.prototype.concat.bind(result))
+          ),
+        Promise.resolve([])
+      );
 
     // convert each url to a function that returns a promise
-    const funcs = messages.map(msg => () => this.postMessage(data.channel, msg));
+    const funcs = messages.map(msg => () =>
+      this.postMessage(data.channel, msg)
+    );
 
     // execute Promises in serial
-    promiseSerial(funcs)
-      .catch(console.error.bind(console))
+    promiseSerial(funcs).catch(console.error.bind(console));
   }
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
     setTimeout(() => {
       var attachments = {
-      icon_emoji: icon_emoji,
-      attachments: [
+        icon_emoji: icon_emoji,
+        attachments: [
           {
             color: color,
             title: title,
@@ -63,10 +68,9 @@ module.exports = class SlackCatBot extends SlackBot {
         botParams || {},
         attachments
       );
-      
-      this.postRawMessage(channel_id, params);
-    }, MSG_TIMEOUT);  
 
+      this.postRawMessage(channel_id, params);
+    }, MSG_TIMEOUT);
   }
 
   postRawMessage(channel_id, args) {
@@ -86,12 +90,13 @@ module.exports = class SlackCatBot extends SlackBot {
       user: user_id,
     });
   }
-  
+
   async resolveUserNameFromId(user_id) {
-    const randUserData = await this.userDataPromise(user_id);          
-    return randUserData.user.profile.display_name ? randUserData.user.profile.display_name : randUserData.user.profile.real_name;      
+    const randUserData = await this.userDataPromise(user_id);
+    return randUserData.user.profile.display_name
+      ? randUserData.user.profile.display_name
+      : randUserData.user.profile.real_name;
   }
-  
 
   userDataPromise(user_id) {
     return this._api('users.info', {
@@ -106,11 +111,10 @@ module.exports = class SlackCatBot extends SlackBot {
   }
 
   delayForScrollIssue() {
-    return new Promise((resolve, reject) => {      
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve()
-      }, MSG_TIMEOUT);    
-            
+        resolve();
+      }, MSG_TIMEOUT);
     });
   }
 };

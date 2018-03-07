@@ -1,16 +1,14 @@
 'use strict';
 module.exports = class Config {
+  constructor() {
+    this.blacklist = [];
+  }
 
-	constructor() {
-		this.blacklist = [];
-	}
+  getKey(key) {
+    if (key === 'modules_blacklist') {
+      return this.blacklist;
+    }
 
-  	getKey(key) {  	
-  	
-  		if (key === "modules_blacklist") {
-  			return this.blacklist;
-  		}
-
-    	return true;
-  	}
+    return true;
+  }
 };

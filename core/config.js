@@ -6,9 +6,9 @@ module.exports = class Config {
   constructor(configPath) {
     const contents = fs.readFileSync(configPath);
     this.config = JSON.parse(contents);
-    
+
     if (!this.getKey('slack_api')) {
-      throw new Error("Must provide slack api keys\n\n\n");
+      throw new Error('Must provide slack api keys\n\n\n');
     }
   }
 

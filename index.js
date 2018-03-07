@@ -44,7 +44,6 @@ const testMemberJoin = {
   ts: '1519690078.000194',
 };
 
-
 class SlackCat {
   constructor(pathToModules, configPath, dbPath) {
     this.pathToModules = pathToModules;
@@ -83,8 +82,8 @@ class SlackCat {
     const router = new Router(new MockBot(), this.pathToModules);
 
     if (process.argv[2].includes('member_joined_channel')) {
-    	router.handle(testMemberJoin);
-    	return;
+      router.handle(testMemberJoin);
+      return;
     }
 
     if (process.argv[2].includes(':')) {
