@@ -18,7 +18,7 @@ module.exports = class Jira extends BaseModule {
 			this.bot.postMessage(
 				data.channel,
 				"Please add ```'jira_api': {\n\
-    		'host': 'stashinvest.atlassian.net',\n\
+    		'host': 'mykewlhost.org',\n\
     		'username': 'user@kewldomain.com',\n\
     		'password': 'xxxxxxxxxxx'\n\
     		}``` to `config.dat`"
@@ -90,7 +90,7 @@ module.exports = class Jira extends BaseModule {
 	}
 
 	postUserTix(data, searchResults) {
-		const tix = searchResults.issues.map(issue => {
+		const tix = searchResults.issues.map(issue => {			
 			return `${issue.key} - https://${jiraSecrets.host}/browse/${issue.key}`;
 		});
 	  	this.bot.postRawMessage(
@@ -145,7 +145,7 @@ module.exports = class Jira extends BaseModule {
         	},
     		{	
 	            "title": "Issue:",
-	            "value": issue.self,
+	            "value": `https://${jiraSecrets.host}/browse/${issue.key}`,
 	            "short": false
 	        }
 		]
