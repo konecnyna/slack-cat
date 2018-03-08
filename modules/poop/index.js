@@ -30,7 +30,8 @@ module.exports = class Poop extends BaseStorageModule {
 
   async updatePoop(data) {
     const user = await this.bot.getUserNameFromId(data.user);
-    const userName = (user.profile) ? user.profile.display_name : user.name;
+    
+    const userName = user.user.profile.display_name || user.user.name;
     const poop = await this.upsert(
       this.PoopModel,
       { where: { name: userName } },
