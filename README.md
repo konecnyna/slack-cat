@@ -2,7 +2,7 @@
 [![license](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat)](https://raw.githubusercontent.com/konecnyna/slack-cat/master/LICENSE)
 [![Build Status](https://travis-ci.org/konecnyna/slack-cat.svg?branch=master)](https://travis-ci.org/konecnyna/slack-cat)
 
-When you want slack to turn into a tire fire.
+When you want slack to turn into a tire fire while also being productive at the same time.
 
 <img src="https://github.com/konecnyna/slack-cat/raw/master/core/tire-fire.gif" height="300px"/>
 
