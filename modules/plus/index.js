@@ -12,6 +12,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handle(data) {
+    
     if (data.cmd === '--') {
       this.plusHelper.displayBeingMeanMsg(data);
       return;
@@ -40,29 +41,27 @@ module.exports = class Plus extends BaseStorageModule {
 
     if (!matches || matches.length < 2) {
       // No user was refs so plus the raw text.]
-      this.plusHelper.plusUser(data.channel, data.user_text.toLowerCase(), true);
+      const pluses = await this.plusHelper.plusUser(data.user_text.toLowerCase());
+      this.bot.postMessage(data.channel, `${data.user_text} now has ${pluses} pluses!`);
       return;
     }
 
     // Resolve slack handle.
     try {
       const userData = await this.bot.getUserNameFromId(matches[1]);
-
-      this.plusHelper.plusUser(
-        data.channel,
-        userData.user.profile.display_name || userData.user.name,
-        true
-      );
+      const userName = userData.user.profile.display_name || userData.user.name;
+      const pluses = await this.plusHelper.plusUser(userName);
+      this.bot.postMessage(data.channel, `${userName} now has ${pluses} pluses!`);
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);
     }
   }
 
-  async handleReaction(data) {
+  async handleReaction(data) {    
     if (data.reaction === 'eggplant' && cache.get(this.getPlusKey(data)) === null) {
       cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
-      this.bot.postMessage(data.item.channel, '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
+      this.bot.postMessageToThread(data.item.channel, '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)', data.item.ts, {});
       return;
     }
 
@@ -76,12 +75,11 @@ module.exports = class Plus extends BaseStorageModule {
     }
 
     const userName = await this.bot.getUserNameFromId(data.item_user);
-    this.plusUser(
-      data.item.channel,
-      userName.user.profile.display_name || userName.user.name,
-      false
-    );
+    const pluses = await this.plusUser(userName.user.profile.display_name || userName.user.name);
     cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
+
+    const msg = `${userName} now has ${pluses} pluses!`;
+    this.bot.postMessageToThread(data.item.channel, pluses, data.item.ts, {});    
   }
 
   getPlusKey(data) {

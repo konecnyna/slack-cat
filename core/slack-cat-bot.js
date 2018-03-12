@@ -73,6 +73,17 @@ module.exports = class SlackCatBot extends SlackBot {
     }, MSG_TIMEOUT);
   }
 
+  postMessageToThread(id, text, ts, params) {
+    params = extend({
+        text: text,
+        channel: id,
+        thread_ts: ts,
+        username: this.name
+    }, params || {});
+    console.log(params);
+    return this._api('chat.postMessage', params);
+  }
+
   postRawMessage(channel_id, args) {
     var params = extend(
       {
