@@ -50,7 +50,8 @@ module.exports = class Plus extends BaseStorageModule {
 
       this.plusHelper.plusUser(
         data.channel,
-        userData.user.profile.display_name || userData.user.name
+        userData.user.profile.display_name || userData.user.name,
+        true
       );
     } catch (e) {
       console.error(e);
@@ -85,10 +86,6 @@ module.exports = class Plus extends BaseStorageModule {
 
   getPlusKey(data) {
     return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${data.item.reaction}`;
-  }
-
-  plusUser(channel, userText, postMessage) {
-    this.plusHelper.plusUser(channel, userText, postMessage);
   }
 
   help() {
