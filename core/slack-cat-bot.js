@@ -79,8 +79,7 @@ module.exports = class SlackCatBot extends SlackBot {
         channel: id,
         thread_ts: ts,
         username: this.name
-    }, params || {});
-    console.log(params);
+    }, params || botParams);    
     return this._api('chat.postMessage', params);
   }
 

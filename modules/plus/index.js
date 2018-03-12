@@ -75,11 +75,12 @@ module.exports = class Plus extends BaseStorageModule {
     }
 
     const userName = await this.bot.getUserNameFromId(data.item_user);
-    const pluses = await this.plusHelper.plusUser(userName.user.profile.display_name || userName.user.name);
+    const user = userName.user.profile.display_name || userName.user.name;
+    const pluses = await this.plusHelper.plusUser(user);
     cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
 
-    const msg = `${userName} now has ${pluses} pluses!`;
-    this.bot.postMessageToThread(data.item.channel, pluses, data.item.ts, {});    
+    const msg = `${user} now has ${pluses} pluses!`;
+    this.bot.postMessageToThread(data.item.channel, msg, data.item.ts);    
   }
 
   getPlusKey(data) {
