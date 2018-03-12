@@ -54,7 +54,7 @@ module.exports = class PlusHelper {
     );
   }
 
-  async plusUser(channel, userName) {
+  async plusUser(channel, userName, postMessage) {
     const pluses = await this.context.upsert(
       this.context.PlusModel,
       { where: { name: userName } },
@@ -67,6 +67,10 @@ module.exports = class PlusHelper {
       }
     );
 
+    if (!postMessage) {
+      return;
+    }
+    
     const msg = `${userName} now has ${pluses.get('pluses')} pluses!`;
     this.context.bot.postMessage(channel, msg);
   }

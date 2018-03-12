@@ -40,7 +40,7 @@ module.exports = class Plus extends BaseStorageModule {
 
     if (!matches || matches.length < 2) {
       // No user was refs so plus the raw text.]
-      this.plusHelper.plusUser(data.channel, data.user_text.toLowerCase());
+      this.plusHelper.plusUser(data.channel, data.user_text.toLowerCase(), true);
       return;
     }
 
@@ -77,7 +77,8 @@ module.exports = class Plus extends BaseStorageModule {
     const userName = await this.bot.getUserNameFromId(data.item_user);
     this.plusUser(
       data.item.channel,
-      userName.user.profile.display_name || userName.user.name
+      userName.user.profile.display_name || userName.user.name,
+      false
     );
     cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
   }
@@ -86,8 +87,8 @@ module.exports = class Plus extends BaseStorageModule {
     return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${data.item.reaction}`;
   }
 
-  plusUser(channel, userText) {
-    this.plusHelper.plusUser(channel, userText);
+  plusUser(channel, userText, postMessage) {
+    this.plusHelper.plusUser(channel, userText, postMessage);
   }
 
   help() {
