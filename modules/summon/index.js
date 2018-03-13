@@ -34,7 +34,7 @@ module.exports = class GoogleImages extends BaseModule {
   }
 
   aliases() {
-    return ['gif'];
+    return ['gif', 'reaction'];
   }
 
   help() {
@@ -92,7 +92,7 @@ module.exports = class GoogleImages extends BaseModule {
     let params = {};
 
     params['tbm'] = "isch";        
-    if (data.cmd === 'gif') {  
+    if (data.cmd === 'gif' || data.cmd === 'reaction') {  
       params['tbs'] = "itp:animated";      
     }
 
@@ -103,7 +103,8 @@ module.exports = class GoogleImages extends BaseModule {
       params['safe'] = "off";
     }
 
-    params["q"] = data.user_text;
+
+    params["q"] = (data.cmd === 'reaction') ? `reaction gif ${data.user_text}` : data.user_text;
     return params;
   }
 };
