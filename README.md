@@ -67,9 +67,8 @@ For example:
 
 ```
 ├── modules/
-|   └── user/
-│       └── hrviolation/
-|           └── index.js
+│    └── hrviolation/
+|        └── index.js
 ```
 
 Sending `?hrviolation` will trigger the `index.js` in the hrviolation directory. You can add custom aliases for commands by overriding the `aliases()` method in BaseModule.
