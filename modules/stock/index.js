@@ -1,6 +1,13 @@
 'use strict';
 const request = require('request');
 
+const key = config.getKey('stock');
+
+
+const DATA_HIGH_KEY = '2. high';
+const DATA_LOW_KEY = '3. low';
+const DATA_CLOSE_KEY = '4. close';
+
 module.exports = class Stock extends BaseModule {
   async handle(data) {
     if (!data.user_text) {
@@ -15,12 +22,12 @@ module.exports = class Stock extends BaseModule {
       return;
     }
 
-    this.postFancyData(data.channel, stockData);
+    this.postFancyData(data, stockData);
   }
 
   getData(symbol) {
     var options = {
-      url: `https://finance.google.com/finance?q=${symbol}&output=json`,
+      url: `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=60min&apikey=${key}`
     };
 
     return new Promise((resolve, reject) => {
@@ -31,12 +38,13 @@ module.exports = class Stock extends BaseModule {
           return;
         }
 
-        resolve(JSON.parse(body.replace('//', ''))[0]);
+        const seriesData = JSON.parse(body)['Time Series (60min)'];
+        resolve(seriesData[Object.keys(seriesData)[0]]);
       });
     });
   }
 
-  async postFancyData(channel, stockData) {
+  async postFancyData(data, stockData) {
     const fields = [];
     let titleString = `$${stockData.l}`;
 
@@ -46,30 +54,30 @@ module.exports = class Stock extends BaseModule {
 
     fields.push({
       title: 'Last:',
-      value: titleString,
+      value: stockData[DATA_CLOSE_KEY],
       short: false,
     });
 
-    if (stockData.hi) {
+    if (stockData[DATA_HIGH_KEY]) {
       fields.push({
         title: 'High:',
-        value: `$${stockData.hi}`,
+        value: `$${stockData[DATA_HIGH_KEY]}`,
         short: false,
       });
     }
 
-    if (stockData.lo) {
+    if (stockData[DATA_LOW_KEY]) {
       fields.push({
         title: 'Low:',
-        value: `$${stockData.lo}`,
+        value: `$${stockData[DATA_LOW_KEY]}`,
         short: false,
       });
     }
 
-    this.postFancyMessage(stockData, channel, fields);
+    this.postFancyMessage(stockData, data, fields);
   }
 
-  async postFancyMessage(stockData, channel, fields, isPositive) {
+  async postFancyMessage(stockData, data, fields, isPositive) {
     let icon = ":bar_chart:";
     if (stockData.c && stockData.c.includes('-')) {
       icon = ':chart_with_downwards_trend:';
@@ -77,15 +85,15 @@ module.exports = class Stock extends BaseModule {
       icon = ':chart_with_upwards_trend:';
     }
 
-    this.bot.postRawMessage(channel, {
+    this.bot.postRawMessage(data.channel, {
       icon_emoji: icon,
       username: 'StockCat',
       attachments: [
         {
-          title: stockData.name,
-          color: this.getStockStatusColor(stockData),
+          title: data.user_text.toUpperCase(),
+          //color: this.getStockStatusColor(stockData),
           fields: fields,
-          footer: await this.getDJIIndex(),
+          footer: `https://finance.google.com/finance?q=${data.user_text}`,
         },
       ],
     });
@@ -109,7 +117,7 @@ module.exports = class Stock extends BaseModule {
 
   async getDJIIndex() {
     const dow = await this.getData('DJI');
-    return `Dow Jones Industrial - ${dow.l} (${dow.c})`;
+    return `Dow Jones Industrial - ${dow[DATA_LOW_KEY]}`;
   }
 
   help() {
