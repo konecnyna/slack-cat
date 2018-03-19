@@ -61,4 +61,6 @@ config.dat
 .DS_Store
 *.sqlite
 
+package-lock.json
+
 modules/user/*

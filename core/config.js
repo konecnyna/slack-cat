@@ -4,12 +4,14 @@ const path = require('path');
 
 module.exports = class Config {
   constructor(configPath) {
-    const contents = fs.readFileSync(configPath);
-    this.config = JSON.parse(contents);
-
-    if (!this.getKey('slack_api')) {
-      throw new Error('Must provide slack api keys\n\n\n');
+    try {
+      const contents = fs.readFileSync(configPath);
+      this.config = JSON.parse(contents);  
+    } catch (e) {
+      this.config = {};
+      console.error("Running without config.dat");
     }
+    
   }
 
   getKey(key) {
