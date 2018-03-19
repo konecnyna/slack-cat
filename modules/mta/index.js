@@ -77,7 +77,7 @@ module.exports = class MTA extends BaseModule {
 			continue;
 		}
 
-		times.push(`In ${date.fromNow(true)} (${date.format('h:mm a')})`);	
+		times.push(`${train.delay ? "_*Delayed*_ " : ""}In ${date.fromNow(true)} (${date.format('h:mm a')})`);	
 		if (times.length === 3) {
 			break;
 		}
