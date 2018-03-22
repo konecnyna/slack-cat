@@ -62,7 +62,7 @@ module.exports = class Router {
 
       if (
         config.getKey('modules_blacklist') &&
-        config.getKey('modules_blacklist').indexOf(key) === 0
+        config.getKey('modules_blacklist').includes(key)
       ) {
         console.log('Skipping: ', key, ' in blacklist.');
         return;
