@@ -2,7 +2,7 @@
 
 const TEMPLATE = 
 
-module.exports = class Crypto extends BaseModule {
+module.exports = class WhoDoneIt extends BaseModule {
   async handle(data) {
     if (!data.user_text) {
     	this.bot.postMessage(data.channel, this.help());
