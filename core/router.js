@@ -16,6 +16,7 @@ module.exports = class Router {
     this.overflowModules = {};
     this.reactionModules = {};
     this.memberJoinedModules = {};
+    this.rawInputModules = {};
 
     // Register all modules. Not good lazy solution cuz of aliases for now...
     this.registerModules();
@@ -33,21 +34,10 @@ module.exports = class Router {
 
     // Handle reactions
     if (data.type === 'reaction_added') {
-      this.handleReaction(data);
-      return;
+      this.handleReaction(data);      
     }
 
-    // Handle messages.
-    if (
-      !data.bot_id &&
-      data.text !== undefined &&
-      data.text.length > 0 &&
-      data.type === 'message' &&
-      data.text.charAt(0) === '?'
-    ) {
-      this.handleCmdMessage(data);
-      return;
-    }
+    this.handleMsg(data);    
   }
 
   registerModules() {
@@ -92,6 +82,11 @@ module.exports = class Router {
       ) {
         this.memberJoinedModules[key] = moduleObj;
       }
+
+      if (moduleObj.getType().includes(BaseModule.TYPES.RAW_INPUT)) {
+        this.rawInputModules[key] = moduleObj;
+      }
+      
     });
   }
 
@@ -105,6 +100,30 @@ module.exports = class Router {
     Object.keys(this.memberJoinedModules).forEach(key => {
       this.memberJoinedModules[key].handleMemeberJoin(data, this.modules);
     });
+  }
+
+  handleRawInput(data) {
+    Object.keys(this.rawInputModules).forEach(key => {
+      this.rawInputModules[key].handleRawInput(data, this.modules);
+    });
+  }
+
+  handleMsg(data) {
+    // Handle messages.
+    if (
+      !data.bot_id &&
+      data.text !== undefined &&
+      data.text.length > 0 &&
+      data.type === 'message' &&
+      data.text.charAt(0) === '?'
+    ) {
+      this.handleCmdMessage(data);
+      return;
+    }
+
+    if (data.type === 'message') {
+      this.handleRawInput(data);
+    }    
   }
 
   handleCmdMessage(data) {
