@@ -30,6 +30,11 @@ module.exports = class BaseModule {
       throw new TypeError('Child class must implement `handleMemeberJoin()` if type is MEMBER_JOINED_CHANNEL'); 
     }
 
+    if (this.getType().includes(BaseModule.TYPES.RAW_INPUT) && this.handleRawInput === undefined) {
+      throw new TypeError('Child class must implement `handleRawInput()` if type is RAW_INPUT'); 
+    }
+
+
     this.bot = bot;
   }
 
@@ -77,7 +82,8 @@ module.exports = class BaseModule {
       MODULE: "module",
       OVERFLOW_CMD: "overflow_cmd",
       REACTION: "reaction",
-      MEMBER_JOINED_CHANNEL: "member_joined_channel"
+      MEMBER_JOINED_CHANNEL: "member_joined_channel",
+      RAW_INPUT: "raw_input",
     };
   }
 
