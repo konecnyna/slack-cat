@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const Config = require('./core/config.js');
 const Router = require('./core/router.js');
+const Server = require('./core/dialog/index.js');
 const SlackCatBot = require('./core/slack-cat-bot.js');
 
 // Global Base Modules.
@@ -51,6 +52,7 @@ class SlackCat {
 
     global.STORAGE_PATH = dbPath;
     global.config = new Config(configPath);
+    global.app = new Server();
   }
 
   start() {
@@ -65,6 +67,7 @@ class SlackCat {
       name: 'SlackCat',
     });
 
+    app.start();
     const router = new Router(bot, this.pathToModules);
 
     bot.on('start', () => {

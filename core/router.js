@@ -85,8 +85,7 @@ module.exports = class Router {
 
       if (moduleObj.getType().includes(BaseModule.TYPES.RAW_INPUT)) {
         this.rawInputModules[key] = moduleObj;
-      }
-      
+      }      
     });
   }
 
