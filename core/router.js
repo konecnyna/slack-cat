@@ -6,6 +6,9 @@ const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 
 const moduleResolver = new requireDir();
+const Server = require('./dialog/index.js');
+const server = new Server();
+const app = server.init();
 
 module.exports = class Router {
   constructor(bot, pathToModules) {
@@ -34,10 +37,10 @@ module.exports = class Router {
 
     // Handle reactions
     if (data.type === 'reaction_added') {
-      this.handleReaction(data);      
+      this.handleReaction(data);
     }
 
-    this.handleMsg(data);    
+    this.handleMsg(data);
   }
 
   registerModules() {
@@ -58,6 +61,13 @@ module.exports = class Router {
         return;
       }
 
+      if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {
+        moduleObj.setApp(app);
+        server.initHandleCallback(body => {
+          moduleObj.onDialogSubmit(body);
+        });
+      }
+      
       // Add all modules types to cmd array.
       if (moduleObj.getType().includes(BaseModule.TYPES.MODULE)) {
         this.modules[key] = moduleObj;
@@ -85,11 +95,13 @@ module.exports = class Router {
 
       if (moduleObj.getType().includes(BaseModule.TYPES.RAW_INPUT)) {
         this.rawInputModules[key] = moduleObj;
-      }      
+      }
     });
+
+    server.start();
   }
 
-  handleReaction(data) {    
+  handleReaction(data) {
     Object.keys(this.reactionModules).forEach(key => {
       this.reactionModules[key].handleReaction(data, this.modules);
     });
@@ -122,7 +134,7 @@ module.exports = class Router {
 
     if (data.type === 'message') {
       this.handleRawInput(data);
-    }    
+    }
   }
 
   handleCmdMessage(data) {
