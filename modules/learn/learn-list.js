@@ -1,28 +1,33 @@
 'use strict';
-const util = require('util');
 
 module.exports = class LearnsList {
+  constructor(bot, model) {
+    this.bot = bot;
+    this.LearnsModel = model;
+  }
 
-	constructor(bot, model) {
-		this.bot = bot;
-		this.LearnsModel = model;
-	}
+  async createRoutes(app) {
+    app.get('/', async (req, res) => {
+      const params = {
+        where: {
+          name: req.query.text,
+        },
+      };
 
-	async getLearns(data) {
-		
-	    const params = {
-	      where: {
-	        name: data.user_text,
-	      }
-	    }
+      const learnData = await this.LearnsModel.findAll(params);     
+      const learns = [];
 
-		const userData = await this.bot.userDataPromise(data.user);    
-	    const learnData = await this.LearnsModel.findAll(params);
-	    await this.bot.postMessage(data.channel, "I just PMed them to you.");
-	    await this.bot.postMessageToUser(userData.user.name, "------------*Learns for _" + data.user_text + "_*------------");
-	    learnData.forEach( async (row, index) => {
-	    	const message = util.format("%d. %s", index + 1, row.get('learn'));
-	      	await this.bot.postMessageToUser(userData.user.name, message);
-	    });
-	}
-}
+      learnData.forEach(async (row, index) => {
+      	learns.push(`<h3>${index + 1}. ${row.get('learn')}</h3>`);
+      });
+      res.send(learns.join(''));
+    });
+  }
+
+  async getLearns(data) {
+    await this.bot.postMessage(
+      data.channel,
+      `http://104.131.78.3.com?text=${data.user_text}`
+    );
+  }
+};
