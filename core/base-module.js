@@ -1,7 +1,5 @@
 'use strict';
 const axios = require('axios');
-const express = require('express');
-const bodyParser = require('body-parser');
 const qs = require('querystring');
 const defaultBotParams = {
   icon_emoji: ':cat:',
@@ -21,54 +19,43 @@ module.exports = class BaseModule {
       throw new TypeError('Child class must implement `help()` method');
     }
 
-    if (
-      this.getType().includes(BaseModule.TYPES.REACTION) &&
-      this.handleReaction === undefined
-    ) {
-      throw new TypeError(
-        'Child class must implement `handleReaction()` if type is REACTION'
-      );
-    }
+    this.checkForOverridenMethod(
+      BaseModule.TYPES.REACTION,
+      this.handleReaction,
+      'handleReaction'
+    );
 
-    if (
-      this.getType().includes(BaseModule.TYPES.MEMBER_JOINED_CHANNEL) &&
-      this.handleMemeberJoin === undefined
-    ) {
-      throw new TypeError(
-        'Child class must implement `handleMemeberJoin()` if type is MEMBER_JOINED_CHANNEL'
-      );
-    }
+    this.checkForOverridenMethod(
+      BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
+      this.handleMemeberJoin,
+      'handleMemeberJoin'
+    );
 
-    if (
-      this.getType().includes(BaseModule.TYPES.RAW_INPUT) &&
-      this.handleRawInput === undefined
-    ) {
-      throw new TypeError(
-        'Child class must implement `handleRawInput()` if type is RAW_INPUT'
-      );
-    }
+    this.checkForOverridenMethod(
+      BaseModule.TYPES.RAW_INPUT,
+      this.handleRawInput,
+      'handleRawInput'
+    );
 
-    if (this.getType().includes(BaseModule.TYPES.DIALOG)) {
-      if (this.onDialogSubmit === undefined) {
-        throw new TypeError(
-          'Child class must implement `onDialogSubmit()` if type is DIALOG'
-        );
-      }
-    }
+    this.checkForOverridenMethod(
+      BaseModule.TYPES.DIALOG,
+      this.onDialogSubmit,
+      'onDialogSubmit'
+    );
 
     this.checkForOverridenMethod(
       BaseModule.TYPES.ENDPOINT,
       this.createRoutes,
-      'ENDPOINT module must implement createRoutes()'
+      'createRoutes'
     );
 
     this.bot = bot;
   }
 
-  checkForOverridenMethod(type, func, message) {
+  checkForOverridenMethod(type, func, funcName) {
     if (this.getType().includes(type) && func === undefined) {
-      throw new TypeError(message);
-    }
+      throw new TypeError(`${type} module must implement ${func}`);
+    }    
   }
 
   getUserArg(data) {

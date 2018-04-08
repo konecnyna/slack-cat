@@ -145,7 +145,7 @@ module.exports = class Jira extends BaseModule {
   }
 
   getType() {
-    return [BaseModule.TYPES.MODULE, BaseModule.TYPES.DIALOG];
+    return [BaseModule.TYPES.MODULE, BaseModule.TYPES.DIALOG, BaseModule.TYPES.ENDPOINT];
   }
 
   help() {
