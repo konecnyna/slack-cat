@@ -6,7 +6,7 @@ const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 
 const moduleResolver = new requireDir();
-const Server = require('./dialog/index.js');
+const Server = require('./server.js');
 const server = new Server();
 const app = server.init();
 
