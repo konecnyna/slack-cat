@@ -13,13 +13,17 @@ const Router = require(path.join(__dirname + '/../core', 'router.js'));
 const MockBot = require(path.join(__dirname + '/../core', 'mock-bot.js'));
 const Config = require(path.join(__dirname + '/../core', 'mock-config.js'));
 
+
+global.config = new Config();
+global.STORAGE_PATH = './storage/db-dev.sqlite';
+global.BaseModule = require('../core/base-module.js');
+global.BaseStorageModule = require('../core/storage-base-module.js');
+const Server = require('../core/server.js');
+let router = new Router(new MockBot(), null, new Server());
+
+
 describe('Router Test', () => {
-  beforeEach(() => {
-    global.config = new Config();
-    global.BaseModule = require('../core/base-module.js');
-    global.BaseStorageModule = require('../core/storage-base-module.js');
-    router = new Router(new MockBot());
-  });
+  
 
   it("Router shouldn't be null", () => {
     // Assert that an error will be thrown if
@@ -44,7 +48,7 @@ describe('Router Test', () => {
 
     // Set blacklist.
     config.blacklist = ['poop'];
-    router = new Router(new MockBot());
+    router = new Router(new MockBot(), null, new Server());
     const keysWithBlackList = Object.keys(router.modules);
     expect(
       keysWithBlackList.indexOf('poop') > -1,
@@ -53,7 +57,7 @@ describe('Router Test', () => {
 
     // Cleanup.
     config.blacklist = [];
-    router = new Router(new MockBot());
+    router = new Router(new MockBot(), null, new Server());
   });
 
   it('Test ping command', () => {

@@ -66,7 +66,7 @@ class SlackCat {
       name: 'SlackCat',
     });
 
-    const server = new Server();    
+    const server = new Server();        
     const router = new Router(bot, this.pathToModules, server);
     server.start();
 

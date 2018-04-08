@@ -21,7 +21,8 @@ global.config = new Config();
 global.STORAGE_PATH = './storage/db-dev.sqlite';
 global.BaseModule = require('../core/base-module.js');
 global.BaseStorageModule = require('../core/storage-base-module.js');
-const router = new Router(new MockBot());
+const Server = require('../core/server.js');
+const router = new Router(new MockBot(), null, new Server());
 
 describe('Modules Test', () => {
   it('Test ping command', done => {
@@ -133,6 +134,7 @@ describe('Modules Test', () => {
     };
 
     router.bot.setCallback(data => {
+      console.log(data);
       data.includes('this is a test').should.equal(true);
       done();
     });

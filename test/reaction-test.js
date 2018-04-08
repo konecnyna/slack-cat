@@ -31,14 +31,14 @@ const testReaction = {
   ts: '1519405945.000295',
 };
 
+global.config = new Config();
+global.STORAGE_PATH = './storage/db-dev.sqlite';
+global.BaseModule = require('../core/base-module.js');
+global.BaseStorageModule = require('../core/storage-base-module.js');
+const Server = require('../core/server.js');
+const router = new Router(new MockBot(), null, new Server());
+
 describe('Reaction Test', () => {
-  beforeEach(() => {
-    global.config = new Config();
-    global.STORAGE_PATH = './storage/db-dev.sqlite';
-    global.BaseModule = require('../core/base-module.js');
-    global.BaseStorageModule = require('../core/storage-base-module.js');
-    router = new Router(new MockBot());
-  });
 
   // it('Test eggplant command', done => {
   //   router.bot.setCallback(data => {
