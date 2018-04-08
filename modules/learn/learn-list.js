@@ -14,14 +14,30 @@ module.exports = class LearnsList {
         },
       };
 
-      const learnData = await this.LearnsModel.findAll(params);     
+      const learnData = await this.LearnsModel.findAll(params);
       const learns = [];
-
+      res.set({ 'content-type': 'text/html; charset=utf-8' });
       learnData.forEach(async (row, index) => {
-      	learns.push(`<h3>${index + 1}. ${row.get('learn')}</h3>`);
+        console.log();
+        learns.push(
+          `<h3>${index + 1}. ${this.createListItem(row.get('learn'))}</h3>`
+        );
       });
       res.send(learns.join(''));
     });
+  }
+
+  createListItem(learn) {
+    if (learn[0] === '<') {
+      learn = learn.replace('<', '');
+      learn = learn.replace('>', '');
+      if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(learn)) {
+        return `<a href=${learn}>${learn}</a><br/><img src="${learn}" width=200/>`;
+      }
+
+      return `<a href=${learn} />`;
+    }
+    return learn;
   }
 
   async getLearns(data) {
