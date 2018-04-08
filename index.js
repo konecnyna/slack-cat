@@ -5,6 +5,7 @@ const path = require('path');
 const Config = require('./core/config.js');
 const Router = require('./core/router.js');
 const SlackCatBot = require('./core/slack-cat-bot.js');
+const Server = require('./core/server.js');
 
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js');
@@ -65,7 +66,9 @@ class SlackCat {
       name: 'SlackCat',
     });
 
-    const router = new Router(bot, this.pathToModules);
+    const server = new Server();    
+    const router = new Router(bot, this.pathToModules, server);
+    server.start();
 
     bot.on('start', () => {
       console.info('Starting server in ' + process.env.NODE_ENV + ' mode.');
@@ -79,7 +82,7 @@ class SlackCat {
   runDebugCommand() {
     // Reaction debug msg
     const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'));
-    const router = new Router(new MockBot(), this.pathToModules);
+    const router = new Router(new MockBot(), this.pathToModules, new Server());
 
     if (process.argv[2].includes('member_joined_channel')) {
       router.handle(testMemberJoin);

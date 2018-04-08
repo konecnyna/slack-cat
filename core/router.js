@@ -1,19 +1,16 @@
 'use strict';
 
 const requireDir = require('./requiredir');
-
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
-
 const moduleResolver = new requireDir();
-const Server = require('./server.js');
-const server = new Server();
-const app = server.init();
+
 
 module.exports = class Router {
-  constructor(bot, pathToModules) {
+  constructor(bot, pathToModules, server) {
     this.bot = bot;
     this.pathToModules = pathToModules;
+    this.server = server;
 
     this.modules = {};
     this.overflowModules = {};
@@ -62,8 +59,8 @@ module.exports = class Router {
       }
 
       if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {
-        moduleObj.setApp(app);
-        server.initHandleCallback(body => {
+        moduleObj.createRoutes(this.server.app);
+        this.server.initHandleCallback(body => {
           moduleObj.onDialogSubmit(body);
         });
       }
@@ -98,7 +95,6 @@ module.exports = class Router {
       }
     });
 
-    server.start();
   }
 
   handleReaction(data) {

@@ -56,7 +56,19 @@ module.exports = class BaseModule {
       }
     }
 
+    this.checkForOverridenMethod(
+      BaseModule.TYPES.ENDPOINT,
+      this.createRoutes,
+      'ENDPOINT module must implement createRoutes()'
+    );
+
     this.bot = bot;
+  }
+
+  checkForOverridenMethod(type, func, message) {
+    if (this.getType().includes(type) && func === undefined) {
+      throw new TypeError(message);
+    }
   }
 
   getUserArg(data) {
@@ -99,14 +111,6 @@ module.exports = class BaseModule {
     return [BaseModule.TYPES.MODULE];
   }
 
-  setApp(app) {
-    if (this.createRoutes === undefined) {
-      return;
-    }
-
-    this.createRoutes(app);
-  }
-
   showDialog(dialogConfig, body, res) {
     // extract the verification token, slash command text,
     // and trigger ID from payload
@@ -122,12 +126,12 @@ module.exports = class BaseModule {
     axios
       .post('https://slack.com/api/dialog.open', qs.stringify(dialog))
       .then(result => {
-        console.log('dialog.open: %o', result.data);        
+        console.log('dialog.open: %o', result.data);
         res.send('');
       })
       .catch(err => {
         console.log('dialog.open call failed: %o', err);
-        res.sendStatus(500);        
+        res.sendStatus(500);
       });
   }
 
@@ -139,6 +143,7 @@ module.exports = class BaseModule {
       MEMBER_JOINED_CHANNEL: 'member_joined_channel',
       RAW_INPUT: 'raw_input',
       DIALOG: 'dialog',
+      ENDPOINT: 'endpoint',
     };
   }
 };
