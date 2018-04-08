@@ -43,7 +43,7 @@ module.exports = class LearnsList {
   async getLearns(data) {
     await this.bot.postMessage(
       data.channel,
-      `http://104.131.78.3.com?text=${data.user_text}`
+      `http://104.131.78.3?text=${data.user_text}`
     );
   }
 };
