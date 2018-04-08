@@ -39,26 +39,21 @@ const Server = require('../core/server.js');
 const router = new Router(new MockBot(), null, new Server());
 
 describe('Reaction Test', () => {
-
   // it('Test eggplant command', done => {
   //   router.bot.setCallback(data => {
   //     console.
   //     data.should.equal('( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
   //     done();
   //   });
-
   //   testReaction.reaction = 'eggplant';
   //   router.handleReaction(testReaction);
   // });
-
   //TODO: This has a memory leak. Will fix.
   // it('Test heavy_plus_sign command', done => {
-
   //   router.bot.setCallback(data => {
   //     data.should.equal('testuser now has 1 pluses!');
   //     done();
   //   });
-
   //   testReaction.reaction = 'heavy_plus_sign';
   //   router.handle(testReaction);
   // });

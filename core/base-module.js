@@ -54,7 +54,7 @@ module.exports = class BaseModule {
 
   checkForOverridenMethod(type, func, funcName) {
     if (this.getType().includes(type) && func === undefined) {
-      throw new TypeError(`${type} module must implement ${func}`);
+      throw new TypeError(`${type} module must implement ${funcName}`);
     }    
   }
 
