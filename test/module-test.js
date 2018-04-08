@@ -17,15 +17,13 @@ if (fs.existsSync(filePath)) {
   fs.unlinkSync(filePath);
 }
 
-describe('Modules Test', () => {
-  beforeEach(() => {
-    global.config = new Config();
-    global.STORAGE_PATH = './storage/db-dev.sqlite';
-    global.BaseModule = require('../core/base-module.js');
-    global.BaseStorageModule = require('../core/storage-base-module.js');
-    router = new Router(new MockBot());
-  });
+global.config = new Config();
+global.STORAGE_PATH = './storage/db-dev.sqlite';
+global.BaseModule = require('../core/base-module.js');
+global.BaseStorageModule = require('../core/storage-base-module.js');
+const router = new Router(new MockBot());
 
+describe('Modules Test', () => {
   it('Test ping command', done => {
     const pingCmdData = {
       type: 'message',
