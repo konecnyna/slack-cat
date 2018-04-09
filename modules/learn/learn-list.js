@@ -1,28 +1,49 @@
 'use strict';
-const util = require('util');
 
 module.exports = class LearnsList {
+  constructor(bot, model) {
+    this.bot = bot;
+    this.LearnsModel = model;
+  }
 
-	constructor(bot, model) {
-		this.bot = bot;
-		this.LearnsModel = model;
-	}
+  async createRoutes(app) {
+    app.get('/', async (req, res) => {
+      const params = {
+        where: {
+          name: req.query.text,
+        },
+      };
 
-	async getLearns(data) {
-		
-	    const params = {
-	      where: {
-	        name: data.user_text,
-	      }
-	    }
+      const learnData = await this.LearnsModel.findAll(params);
+      const learns = [];
+      res.set({ 'content-type': 'text/html; charset=utf-8' });
+      learnData.forEach(async (row, index) => {
+        console.log();
+        learns.push(
+          `<h3>${index + 1}. ${this.createListItem(row.get('learn'))}</h3>`
+        );
+      });
+      res.send(learns.join(''));
+    });
+  }
 
-		const userData = await this.bot.userDataPromise(data.user);    
-	    const learnData = await this.LearnsModel.findAll(params);
-	    await this.bot.postMessage(data.channel, "I just PMed them to you.");
-	    await this.bot.postMessageToUser(userData.user.name, "------------*Learns for _" + data.user_text + "_*------------");
-	    learnData.forEach( async (row, index) => {
-	    	const message = util.format("%d. %s", index + 1, row.get('learn'));
-	      	await this.bot.postMessageToUser(userData.user.name, message);
-	    });
-	}
-}
+  createListItem(learn) {
+    if (learn[0] === '<') {
+      learn = learn.replace('<', '');
+      learn = learn.replace('>', '');
+      if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(learn)) {
+        return `<a href=${learn}>${learn}</a><br/><img src="${learn}" width=200/>`;
+      }
+
+      return `<a href=${learn} />`;
+    }
+    return learn;
+  }
+
+  async getLearns(data) {
+    await this.bot.postMessage(
+      data.channel,
+      `http://104.131.78.3?text=${data.user_text}`
+    );
+  }
+};

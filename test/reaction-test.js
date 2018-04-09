@@ -31,34 +31,29 @@ const testReaction = {
   ts: '1519405945.000295',
 };
 
-describe('Reaction Test', () => {
-  beforeEach(() => {
-    global.config = new Config();
-    global.STORAGE_PATH = './storage/db-dev.sqlite';
-    global.BaseModule = require('../core/base-module.js');
-    global.BaseStorageModule = require('../core/storage-base-module.js');
-    router = new Router(new MockBot());
-  });
+global.config = new Config();
+global.STORAGE_PATH = './storage/db-dev.sqlite';
+global.BaseModule = require('../core/base-module.js');
+global.BaseStorageModule = require('../core/storage-base-module.js');
+const Server = require('../core/server.js');
+const router = new Router(new MockBot(), null, new Server());
 
+describe('Reaction Test', () => {
   // it('Test eggplant command', done => {
   //   router.bot.setCallback(data => {
   //     console.
   //     data.should.equal('( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)');
   //     done();
   //   });
-
   //   testReaction.reaction = 'eggplant';
   //   router.handleReaction(testReaction);
   // });
-
   //TODO: This has a memory leak. Will fix.
   // it('Test heavy_plus_sign command', done => {
-
   //   router.bot.setCallback(data => {
   //     data.should.equal('testuser now has 1 pluses!');
   //     done();
   //   });
-
   //   testReaction.reaction = 'heavy_plus_sign';
   //   router.handle(testReaction);
   // });
