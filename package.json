@@ -18,21 +18,22 @@
   },
   "homepage": "https://github.com/konecnyna/slack-cat#readme",
   "dependencies": {
+    "axios": "^0.16.0",
+    "body-parser": "^1.17.1",
     "dark-sky": "^1.1.2",
+    "debug": "^3.1.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2",
     "jira-client": "^6.4.1",
     "memory-cache": "^0.2.0",
     "moment": "^2.21.0",
     "mta-gtfs": "^1.1.0",
+    "public-ip": "^2.4.0",
     "request": "^2.83.0",
     "require-dir": "^0.3.2",
     "sequelize": "^4.22.5",
     "slackbots": "^1.1.0",
-    "sqlite3": "^3.1.13",
-    "axios": "^0.16.0",
-    "body-parser": "^1.17.1",
-    "debug": "^3.1.0",
-    "dotenv": "^4.0.0",
-    "express": "^4.15.2"
+    "sqlite3": "^3.1.13"
   },
   "devDependencies": {
     "babel": "^6.23.0",

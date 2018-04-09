@@ -57,7 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
-config.dat
+config.json
 .DS_Store
 *.sqlite
 

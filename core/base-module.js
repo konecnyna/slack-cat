@@ -105,7 +105,7 @@ module.exports = class BaseModule {
     console.log(body);
 
     const dialog = {
-      token: process.env.SLACK_ACCESS_TOKEN,
+      token: config.getKey("slack_access_token"),
       trigger_id,
       dialog: JSON.stringify(dialogConfig),
     };

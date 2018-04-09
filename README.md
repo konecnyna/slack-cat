@@ -12,7 +12,7 @@ It's ezpz. You can look at the example implementation [here](https://github.com/
 
 1. run `npm install https://github.com/konecnyna/slack-cat.git --save` (this assumes you did an `npm init` in the directory)
 2. Add the configure the configuration file, database path (useful for backing up data), and path to your modules. If you don't have any modules pass an empty string `''`.
-3. Add your [slack api key](https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens) to config.dat file in the root dir (See below for example).
+3. Add your [slack api key](https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens) to config.json file in the root dir (See below for example).
 4. node `index.js`
 5. In Slack invite @SlackCat to a channel or direct message and run `?ping`. If everything is working the bot should respond with `?pong`.
 
@@ -21,7 +21,7 @@ const SlackCat = require('slack-cat');
 const Path = require('path');
 
 
-const configPath = Path.join(__dirname, 'config.dat')
+const configPath = Path.join(__dirname, 'config.json')
 const dbPath = Path.join(__dirname, 'db.sqlite');
 const modules = Path.join(__dirname, '/modules');
 
@@ -29,7 +29,7 @@ new SlackCat(modules,configPath, dbPath).start();
 ```
 
 
-Example `config.dat`:
+Example `config.json`:
 ```
 {
     "slack_api": "xxx",
@@ -49,7 +49,7 @@ Example `config.dat`:
 
 Look at the modules in the `modules/default` folder for examples. If there are core modules that you wouldn't like in slackcat you can add them to the "modules_blacklist".
 
-For example: `"modules_blacklist": ["poop"]` in `config.dat` file would exclude the `?poop` command from slackcat.
+For example: `"modules_blacklist": ["poop"]` in `config.json` file would exclude the `?poop` command from slackcat.
 
 
 ##### Usage:

@@ -20,7 +20,7 @@ module.exports = class Weather extends BaseModule {
     }
 
     if (!config.getKey('darksky_api') || !config.getKey('google_geocode_api')) {
-      this.bot.postMessage(data.channel, "Please put `darksky_api` or `google_geocode_api` key in `config.dat`");
+      this.bot.postMessage(data.channel, "Please put `darksky_api` or `google_geocode_api` key in `config.json`");
       return;
     }
 
@@ -56,9 +56,6 @@ module.exports = class Weather extends BaseModule {
       case 'us-radar':
         img = "http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif";
         break;
-
-      case 'radar':
-      case 'ne-radar':
       case 'nyc-radar':
         img = "http://images.intellicast.com/WxImages/RadarLoop/hfd_None_anim.gif";
         break;

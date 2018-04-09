@@ -71,7 +71,7 @@ class SlackCat {
     server.start();
 
     bot.on('start', () => {
-      console.info('Starting server in ' + process.env.NODE_ENV + ' mode.');
+      console.info('Starting server in ' + config.getKey("node_env") + ' mode.');
     });
 
     bot.on('message', data => {
