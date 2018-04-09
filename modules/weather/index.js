@@ -11,27 +11,68 @@ const botParams = {
   username: 'WeatherCat',
 };
 
-module.exports = class Weather extends BaseModule {
+const radarMap = {
+  "AR":"lit",
+  "AZ":"prc",
+  "CA":"bfl",
+  "CO":"den",
+  "CT":"hfd",
+  "FL":"eyw",
+  "FL":"pie",
+  "GA":"csg",
+  "IA":"dsm",
+  "ID":"myl",
+  "IL":"spi",
+  "KS":"sln",
+  "KY":"bwg",
+  "LA":"msy",
+  "MI":"cad",
+  "MN":"stc",
+  "MO":"jef",
+  "MS":"tvr",
+  "MT":"lwt",
+  "NC":"clt",
+  "ND": "bis",
+  "NE":"lbf",
+  "NH":"bml",
+  "NM":"row",
+  "NV": "rno",
+  "NY":"bgm",
+  "OH": "day",
+  "OK":"law",
+  "OR":"rdm",
+  "SD":"pir",
+  "TX":"bro",
+  "TX":"sat",
+  "UT": "pvu",
+  "VA": "fcx",
+  "WA": "tiw",
+  "WY": "riw",
+}
 
-  async handle(data) {    
+module.exports = class Weather extends BaseModule {
+  async handle(data) {
     if (this.aliases().includes(data.cmd)) {
       this.handleRadar(data);
       return;
     }
 
     if (!config.getKey('darksky_api') || !config.getKey('google_geocode_api')) {
-      this.bot.postMessage(data.channel, "Please put `darksky_api` or `google_geocode_api` key in `config.json`");
+      this.bot.postMessage(
+        data.channel,
+        'Please put `darksky_api` or `google_geocode_api` key in `config.json`'
+      );
       return;
     }
 
     let query = data.user_text;
     if (!query) {
-      query = "nyc";
+      query = 'nyc';
     }
 
     const coords = await geocoder.getLongLat(query);
     if (!coords) {
-      this.bot.postMessage(data.channel, "No location found.");
+      this.bot.postMessage(data.channel, 'No location found.');
       return;
     }
 
@@ -51,25 +92,27 @@ module.exports = class Weather extends BaseModule {
   }
 
   handleRadar(data) {
-    let img = ""
-    switch (data.cmd) {
-      case 'us-radar':
-        img = "http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif";
-        break;
-      case 'nyc-radar':
-        img = "http://images.intellicast.com/WxImages/RadarLoop/hfd_None_anim.gif";
-        break;
-
-      default:
-        img = 'No radar found';        
+    let img = '';
+    if (!data.user_text) {
+      this.bot.postMessage(data.channel, "http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif");
+      return;
     }
 
-
-    this.bot.postMessage(data.channel, img);    
+    const location = radarMap[data.user_text.toUpperCase()];
+    if (location) {
+      img = `http://images.intellicast.com/WxImages/RadarLoop/${location}_None_anim.gif`;
+    } else {
+      img = 'http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif';  
+    }
+    
+    this.bot.postMessage(data.channel, img);
   }
 
   help() {
-    return 'Usage: `?weather` gives current forecast for NYC. More cmds: ' + this.aliases() ;
+    return (
+      'Usage: `?weather` gives current forecast for NYC. More cmds: ' +
+      this.aliases()
+    );
   }
 
   aliases() {
@@ -82,7 +125,6 @@ module.exports = class Weather extends BaseModule {
       location,
       parseInt(weatherData.currently.apparentTemperature)
     );
-
 
     var summary = util.format(
       'Forecast: %s for the hour. %s\n\n %d%% humidity with wind speed of %d MPH',
