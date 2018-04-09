@@ -1,16 +1,16 @@
 'use strict';
 
 const requireDir = require('./requiredir');
-
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
-
 const moduleResolver = new requireDir();
 
+
 module.exports = class Router {
-  constructor(bot, pathToModules) {
+  constructor(bot, pathToModules, server) {
     this.bot = bot;
     this.pathToModules = pathToModules;
+    this.server = server;
 
     this.modules = {};
     this.overflowModules = {};
@@ -34,10 +34,10 @@ module.exports = class Router {
 
     // Handle reactions
     if (data.type === 'reaction_added') {
-      this.handleReaction(data);      
+      this.handleReaction(data);
     }
 
-    this.handleMsg(data);    
+    this.handleMsg(data);
   }
 
   registerModules() {
@@ -58,6 +58,17 @@ module.exports = class Router {
         return;
       }
 
+      if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {      
+        moduleObj.createRoutes(this.server.app);
+        this.server.initHandleCallback(body => {
+          moduleObj.onDialogSubmit(body);
+        });
+      }
+
+      if (moduleObj.getType().includes(BaseModule.TYPES.ENDPOINT)) {
+        moduleObj.createRoutes(this.server.app);        
+      }
+      
       // Add all modules types to cmd array.
       if (moduleObj.getType().includes(BaseModule.TYPES.MODULE)) {
         this.modules[key] = moduleObj;
@@ -66,31 +77,21 @@ module.exports = class Router {
         });
       }
 
-      // Overflow modules
-      if (moduleObj.getType().includes(BaseModule.TYPES.OVERFLOW_CMD)) {
-        this.overflowModules[key] = moduleObj;
-      }
-
-      // Reaction modules.
-      if (moduleObj.getType().includes(BaseModule.TYPES.REACTION)) {
-        this.reactionModules[key] = moduleObj;
-      }
-
-      // User joined channel.
-      if (
-        moduleObj.getType().includes(BaseModule.TYPES.MEMBER_JOINED_CHANNEL)
-      ) {
-        this.memberJoinedModules[key] = moduleObj;
-      }
-
-      if (moduleObj.getType().includes(BaseModule.TYPES.RAW_INPUT)) {
-        this.rawInputModules[key] = moduleObj;
-      }
-      
+      this.addModules(key, moduleObj, BaseModule.TYPES.OVERFLOW_CMD, this.overflowModules);
+      this.addModules(key, moduleObj, BaseModule.TYPES.REACTION, this.reactionModules);
+      this.addModules(key, moduleObj, BaseModule.TYPES.MEMBER_JOINED_CHANNEL, this.memberJoinedModules);
+      this.addModules(key, moduleObj, BaseModule.TYPES.RAW_INPUT, this.rawInputModules);
     });
+
   }
 
-  handleReaction(data) {    
+  addModules(key, module, type, array) {
+    if (module.getType().includes(type)) {
+        array[key] = module;
+    }
+  }
+
+  handleReaction(data) {
     Object.keys(this.reactionModules).forEach(key => {
       this.reactionModules[key].handleReaction(data, this.modules);
     });
@@ -123,7 +124,7 @@ module.exports = class Router {
 
     if (data.type === 'message') {
       this.handleRawInput(data);
-    }    
+    }
   }
 
   handleCmdMessage(data) {

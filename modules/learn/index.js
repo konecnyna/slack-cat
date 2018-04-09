@@ -45,6 +45,10 @@ module.exports = class Learn extends BaseStorageModule {
     return ['learns', 'unlearn', 'list'];
   }
 
+  createRoutes(app) {
+    this.list.createRoutes(app);
+  }
+  
   async displayLearns(data) {
     const msgs = await this.getLearns(data.user_text, 5, true, false);      
     if (msgs) {
@@ -164,6 +168,10 @@ module.exports = class Learn extends BaseStorageModule {
       "name": split[0].trim(),
       "text": split.splice(1, split.length).join(' ').trim()
     }
+  }
+
+  getType() {
+    return [BaseModule.TYPES.ENDPOINT, BaseModule.TYPES.MODULE];
   }
 
   help() {
