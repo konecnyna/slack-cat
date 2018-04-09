@@ -27,7 +27,7 @@ module.exports = class Jira extends BaseModule {
     		'host': 'mykewlhost.org',\n\
     		'username': 'user@kewldomain.com',\n\
     		'password': 'xxxxxxxxxxx'\n\
-    		}``` to `config.dat`"
+    		}``` to `config.json`"
       );
       return;
     }	

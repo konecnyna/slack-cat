@@ -1,9 +1,13 @@
 'use strict';
+const publicIp = require('public-ip');
+
 
 module.exports = class LearnsList {
   constructor(bot, model) {
     this.bot = bot;
     this.LearnsModel = model;
+
+    
   }
 
   async createRoutes(app) {
@@ -41,9 +45,10 @@ module.exports = class LearnsList {
   }
 
   async getLearns(data) {
+    const ip = await publicIp.v4();
     await this.bot.postMessage(
       data.channel,
-      `http://104.131.78.3?text=${data.user_text}`
+      `http://${ip}?text=${data.user_text}`
     );
   }
 };

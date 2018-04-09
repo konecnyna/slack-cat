@@ -28,7 +28,7 @@ module.exports = class GoogleGeocodeApi {
       url: "https://maps.googleapis.com/maps/api/geocode/json",      
       qs: {
         address: input,
-        key: process.env.GOOGLE_GEOCODE_API_KEY
+        key: config.getKey("google_geocode_api")
       }
     };
 

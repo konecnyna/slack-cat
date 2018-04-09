@@ -30,7 +30,7 @@ module.exports = class Server {
     this.app.post('/interactive-component', (req, res) => {
       const body = JSON.parse(req.body.payload);
       // check that the verification token matches expected value
-      if (body.token === process.env.SLACK_VERIFICATION_TOKEN) {
+      if (body.token === config.getKey("slack_verification_token")) {
         // immediately respond with a empty 200 response to let
         // Slack know the command was received
         res.send('');
@@ -44,8 +44,9 @@ module.exports = class Server {
   }
 
   start() {
-    this.app.listen(process.env.PORT, () => {
-      console.log(`App listening on port ${process.env.PORT}!`);
+    const port = config.getKey("port") || 3000;
+    this.app.listen(port, () => {
+      console.log(`App listening on http://localhost:${port}!`);
     });
   }
 };
