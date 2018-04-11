@@ -107,7 +107,7 @@ module.exports = class HelloWorld extends BaseModule {
 | Type  | Desc  | Required Method |
 |---|---|---|
 | MODULE | This is the default type. Use this when making a new cmd and call with `?<your_cmd_name> <args>`   | `handle(data)` |
-| OVERFLOW\_CMD | This module type is to handle commands that the router doesn't know how to handle. See `LearnOverflowAlises` for an example.   | `handleReaction(data)`|
+| OVERFLOW\_CMD | This module type is to handle commands that the router doesn't know how to handle. See `handleOverflow(data)` for an example.   | `handleReaction(data)`|
 | REACTION | This module is for handling when a user reacts to a post with an emoji. See the `Reactions` module for more info.  | `handleReaction(data)`|
 | MEMBER_JOINED_CHANNEL | This module is for handling when a user joins a channel | `handleMemeberJoin(data)`|
 | RAW_INPUT | This module is for handling any text being posted in the channel | `handleRawInput(data)` |
