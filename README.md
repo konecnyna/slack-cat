@@ -104,14 +104,15 @@ module.exports = class HelloWorld extends BaseModule {
 };
 ```
 
-| Type  | Desc  |
-|---|---|
-| MODULE | This is the default type. Use this when making a new cmd and call with `?<your_cmd_name> <args>`   |
-| OVERFLOW\_CMD | This module type is to handle commands that the router doesn't know how to handle. See `LearnOverflowAlises` for an example.   |
-| REACTION | This module is for handling when a user reacts to a post with an emoji. See the `Reactions` module for more info.  |
-| MEMBER_JOINED_CHANNEL | This module is for handling when a user joins a channel |
-| RAW_INPUT | This module is for handling any text being posted in the channel |
-| ENDPOINT | This module handling server side  |
+| Type  | Desc  | Required Method |
+|---|---|---|
+| MODULE | This is the default type. Use this when making a new cmd and call with `?<your_cmd_name> <args>`   | `handle(data)` |
+| OVERFLOW\_CMD | This module type is to handle commands that the router doesn't know how to handle. See `LearnOverflowAlises` for an example.   | `handleReaction(data)`|
+| REACTION | This module is for handling when a user reacts to a post with an emoji. See the `Reactions` module for more info.  | `handleReaction(data)`|
+| MEMBER_JOINED_CHANNEL | This module is for handling when a user joins a channel | `handleMemeberJoin(data)`|
+| RAW_INPUT | This module is for handling any text being posted in the channel | `handleRawInput(data)` |
+| ENDPOINT | This module handling server side  | `createRoutes(data)` |
+| DIALOG | This creates a dialog for a user to interact with  | `createRoutes(app)` `onDialogSubmit(data)` |
 
 
 
