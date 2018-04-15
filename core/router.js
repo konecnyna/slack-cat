@@ -61,7 +61,9 @@ module.exports = class Router {
       if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {      
         moduleObj.createRoutes(this.server.app);
         this.server.initHandleCallback(body => {
-          moduleObj.onDialogSubmit(body);
+          if (body.callback_id === moduleObj.dialogCallbackId()) {
+            moduleObj.onDialogSubmit(body);
+          }        
         });
       }
 

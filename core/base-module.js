@@ -44,6 +44,12 @@ module.exports = class BaseModule {
     );
 
     this.checkForOverridenMethod(
+      BaseModule.TYPES.DIALOG,
+      this.dialogCallbackId,
+      'dialogCallbackId'
+    );
+
+    this.checkForOverridenMethod(
       BaseModule.TYPES.ENDPOINT,
       this.createRoutes,
       'createRoutes'

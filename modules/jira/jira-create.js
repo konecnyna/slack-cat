@@ -24,7 +24,7 @@ module.exports = class JiraCreate {
     }
   }
 
-  createRoutes(app) {
+  createRoutes(app, callbackId) {
     app.post('/jira-create', (req, res) => {
       // extract the verification token, slash command text,
       // and trigger ID from payload
@@ -33,7 +33,7 @@ module.exports = class JiraCreate {
         {
           title: 'Create Jira Ticket!',
           callback_id: 'submit-jira-ticket',
-          submit_label: 'Create',
+          submit_label: callbackId,
           elements: [
             {
               label: 'Title',
