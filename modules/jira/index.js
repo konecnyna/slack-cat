@@ -11,6 +11,7 @@ const jira = new JiraApi({
 });
 const QUOTES_REGEX = new RegExp('("([^"]|"")*")', 'g');
 const JiraCreate = require('./jira-create');
+const CALLBACK_ID = 'submit-jira-ticket';
 
 module.exports = class Jira extends BaseModule {
   constructor(bot) {
@@ -24,13 +25,13 @@ module.exports = class Jira extends BaseModule {
       this.bot.postMessage(
         data.channel,
         "Please add ```'jira_api': {\n\
-    		'host': 'mykewlhost.org',\n\
-    		'username': 'user@kewldomain.com',\n\
-    		'password': 'xxxxxxxxxxx'\n\
-    		}``` to `config.json`"
+        'host': 'mykewlhost.org',\n\
+        'username': 'user@kewldomain.com',\n\
+        'password': 'xxxxxxxxxxx'\n\
+        }``` to `config.json`"
       );
       return;
-    }	
+    }
 
     if (!data.user_text) {
       this.displayHelp(data);
@@ -58,10 +59,6 @@ module.exports = class Jira extends BaseModule {
 
   displayHelp(data) {
     this.bot.postMessage(data.channel, this.help());
-  }
-
-  createRoutes(app) {
-    this.jiraCreate.createRoutes(app);
   }
 
   postUserTix(data, searchResults) {
@@ -121,8 +118,16 @@ module.exports = class Jira extends BaseModule {
   }
 
   async onDialogSubmit(body) {
-    const newIssue = await this.jiraCreate.createJiraTicket(body, jira);    
+    const newIssue = await this.jiraCreate.createJiraTicket(body, jira);
     this.postIssue(body.user.id, newIssue);
+  }
+
+  dialogCallbackId() {
+    return CALLBACK_ID;
+  }
+
+  createRoutes(app) {
+    this.jiraCreate.createRoutes(app, CALLBACK_ID);
   }
 
   async postIssue(channel, issue) {
@@ -145,7 +150,11 @@ module.exports = class Jira extends BaseModule {
   }
 
   getType() {
-    return [BaseModule.TYPES.MODULE, BaseModule.TYPES.DIALOG, BaseModule.TYPES.ENDPOINT];
+    return [
+      BaseModule.TYPES.MODULE,
+      BaseModule.TYPES.DIALOG,
+      BaseModule.TYPES.ENDPOINT,
+    ];
   }
 
   help() {
