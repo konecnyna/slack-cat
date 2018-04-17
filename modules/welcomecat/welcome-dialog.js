@@ -17,16 +17,16 @@ module.exports = class WelcomeDialog {
   createRoutes(app, dialogId) {        
     app.post('/welcome-cat', async (req, res) => {
       const { token, text, trigger_id, channel_id, channel_name } = req.body;      
-      const welcomeObject =  await this.welcomeHelper.getOptionsForChannel(channel_id);
-      
+      const welcomeObject =  await this.welcomeHelper.getOptionsForChannel(channel_id);          
+
       this.context.showDialog(
         {
-          title: 'Channel Welcome Message',
+          title: `Channel Welcome Message`,
           callback_id: dialogId,
           submit_label: "Submit",
           elements: [            
             {
-              label: `Message for #${channel_name}`,
+              label: `Message`,
               type: 'textarea',
               name: 'message', 
               value: welcomeObject.get('message') || ""             
