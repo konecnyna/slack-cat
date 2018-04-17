@@ -7,7 +7,6 @@ module.exports = class WeclomeHelper {
   }
 
   async setMessage(msg, enabled, channel, genericWelcome) {
-    console.log(enabled);
     const message = await this.context.upsert(
       this.model,
       { where: { channel: channel } },
