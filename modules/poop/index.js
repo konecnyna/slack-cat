@@ -20,7 +20,7 @@ module.exports = class Poop extends BaseStorageModule {
 
   registerSqliteModel() {
     this.PoopModel = this.db.define('poops', {
-      name: this.Sequelize.STRING,
+      name: { type: this.Sequelize.STRING, primaryKey: true },
       poops: {
         type: this.Sequelize.INTEGER,
         defaultValue: 0,
