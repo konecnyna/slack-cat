@@ -1,5 +1,6 @@
 'use strict';
 
+const WelcomeDialog = require('./welcome-dialog');
 const WelcomeHelper = require('./welcome-helper.js');
 const columnMap = {
   '--enabled' : "enabled",
@@ -11,10 +12,14 @@ const botParams = {
   username: 'WelcomeCat',
 };
 
+const DIALOG_ID = "welcome-cat-dialog";
+
 module.exports = class WelcomeCat extends BaseStorageModule {
   constructor(bot) {
     super(bot);
-    this.welcomeHelper = new WelcomeHelper(this.WelcomeMessageModel);
+    this.welcomeHelper = new WelcomeHelper(this.WelcomeMessageModel, this);
+    this.welcomeDialog = new WelcomeDialog(this, this.welcomeHelper);
+
   }
   async handle(data) {
     if (!data.args) {
@@ -27,29 +32,6 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       return;
     }
 
-    if (data.args.includes('--msg')) {
-      this.bot.postMessageWithParams(
-        data.channel,
-        `Set channel welcome message to: "${await this.welcomeHelper.setMessage(
-          this,
-          data,
-          data.channel
-        )}"`, 
-        botParams
-      );
-      return;
-    }
-    
-    if (this.cmds().includes(data.args[0])) {
-      if (data.args[0] === '--channelMsgEnabled' || data.args[0] === '--enabled') {
-        data.user_text = (data.user_text === 'true');
-      }
-
-      this.welcomeHelper.updateModel(data.channel, columnMap[data.args[0]], data.user_text);
-      this.bot.postMessageWithParams(data.channel, "Set!", botParams);
-      return;
-    }
-
     this.bot.postMessageWithParams(data.channel, "Bad command.", botParams);
   }
 
@@ -58,6 +40,7 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       data.channel
     );
 
+    
     if (welcomeMessage == null || !welcomeMessage.get('enabled')) {
       return;
     }
@@ -76,6 +59,18 @@ module.exports = class WelcomeCat extends BaseStorageModule {
     }    
   }
 
+  onDialogSubmit(body) {    
+    this.welcomeDialog.onDialogSubmit(body);
+  }
+
+  createRoutes(app) {    
+    this.welcomeDialog.createRoutes(app, DIALOG_ID);
+  }
+
+
+  dialogCallbackId() {
+    return DIALOG_ID;
+  }
 
   registerSqliteModel() {
     this.WelcomeMessageModel = this.db.define('welcome_message', {
@@ -115,6 +110,6 @@ That's it! Additional Arguments:
   }
   
   getType() {
-    return [BaseModule.TYPES.MEMBER_JOINED_CHANNEL, BaseModule.TYPES.MODULE];
+    return [BaseModule.TYPES.MEMBER_JOINED_CHANNEL, BaseModule.TYPES.MODULE, BaseModule.TYPES.DIALOG];
   }
 };
