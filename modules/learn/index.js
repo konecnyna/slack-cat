@@ -15,7 +15,7 @@ module.exports = class Learn extends BaseStorageModule {
 
   registerSqliteModel() {
     this.LearnsModel = this.db.define('learns', {
-      name: this.Sequelize.STRING,
+      name: {type: this.Sequelize.STRING, primaryKey: true },
       learn: this.Sequelize.STRING,
       learn_type: this.Sequelize.STRING,
       learned_by: this.Sequelize.STRING,

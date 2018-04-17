@@ -93,7 +93,7 @@ module.exports = class Plus extends BaseStorageModule {
 
   registerSqliteModel() {
     this.PlusModel = this.db.define('pluses', {
-      name: this.Sequelize.STRING,
+      name: { type: this.Sequelize.STRING,  primaryKey: true },
       pluses: this.Sequelize.INTEGER,
     });
   }
