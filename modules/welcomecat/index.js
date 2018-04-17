@@ -1,7 +1,7 @@
 'use strict';
 
-const WelcomeHelper = require('./welcome-helper.js');
 const WelcomeDialog = require('./welcome-dialog');
+const WelcomeHelper = require('./welcome-helper.js');
 const columnMap = {
   '--enabled' : "enabled",
   '--channelMsgEnabled': 'generic_welcome'
@@ -12,11 +12,13 @@ const botParams = {
   username: 'WelcomeCat',
 };
 
+const DIALOG_ID = "welcome-cat-dialog";
+
 module.exports = class WelcomeCat extends BaseStorageModule {
   constructor(bot) {
     super(bot);
-    this.welcomeHelper = new WelcomeHelper(this.WelcomeMessageModel);
-    this.welcomeDialog = new WelcomeDialog(this);
+    this.welcomeHelper = new WelcomeHelper(this.WelcomeMessageModel, this);
+    this.welcomeDialog = new WelcomeDialog(this, this.welcomeHelper);
 
   }
   async handle(data) {
@@ -30,17 +32,6 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       return;
     }
 
-    
-    if (this.cmds().includes(data.args[0])) {
-      if (data.args[0] === '--channelMsgEnabled' || data.args[0] === '--enabled') {
-        data.user_text = (data.user_text === 'true');
-      }
-
-      this.welcomeHelper.updateModel(data.channel, columnMap[data.args[0]], data.user_text);
-      this.bot.postMessageWithParams(data.channel, "Set!", botParams);
-      return;
-    }
-
     this.bot.postMessageWithParams(data.channel, "Bad command.", botParams);
   }
 
@@ -49,6 +40,7 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       data.channel
     );
 
+    
     if (welcomeMessage == null || !welcomeMessage.get('enabled')) {
       return;
     }
@@ -67,15 +59,18 @@ module.exports = class WelcomeCat extends BaseStorageModule {
     }    
   }
 
-  onDialogSubmit(body) {
-    console.log("HI!");
+  onDialogSubmit(body) {    
     this.welcomeDialog.onDialogSubmit(body);
   }
 
-  createRoutes(app) {
-    this.welcomeDialog.createRoutes(app);
+  createRoutes(app) {    
+    this.welcomeDialog.createRoutes(app, DIALOG_ID);
   }
 
+
+  dialogCallbackId() {
+    return DIALOG_ID;
+  }
 
   registerSqliteModel() {
     this.WelcomeMessageModel = this.db.define('welcome_message', {
