@@ -108,7 +108,6 @@ module.exports = class BaseModule {
     // extract the verification token, slash command text,
     // and trigger ID from payload
     const { token, text, trigger_id } = body;
-    console.log(body);
 
     const dialog = {
       token: config.getKey("slack_access_token"),
