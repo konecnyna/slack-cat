@@ -1,6 +1,7 @@
 'use strict';
 
 const WelcomeHelper = require('./welcome-helper.js');
+const WelcomeDialog = require('./welcome-dialog');
 const columnMap = {
   '--enabled' : "enabled",
   '--channelMsgEnabled': 'generic_welcome'
@@ -15,6 +16,8 @@ module.exports = class WelcomeCat extends BaseStorageModule {
   constructor(bot) {
     super(bot);
     this.welcomeHelper = new WelcomeHelper(this.WelcomeMessageModel);
+    this.welcomeDialog = new WelcomeDialog(this);
+
   }
   async handle(data) {
     if (!data.args) {
@@ -27,18 +30,6 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       return;
     }
 
-    if (data.args.includes('--msg')) {
-      this.bot.postMessageWithParams(
-        data.channel,
-        `Set channel welcome message to: "${await this.welcomeHelper.setMessage(
-          this,
-          data,
-          data.channel
-        )}"`, 
-        botParams
-      );
-      return;
-    }
     
     if (this.cmds().includes(data.args[0])) {
       if (data.args[0] === '--channelMsgEnabled' || data.args[0] === '--enabled') {
@@ -74,6 +65,15 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       const userData = await this.bot.userDataPromise(data.user);      
       this.bot.postMessageWithParams(data.channel, `Hi <@${userData.user.id}>! Welcome!`, botParams);  
     }    
+  }
+
+  onDialogSubmit(body) {
+    console.log("HI!");
+    this.welcomeDialog.onDialogSubmit(body);
+  }
+
+  createRoutes(app) {
+    this.welcomeDialog.createRoutes(app);
   }
 
 
@@ -115,6 +115,6 @@ That's it! Additional Arguments:
   }
   
   getType() {
-    return [BaseModule.TYPES.MEMBER_JOINED_CHANNEL, BaseModule.TYPES.MODULE];
+    return [BaseModule.TYPES.MEMBER_JOINED_CHANNEL, BaseModule.TYPES.MODULE, BaseModule.TYPES.DIALOG];
   }
 };
