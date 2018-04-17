@@ -1,23 +1,30 @@
 'use strict';
 
 module.exports = class WeclomeHelper {
-  constructor(model) {
+  constructor(model, context) {
     this.model = model;
+    this.context = context;
   }
 
-  async setMessage(context, data, channel) {
-    const message = await context.upsert(
+  async setMessage(msg, enabled, channel, genericWelcome) {
+    console.log(enabled);
+    const message = await this.context.upsert(
       this.model,
       { where: { channel: channel } },
       {
         channel: channel,
-        message: data.user_text,
+        message: msg,
+        enabled: enabled,
+        generic_welcome: genericWelcome
       },
       {
-        message: data.user_text,
+        message: msg,
+        enabled: enabled,
+        generic_welcome: genericWelcome
       }
     );    
-    return await message.get('message');
+    
+    return message.get('message');
   }
 
   async updateModel(channel, fieldName, value) {

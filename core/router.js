@@ -17,6 +17,7 @@ module.exports = class Router {
     this.reactionModules = {};
     this.memberJoinedModules = {};
     this.rawInputModules = {};
+    this.dialogModules = {};
 
     // Register all modules. Not good lazy solution cuz of aliases for now...
     this.registerModules();
@@ -60,14 +61,8 @@ module.exports = class Router {
 
       if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {      
         moduleObj.createRoutes(this.server.app);
-        this.server.initHandleCallback(body => {
-          if (body.callback_id === moduleObj.dialogCallbackId()) {
-            moduleObj.onDialogSubmit(body);
-          }        
-        });
-      }
-
-      if (moduleObj.getType().includes(BaseModule.TYPES.ENDPOINT)) {
+        this.addModules(key, moduleObj, BaseModule.TYPES.DIALOG, this.dialogModules);                
+      } else if (moduleObj.getType().includes(BaseModule.TYPES.ENDPOINT)) {
         moduleObj.createRoutes(this.server.app);        
       }
       
@@ -85,6 +80,7 @@ module.exports = class Router {
       this.addModules(key, moduleObj, BaseModule.TYPES.RAW_INPUT, this.rawInputModules);
     });
 
+    this.setupDialogCallback();
   }
 
   addModules(key, module, type, array) {
@@ -181,6 +177,17 @@ module.exports = class Router {
       data.channel,
       `<@${userData.user.id}> is just sent them to you.`
     );
+  }
+
+  setupDialogCallback() {
+    this.server.initHandleCallback(body => {
+      Object.keys(this.dialogModules).forEach(key => {
+        const moduleObj = this.dialogModules[key];        
+        if (body.callback_id === moduleObj.dialogCallbackId()) {
+          moduleObj.onDialogSubmit(body);
+        }
+      });
+    });
   }
 
   addExtras(data) {
