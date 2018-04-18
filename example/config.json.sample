@@ -1,0 +1,23 @@
+{  
+   "slack_api":"xoxb-****",
+   "darksky_api":"***",
+   "google_geocode_api":"***",
+   "pager_duty_api":"***",
+   "jira_api":{  
+      "host":"***.atlassian.net",
+      "username":"****",
+      "password":"**"
+   },
+   "github":{  
+      "username":"***",
+      "password":"****"
+   },
+   "mta":"***",
+   "modules_blacklist":[  
+
+   ],
+   "node_env":"production",
+   "port":80,
+   "slack_verification_token":"****",
+   "slack_access_token":"xoxp-***"
+}
