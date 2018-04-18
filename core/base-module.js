@@ -46,7 +46,7 @@ module.exports = class BaseModule {
     this.checkForOverridenMethod(
       BaseModule.TYPES.DIALOG,
       this.dialogCallbackId,
-      'dialogCallbackId (Please make sure you setup dialogs correctly: https://github.com/konecnyna/slack-cat/wiki/Dialog)'
+      'dialogCallbackId (Please make sure you setup dialogs correctly: https://github.com/konecnyna/slack-cat/wiki/Dialog )'
     );
 
     this.checkForOverridenMethod(
