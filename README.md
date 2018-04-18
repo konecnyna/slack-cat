@@ -114,7 +114,9 @@ module.exports = class HelloWorld extends BaseModule {
 | ENDPOINT | This module handling server side  | `createRoutes(data)` |
 | DIALOG | This creates a dialog for a user to interact with  | `createRoutes(app)` `onDialogSubmit(data)` |
 
+# Dialogs
 
+There is some more complexities with setting up dialogs in slack [detailed here](https://github.com/konecnyna/slack-cat/wiki/Dialog)
 
 # Debugging
 
