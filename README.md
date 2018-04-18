@@ -12,7 +12,7 @@ It's ezpz. You can look at the example implementation [here](https://github.com/
 
 1. run `npm install https://github.com/konecnyna/slack-cat.git --save` (this assumes you did an `npm init` in the directory)
 2. Add the configure the configuration file, database path (useful for backing up data), and path to your modules. If you don't have any modules pass an empty string `''`.
-3. Add your [slack api key](https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens) to config.json file in the root dir (See below for example).
+3. Add your [slack api key](https://get.slack.help/hc/en-us/articles/215770388-Create-and-regenerate-API-tokens) to [config.json](https://github.com/konecnyna/slack-cat/blob/master/example/config.json.sample) file in the root dir (See below for example).
 4. node `index.js`
 5. In Slack invite @SlackCat to a channel or direct message and run `?ping`. If everything is working the bot should respond with `?pong`.
 
@@ -29,7 +29,7 @@ new SlackCat(modules,configPath, dbPath).start();
 ```
 
 
-Example `config.json`:
+Example [`config.json`](https://github.com/konecnyna/slack-cat/blob/master/example/config.json.sample):
 ```
 {
     "slack_api": "xxx",
