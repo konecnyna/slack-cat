@@ -23,6 +23,14 @@ module.exports = class MockBot {
     }
   }
 
+  postMessageToThread(id, text, ts, params) {
+    if (this.callback) {
+      this.callback(text);
+    } else {
+      console.log(text);
+    }
+  }
+
   postMessageWithParams(channelId, msg, params) {
     this.msg = msg;
     if (this.callback) {
