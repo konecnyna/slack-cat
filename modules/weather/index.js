@@ -132,8 +132,6 @@ module.exports = class Weather extends BaseModule {
       weatherData.currently.windSpeed
     );
 
-    console.log(weatherData);
-
     this.bot.postFancyMessage(
       data.channel,
       this.weatherEmoji(weatherData.hourly.icon),
