@@ -147,29 +147,26 @@ module.exports = class Weather extends BaseModule {
   weatherEmoji(icon) {
   	switch(icon) {
   		case "clear-day":
-  			return "☀️";  			
+  			return ":sunny:";  			
   		case "clear-night":
-  			return "🌑";
-  		case "rain":
-  			return "🌧";
+  			return ":new_moon:";  		
 		case "snow":
-			return "🌨";
 		case "sleet":
-			return "🌨"
+			return ":snow_cloud:";		
 		case "wind":
-			return "🌬";
+			return ":wind_blowing_face:";
 		case "fog":
-			return "🌁";
+			return ":foggy:";
 		case "cloudy":
-			return "☁️";
+			return ":cloud:";
 		case "partly-cloudy-day":
-			return "🌤";
+			return ":sun_small_cloud:";
 		case "partly-cloudy-night":
-			return "⛅️";
+			return ":party_sunny:";
 		case "rain":
-			return "🌧";
+			return ":rain_cloud:";
 		default:
-			return "🌞";
+			return ":sunny:";
   	}  	
   }
 };
