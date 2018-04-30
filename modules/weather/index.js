@@ -120,13 +120,11 @@ module.exports = class Weather extends BaseModule {
   }
 
   sendFormattedWeather(data, weatherData, location) {
-    var title = util.format(
-      'Currently in %s: %d°',
-      location,
-      parseInt(weatherData.currently.apparentTemperature)
-    );
+    const title = `Currently in ${location}: ${parseInt(weatherData.currently.apparentTemperature)}°`;
+            
+    
 
-    var summary = util.format(
+    const summary = util.format(
       'Forecast: %s for the hour. %s\n\n %d%% humidity with wind speed of %d MPH',
       weatherData.currently.summary,
       weatherData.hourly.summary,
@@ -134,13 +132,44 @@ module.exports = class Weather extends BaseModule {
       weatherData.currently.windSpeed
     );
 
+    console.log(weatherData);
+
     this.bot.postFancyMessage(
       data.channel,
-      ':new_moon_with_face:',
+      this.weatherEmoji(weatherData.hourly.icon),
       '#ddd',
       title,
       summary,
       botParams
     );
+  }
+
+  weatherEmoji(icon) {
+  	switch(icon) {
+  		case "clear-day":
+  			return "☀️";  			
+  		case "clear-night":
+  			return "🌑";
+  		case "rain":
+  			return "🌧";
+		case "snow":
+			return "🌨";
+		case "sleet":
+			return "🌨"
+		case "wind":
+			return "🌬";
+		case "fog":
+			return "🌁";
+		case "cloudy":
+			return "☁️";
+		case "partly-cloudy-day":
+			return "🌤";
+		case "partly-cloudy-night":
+			return "⛅️";
+		case "rain":
+			return "🌧";
+		default:
+			return "🌞";
+  	}  	
   }
 };
