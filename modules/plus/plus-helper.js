@@ -3,15 +3,14 @@ module.exports = class PlusHelper {
     this.context = context;
   }
 
-  async displayPlusesForUser(data) {
+  async displayPlusesForUser(user) {
     const pluses = await this.context.PlusModel.findOne({
       where: {
-        name: data.user_text,
+        name: user,
       },
     });
 
-    const msg = `${data.user_text} has ${pluses.get('pluses')} pluses!`;
-    this.context.bot.postMessage(data.channel, msg);
+    return pluses.get('pluses');
   }
 
   async displayLeaderBoard(data) {
