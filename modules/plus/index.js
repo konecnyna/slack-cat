@@ -27,12 +27,18 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
+    const matches = data.user_text.match(userPattern);    
     if (data.cmd === 'pluses') {
-      this.plusHelper.displayPlusesForUser(data);
+      let user = data.user_text;
+      if (matches && matches.length > 1) {
+        user = await this.bot.getUserNameFromId(matches[1]);  
+      }    
+      const pluses = await this.plusHelper.displayPlusesForUser(user);          
+      this.bot.postMessage(data.channel, `${data.user_text} has ${pluses} pluses!`);      
       return;
     }
 
-    const matches = data.user_text.match(userPattern);
+    
     if ((matches && data.user === matches[1]) || data.user === data.user_text) {
       // Person is being an ahole and trying to plus themselves!
       this.bot.postMessage(data.channel, "You'll go blind like that kid!");
