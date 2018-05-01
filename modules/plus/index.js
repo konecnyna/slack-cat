@@ -31,8 +31,9 @@ module.exports = class Plus extends BaseStorageModule {
     if (data.cmd === 'pluses') {
       let user = data.user_text;
       if (matches && matches.length > 1) {
-        user = await this.bot.getUserNameFromId(matches[1]);  
+        user = await this.getUserNameFromId(matches[1]);
       }    
+      
       const pluses = await this.plusHelper.displayPlusesForUser(user);          
       this.bot.postMessage(data.channel, `${data.user_text} has ${pluses} pluses!`);      
       return;
@@ -54,8 +55,7 @@ module.exports = class Plus extends BaseStorageModule {
 
     // Resolve slack handle.
     try {
-      const userData = await this.bot.getUserNameFromId(matches[1]);
-      const userName = userData.user.profile.display_name || userData.user.name;
+      const userName = await this.getUserNameFromId(matches[1]);
       const pluses = await this.plusHelper.plusUser(userName);
       this.bot.postMessage(data.channel, `${userName} now has ${pluses} pluses!`);
     } catch (e) {
@@ -64,6 +64,11 @@ module.exports = class Plus extends BaseStorageModule {
     }
   }
 
+
+  async getUserNameFromId(userPatternResult) {
+    const userData = await this.bot.getUserNameFromId(userPatternResult);
+    return userData.user.profile.display_name || userData.user.name;      
+  }
   async handleReaction(data) {    
     if (data.reaction === 'eggplant' && cache.get(this.getPlusKey(data)) === null) {
       cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
