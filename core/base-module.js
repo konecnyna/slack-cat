@@ -10,14 +10,16 @@ module.exports = class BaseModule {
     if (new.target === BaseModule) {
       throw new TypeError('Cannot construct Abstract instances directly');
     }
-
-    if (this.handle === undefined) {
-      throw new TypeError('Child class must implement `handle(data);`');
-    }
-
+    
     if (this.help === undefined) {
       throw new TypeError('Child class must implement `help()` method');
     }
+
+    this.checkForOverridenMethod(
+      BaseModule.TYPES.MODULE,
+      this.handle,
+      'handle'
+    );
 
     this.checkForOverridenMethod(
       BaseModule.TYPES.REACTION,
