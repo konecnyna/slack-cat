@@ -56,14 +56,42 @@ module.exports = class Learn extends BaseStorageModule {
     }    
   }
 
-  unlearn(data) {    
-    const input = this.sanatizeInput(data.user_text);
-    this.LearnsModel.destroy({
-      where: {
-        name: input.name,
-        learn: input.text
+  async unlearn(data) {    
+    const input = this.sanatizeInput(data.user_text);    
+    if (!input.name.length || !input.text.length) {
+      this.bot.postMessage(data.channel, "You forgot to give me keybword o unlearn text. You can also use `?unlearn test --index 1`");
+      return;
+    }
+
+    if (data.args.includes('--index')) {
+      const learnData = await this.LearnsModel.findAll({
+        where: {
+          name: input.name,
+        }
+      });
+
+      const index = parseInt(input.text);
+      if (!learnData[index - 1]) {
+        this.bot.postMessage(data.channel, "Bad index");
+        return;
       }
-    });
+      
+      const learnText = learnData[index - 1].get('learn');      
+      this.LearnsModel.destroy({
+        where: {
+          name: input.name,
+          learn: learnText
+        }
+      });
+    } else {
+      this.LearnsModel.destroy({
+        where: {
+          name: input.name,
+          learn: input.text
+        }
+      });
+    }
+    
 
     this.bot.postMessage(data.channel, "Unlearned " + input.name);
   }
