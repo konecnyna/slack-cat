@@ -10,21 +10,24 @@ const mta = new Mta({
 module.exports = class MTA {
 	async getStops() {
 		// Gist of all the stations
-		return "https://gist.github.com/konecnyna/07f0436ff8b4a89d9f814938b12a3c25";
-		
-		// const stops = await mta.stop();
-	 //  	const output = Object.keys(stops).map(key => {
-	 //  		const stop = stops[key];
-	 //  		return `| ${stop.stop_id[0]} | ${stop.stop_name} |  ${stop.stop_id} |`
-	 //  	});
-	 //  	var fs = require('fs');
-		// fs.writeFile("stops.txt", output.join("\n"), function(err) {
-		//     if(err) {
-		//         return console.log(err);
-		//     }
+		return "https://gist.github.com/konecnyna/07f0436ff8b4a89d9f814938b12a3c25";		
+	}
 
-		//     console.log("The file was saved!");
-		// }); 
+	// This is for debug.
+	async getAllStops() {		
+		const stops = await mta.stop();
+	  	const output = Object.keys(stops).map(key => {
+	  		const stop = stops[key];
+	  		return `| ${stop.stop_id[0]} | ${stop.stop_name} |  ${stop.stop_id} |`
+	  	});
+	  	var fs = require('fs');
+		fs.writeFile("stops.txt", output.join("\n"), function(err) {
+		    if(err) {
+		        return console.log(err);
+		    }
+
+		    console.log("The file was saved!");
+		}); 
 	}
 
 	async status(input) {
@@ -35,7 +38,11 @@ module.exports = class MTA {
 	}
 
 	async getStopSchedule(stopId) {
-		return await mta.schedule(stopId, this.getFeedId(stopId[0]));
+		const feedId = this.getFeedId(stopId[0]);
+		if (feedId) {
+			return await mta.schedule(stopId, feedId);	
+		}
+		return null;		
 	}
 
 	async getStopName(stopId) {
@@ -77,6 +84,8 @@ module.exports = class MTA {
 	}
 
 	getFeedId(input) {
+		input = input.toUpperCase();
+
 		if ("123456S".includes(input)) {
 			return 1;
 		}
