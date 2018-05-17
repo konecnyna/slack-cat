@@ -175,7 +175,7 @@ module.exports = class Router {
     );
     this.bot.postMessage(
       data.channel,
-      `<@${userData.user.id}> is just sent them to you.`
+      `<@${userData.user.id}> -- I just sent them to you.`
     );
   }
 
