@@ -4,7 +4,7 @@ const util = require('util');
 module.exports = class HrViolations extends BaseStorageModule {
 
   async handle(data) {
-  
+
     await this.replaceSlackUserWithUserName(data);
     if (data.cmd === "hrviolations") {
       this.displayHrviolations(data);
@@ -54,12 +54,12 @@ module.exports = class HrViolations extends BaseStorageModule {
 
   async getLeaderBoard(data) {
     const violations = await this.db.query(
-      'select name, count(*) as number from hrviolations GROUP BY 1 order by number DESC', 
+      'select name, count(*) as number from hrviolations GROUP BY 1 order by number DESC',
       { model: this.HrViolations }
     );
-      
+
     let msg = "";
-    violations.forEach( (violation, index) =>  {
+    violations.forEach((violation, index) => {
       let row = util.format("*%d. %s* - %d violations\n", index + 1, violation.get('name'), violation.get('number'));
       msg += row;
     });
@@ -81,13 +81,13 @@ module.exports = class HrViolations extends BaseStorageModule {
     hrviolations.map(row => {
       msgs.push(row.get('reported_reason'));
     });
-    
+
     return msgs;
   }
 
   async addViolation(data) {
     const split = data.user_text.split(' ');
-    const authorData = await this.bot.userDataPromise(data.user);    
+    const authorData = await this.bot.userDataPromise(data.user);
 
     const violationsData = {
       name: split[0].trim(),
@@ -95,6 +95,6 @@ module.exports = class HrViolations extends BaseStorageModule {
       reported_by: authorData.user.name,
     };
 
-    this.HrViolations.create(violationsData);      
+    this.HrViolations.create(violationsData);
   }
 };

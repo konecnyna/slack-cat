@@ -120,7 +120,6 @@ module.exports = class BaseModule {
     axios
       .post('https://slack.com/api/dialog.open', qs.stringify(dialog))
       .then(result => {
-        console.log('dialog.open: %o', result.data);
         res.send('');
       })
       .catch(err => {
