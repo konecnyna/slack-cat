@@ -13,10 +13,20 @@ module.exports = class LearnsList {
   async createRoutes(app) {
     app.get('/', async (req, res) => {
       const params = {
-        where: {
-          name: req.query.text,
-        },
+        where: {}
       };
+
+      switch (req.query.text) {
+        case "allText":
+          params.where['learn_type'] = 'quote';
+          break;
+        case "allImages":
+          params.where['learn_type'] = 'image';
+          break;
+        default:
+          params.where['name'] = req.query.text;
+          break;  
+      }
 
       const learnData = await this.LearnsModel.findAll(params);
       const learns = [];
@@ -48,7 +58,7 @@ module.exports = class LearnsList {
     const ip = await publicIp.v4();
     await this.bot.postMessage(
       data.channel,
-      `http://${ip}?text=${data.user_text}`
+      `http://${ip}?text=${data.user_text || "allText"}`
     );
   }
 };
