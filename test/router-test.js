@@ -16,7 +16,7 @@ const Config = require(path.join(__dirname + '/../core', 'mock-config.js'));
 global.config = new Config();
 global.STORAGE_PATH = './storage/db-dev.sqlite';
 global.BaseModule = require('../core/base-module.js');
-global.BaseStorageModule = require('../core/storage-base-module.js');
+global.BaseStorageModule = require('../core/base-storage-module.js');
 const Server = require('../core/server.js');
 let router = new Router(new MockBot(), null, new Server());
 

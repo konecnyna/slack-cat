@@ -9,7 +9,7 @@ const Server = require('./core/server.js');
 
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js');
-global.BaseStorageModule = require('./core/storage-base-module.js');
+global.BaseStorageModule = require('./core/base-storage-module.js');
 
 const testMsg = {
   type: 'message',
