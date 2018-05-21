@@ -132,9 +132,11 @@ module.exports = class Weather extends BaseModule {
       weatherData.currently.windSpeed
     );
 
+    const emoji = this.weatherEmoji(weatherData.hourly.icon);    
+
     this.bot.postFancyMessage(
       data.channel,
-      this.weatherEmoji(weatherData.hourly.icon),
+      emoji,
       '#ddd',
       title,
       summary,
@@ -142,7 +144,8 @@ module.exports = class Weather extends BaseModule {
     );
   }
 
-  weatherEmoji(icon) {
+  weatherEmoji(icon) {    
+
   	switch(icon) {
   		case "clear-day":
   			return ":sunny:";  			
@@ -160,7 +163,7 @@ module.exports = class Weather extends BaseModule {
 		case "partly-cloudy-day":
 			return ":sun_small_cloud:";
 		case "partly-cloudy-night":
-			return ":party_sunny:";
+			return ":partly_sunny:";
 		case "rain":
 			return ":rain_cloud:";
 		default:
