@@ -4,20 +4,26 @@ const request = require('request');
 
 module.exports = class PagerDuty extends BaseModule {
   async handle(data) {
-    if (!config.getKey('pager_duty_api')) {
+    if (!this.isValidConfig()) {
       this.bot.postMessage(data.channel, "Please add key `pager_duty_api` key to `config.json`");      
       return;
     }
 
     
-    const body = await this.getData(data);    
+    const body = await this.getData(data);
+
     body.oncalls.sort((a, b) => {
       return a.escalation_level > b.escalation_level;
+    });
+
+    const policy = body.oncalls.filter(item => {
+      //console.log(item.escalation_policy.id, config.getKey('pager_duty_api').policy_id)
+        return item.escalation_policy.id === config.getKey('pager_duty_api').policy_id;
     });
     
     
     const map = {};
-    body.oncalls.map(item => {
+    policy.map(item => {
       const key = "level" + item.escalation_level;
       if (key in map) {
         map[key].value += ", " + item.user.summary              
@@ -62,11 +68,17 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
 
+  isValidConfig() {
+    return config.getKey('pager_duty_api')
+      && config.getKey('pager_duty_api').key
+      && config.getKey('pager_duty_api').policy_id;
+  }
+
   getData(data) {
     var options = {
       url: "https://api.pagerduty.com/oncalls",
       headers: {
-        "Authorization": "Token token=" + config.getKey('pager_duty_api'),
+        "Authorization": "Token token=" + config.getKey('pager_duty_api').key,
         "Content-Type": "application/json",
         "Accept": "application/vnd.pagerduty+json;version=2"
       }
