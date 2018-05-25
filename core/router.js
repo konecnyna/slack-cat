@@ -127,7 +127,7 @@ module.exports = class Router {
 
   handleCmdMessage(data) {
     const matches = this.addExtras(data);
-    if (data.cmd && data.cmd === 'cmds') {
+    if (this.isShowCommnads(data)) {
       this.showCmds(data);
       return;
     }
@@ -147,6 +147,14 @@ module.exports = class Router {
     }
 
     this.handleOverflow(data);
+  }
+
+  isShowCommnads(data) {
+    if (!data.cmd) {
+      return false;
+    }
+    
+    return data.cmd === 'commands' || data.cmd === 'cmds';
   }
 
   handleOverflow(data) {
