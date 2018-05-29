@@ -30,7 +30,7 @@ module.exports = class PagerDuty extends BaseModule {
 
   postFieldsToChannel(channel, fields) {
     this.bot.postRawMessage(channel, {
-      icon_emoji: ':cat:',
+      icon_url: 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png',
       username: 'PagerDutyCat',
       attachments: [
         {
