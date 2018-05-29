@@ -137,6 +137,7 @@ module.exports = class BaseModule {
       RAW_INPUT: 'raw_input',
       DIALOG: 'dialog',
       ENDPOINT: 'endpoint',
+      SERVICE: 'service'
     };
   }
 };

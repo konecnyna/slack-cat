@@ -18,6 +18,7 @@ module.exports = class Router {
     this.memberJoinedModules = {};
     this.rawInputModules = {};
     this.dialogModules = {};
+    this.serviceModules = {};
 
     // Register all modules. Not good lazy solution cuz of aliases for now...
     this.registerModules();
@@ -78,6 +79,7 @@ module.exports = class Router {
       this.addModules(key, moduleObj, BaseModule.TYPES.REACTION, this.reactionModules);
       this.addModules(key, moduleObj, BaseModule.TYPES.MEMBER_JOINED_CHANNEL, this.memberJoinedModules);
       this.addModules(key, moduleObj, BaseModule.TYPES.RAW_INPUT, this.rawInputModules);
+      this.addModules(key, moduleObj, BaseModule.TYPES.SERVICE, this.serviceModules);
     });
 
     this.setupDialogCallback();

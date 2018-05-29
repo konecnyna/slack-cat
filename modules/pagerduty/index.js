@@ -69,7 +69,7 @@ module.exports = class PagerDuty extends BaseModule {
     return map;
   }
 
-  getData(data) {
+  getData() {
     var options = {
       url: 'https://api.pagerduty.com/oncalls',
       headers: {
