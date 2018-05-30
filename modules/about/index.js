@@ -49,7 +49,7 @@ const HELP_MSG = [
 
 module.exports = class About extends BaseModule {
   handle(data) {
-    if (data.cmd === 'helper') {
+    if (data.cmd === 'help') {
       this.postFancyMessage(data.channel, HELP_MSG, 'https://github.com/konecnyna/slack-cat/blob/master/README.md');
       return;
     }
