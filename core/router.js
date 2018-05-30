@@ -71,6 +71,11 @@ module.exports = class Router {
       if (moduleObj.getType().includes(BaseModule.TYPES.MODULE)) {
         this.modules[key] = moduleObj;
         moduleObj.aliases().map(alias => {
+          if (this.modules[alias]) {  
+            console.error('************************************************');
+            console.error('* Warning: Overwriting [' + alias + '] alias. *');
+            console.error('************************************************');      
+          }
           this.modules[alias] = moduleObj;
         });
       }

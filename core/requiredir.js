@@ -157,11 +157,17 @@ module.exports = class RequireDir {
     }
     Object.keys(allModules).map(key => {
       if (modules[key] !== undefined) {
-        console.error('*********************************');
-        console.error('* Warning: Overriting ' + key + ' cmd. *');
-        console.error('*********************************');
+        this.showOverriteError(key);
       }
     });
+
+    
+  }
+
+  showOverriteError(key) {
+    console.error('*********************************');
+    console.error('* Warning: Overwriting ' + key + ' cmd. *');
+    console.error('*********************************');
   }
 
   toCamelCase(str) {
