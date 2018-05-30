@@ -42,7 +42,7 @@ const HELP_MSG = [
   },
   {
     title: 'Troubleshooting:',
-    value: 'Solution: Verify that slackcat is in the chnnale `/invite @slackcat`. Make sure the server hasn\'t crashed.',
+    value: 'Solution: Verify that slackcat is in the channel `/invite @slackcat`. Make sure the server hasn\'t crashed.',
     short: true,
   },
 ];
