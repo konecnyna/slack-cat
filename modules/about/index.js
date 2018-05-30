@@ -1,54 +1,81 @@
 'use strict';
 
+const SOURCE_MSG = [
+  {
+    title: 'Author(s):',
+    value: 'defkon (https://github.com/konecnyna)',
+    short: false,
+  },
+  {
+    title: 'Source code:',
+    value: 'https://github.com/konecnyna/slack-cat',
+    short: false,
+  },
+  {
+    title: 'Contributing:',
+    value: 'https://github.com/konecnyna/slack-cat/blob/master/README.md',
+    short: false,
+  },
+
+  {
+    title: 'Help:',
+    value: 'List of commands - `?cmds`\nHelp - `?<module_name> --help`',
+    short: false,
+  },
+];
+
+const HELP_MSG = [
+  {
+    title: 'Help:',
+    value: 'List of commands - `?cmds`\nHelp - `?<module_name> --help`',
+    short: false,
+  },
+  {
+    title: 'Usage:',
+    value: 'Commands are always prefixed with `?` such as `?ping`. Simply type `?ping` in any channel that has Slackcat in it and Slackcat should return `pong`',
+    short: false,
+  },
+  {
+    title: 'Troubleshooting:',
+    value: 'Issue: I typed a command and nothiing happened?',
+    short: true,
+  },
+  {
+    title: 'Troubleshooting:',
+    value: 'Solution: Verify that slackcat is in the chnnale `/invite @slackcat`. Make sure the server hasn\'t crashed.',
+    short: true,
+  },
+];
+
 module.exports = class About extends BaseModule {
-	handle(data) {
-		const fields = [
-			{
-				title: 'Author(s):',
-				value: 'defkon (https://github.com/konecnyna)',
-				short: false,
-			},
-			{
-				title: 'Source code:',
-				value: 'https://github.com/konecnyna/slack-cat',
-				short: false,
-			},
-			{
-				title: 'Contributing:',
-				value:
-					'https://github.com/konecnyna/slack-cat/blob/master/README.md',
-				short: false,
-			},
+  handle(data) {
+    if (data.cmd === 'helper') {
+      this.postFancyMessage(data.channel, HELP_MSG, 'https://github.com/konecnyna/slack-cat/blob/master/README.md');
+      return;
+    }
 
-			{
-				title: 'Help:',
-				value: 'List of commands - `?cmds`\nHelp - `?<module_name> --help`',
-				short: false,
-			}
-		];
+    this.postFancyMessage(data.channel, SOURCE_MSG, 'meow');
+  }
 
-		this.postFancyMessage(data.channel, fields);
-	}
+  async postFancyMessage(channel, fields, footer) {
+    this.bot.postRawMessage(channel, {
+      icon_emoji: ':cat:',
+      username: 'slackcat',
+      attachments: [
+        {
+          color: '#36a64f',
+          fields: fields,
+          footer: footer,
+        },
+      ],
+    });
+  }
 
-	async postFancyMessage(channel, fields) {
-		this.bot.postRawMessage(channel, {
-			icon_emoji: ':cat:',
-			username: 'slackcat',
-			attachments: [
-				{
-					color: '#36a64f',
-					fields: fields,
-					footer: 'meow',
-				},
-			],
-		});
-	}
+  aliases() {
+    return ['source', 'help'];
+  }
 
-	aliases() {
-		return ['source'];
-	}
-
-	help() {
-		return 'Shows you kewl info about the author(s)';
-	}
+  help() {
+    return 'Shows you kewl info about the author(s) and useful info how to sue the cat.';
+  }
 };
