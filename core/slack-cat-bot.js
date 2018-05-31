@@ -1,12 +1,7 @@
 'use strict';
 
 const SlackBot = require('slackbots');
-var extend = require('extend');
-
-const botParams = {
-  icon_emoji: ':cat:',
-  username: 'SlackCat',
-};
+const extend = require('extend');
 
 const MSG_TIMEOUT = 250;
 
@@ -17,10 +12,29 @@ const MSG_TIMEOUT = 250;
  *
  **/
 module.exports = class SlackCatBot extends SlackBot {
+  constructor(args) {
+    super(args);
+
+    const name = config.getKey('bot_name');
+    const icon_emoji = config.getKey('bot_emoji');
+    const icon_url = config.getKey('bot_icon_url');
+
+    this.botParams = {
+      username: name || 'SlackCat',
+    };
+
+    if (icon_url) {
+      // url takes prority.
+      this.botParams['icon_url'] = icon_url;
+    } else {
+      this.botParams['icon_emoji'] = icon_emoji || ':cat:';
+    }
+  }
+  
   async postMessage(channelId, msg) {
     // Set default bot params.
     await this.delayForScrollIssue();
-    super.postMessage(channelId, msg, botParams);
+    super.postMessage(channelId, msg, this.botParams);
   }
 
   async postMessageWithParams(channelId, msg, params) {
@@ -74,12 +88,15 @@ module.exports = class SlackCatBot extends SlackBot {
   }
 
   postMessageToThread(id, text, ts, params) {
-    params = extend({
+    params = extend(
+      {
         text: text,
         channel: id,
         thread_ts: ts,
-        username: this.name
-    }, params || botParams);    
+        username: this.name,
+      },
+      params || this.botParams
+    );
     return this._api('chat.postMessage', params);
   }
 
