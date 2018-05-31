@@ -1,5 +1,8 @@
 {  
    "slack_api":"xxx",
+   "bot_name": "test",
+   "bot_emoji": ":cat:",
+   "bot_icon_url": "http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png",
    "darksky_api":"***",
    "google_geocode_api":"***",
    "pager_duty_api":"***",

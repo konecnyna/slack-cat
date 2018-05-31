@@ -51,7 +51,7 @@ class SlackCat {
     this.dbPath = dbPath;
 
     global.STORAGE_PATH = dbPath;
-    global.config = new Config(configPath);    
+    global.config = new Config(configPath);
   }
 
   start() {
@@ -63,15 +63,16 @@ class SlackCat {
 
     const bot = new SlackCatBot({
       token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
-      name: 'SlackCat',
     });
 
-    const server = new Server();        
+    const server = new Server();
     const router = new Router(bot, this.pathToModules, server);
-    server.start();
 
     bot.on('start', () => {
-      console.info('Starting server in ' + config.getKey("node_env") + ' mode.');
+      server.start();
+      console.info(
+        'Starting server in ' + config.getKey('node_env') + ' mode.'
+      );
     });
 
     bot.on('message', data => {

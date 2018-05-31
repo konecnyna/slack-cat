@@ -1,9 +1,6 @@
 'use strict';
 const axios = require('axios');
 const qs = require('querystring');
-const defaultBotParams = {
-  icon_emoji: ':cat:',
-};
 
 module.exports = class BaseModule {
   constructor(bot) {
