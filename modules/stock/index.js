@@ -31,7 +31,8 @@ module.exports = class Stock extends BaseModule {
 
   getData(symbol) {
     var options = {
-      url: `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=60min&apikey=${key}`
+      url: `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=60min&apikey=${key}`,
+      timeout: 45000
     };
 
     return new Promise((resolve, reject) => {
