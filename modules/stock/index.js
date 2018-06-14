@@ -15,14 +15,18 @@ module.exports = class Stock extends BaseModule {
       return;
     }
 
-    const stockData = await this.getData(data.user_text);
+    try {
+      const stockData = await this.getData(data.user_text);
 
-    if (!stockData) {
-      this.bot.postMessage(data.channel, `Couldn't find ${data.user_text}`);
-      return;
-    }
+      if (!stockData) {
+        this.bot.postMessage(data.channel, `Couldn't find ${data.user_text}`);
+        return;
+      }
 
-    this.postFancyData(data, stockData);
+      this.postFancyData(data, stockData);
+    } catch (e) {
+      this.bot.postMessage(data.channel, `I got an error: ${e}`);
+    }    
   }
 
   getData(symbol) {
@@ -32,13 +36,14 @@ module.exports = class Stock extends BaseModule {
 
     return new Promise((resolve, reject) => {
       request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-          console.error(error);
+        const json = JSON.parse(body);
+        if (error || json['Error Message']) {
+          reject(error || json['Error Message']);
+          console.error(error || json['Error Message']);
           return;
         }
 
-        const seriesData = JSON.parse(body)['Time Series (60min)'];
+        const seriesData = json['Time Series (60min)'];        
         resolve(seriesData[Object.keys(seriesData)[0]]);
       });
     });
