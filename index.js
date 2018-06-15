@@ -6,6 +6,8 @@ const Config = require('./core/config.js');
 const Router = require('./core/router.js');
 const SlackCatBot = require('./core/slack-cat-bot.js');
 const Server = require('./core/server.js');
+const { RTMClient } = require('@slack/client');
+
 
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js');
@@ -65,17 +67,20 @@ class SlackCat {
       token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
     });
 
+    const rtm = new RTMClient(config.getKey('slack_api'));
+
     const server = new Server();
     const router = new Router(bot, this.pathToModules, server);
 
-    bot.on('start', () => {
+    rtm.start();
+    rtm.on('start', () => {
       server.start();
       console.info(
         'Starting server in ' + config.getKey('node_env') + ' mode.'
       );
     });
 
-    bot.on('message', data => {
+    rtm.on('message', data => {
       router.handle(data);
     });
   }
