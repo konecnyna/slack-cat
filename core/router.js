@@ -5,7 +5,7 @@ const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 const moduleResolver = new requireDir();
 
-
+    
 module.exports = class Router {
   constructor(bot, pathToModules, server) {
     this.bot = bot;
