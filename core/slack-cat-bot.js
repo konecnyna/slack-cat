@@ -3,10 +3,8 @@
 const SlackBot = require('slackbots');
 const extend = require('extend');
 
-const MSG_TIMEOUT = 250;
-
 /**
- *
+ * FIXED:
  * The timeouts are for a scroll issue. When the bot responds in real time
  * there is strange behavior where slack won't scroll to the newest msg.
  *
@@ -30,17 +28,6 @@ module.exports = class SlackCatBot extends SlackBot {
       this.botParams['icon_emoji'] = icon_emoji || ':cat:';
     }
   }
-  
-  async postMessage(channelId, msg) {
-    // Set default bot params.
-    await this.delayForScrollIssue();
-    super.postMessage(channelId, msg, this.botParams);
-  }
-
-  async postMessageWithParams(channelId, msg, params) {
-    await this.delayForScrollIssue();
-    super.postMessage(channelId, msg, params);
-  }
 
   postMessageSequentially(data, messages) {
     const promiseSerial = funcs =>
@@ -62,29 +49,27 @@ module.exports = class SlackCatBot extends SlackBot {
   }
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
-    setTimeout(() => {
-      var attachments = {
-        icon_emoji: icon_emoji,
-        attachments: [
-          {
-            color: color,
-            title: title,
-            text: body,
-          },
-        ],
-      };
-
-      var params = extend(
+    var attachments = {
+      icon_emoji: icon_emoji,
+      attachments: [
         {
-          channel: channel_id,
-          username: this.name,
+          color: color,
+          title: title,
+          text: body,
         },
-        botParams || {},
-        attachments
-      );
+      ],
+    };
 
-      this.postRawMessage(channel_id, params);
-    }, MSG_TIMEOUT);
+    var params = extend(
+      {
+        channel: channel_id,
+        username: this.name,
+      },
+      botParams || {},
+      attachments
+    );
+
+    this.postRawMessage(channel_id, params);
   }
 
   postMessageToThread(id, text, ts, params) {
@@ -135,13 +120,5 @@ module.exports = class SlackCatBot extends SlackBot {
       .catch(err => {
         return err;
       });
-  }
-
-  delayForScrollIssue() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve();
-      }, MSG_TIMEOUT);
-    });
   }
 };
