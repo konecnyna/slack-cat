@@ -55,6 +55,10 @@ module.exports = class SlackCatBot extends SlackBot {
   }
 
 
+  async postMessageWithParams(channelId, msg, params) {
+    super.postMessage(channelId, msg, params);
+  }
+
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
     var attachments = {
       icon_emoji: icon_emoji,
