@@ -47,6 +47,13 @@ module.exports = class SlackCatBot extends SlackBot {
     // execute Promises in serial
     promiseSerial(funcs).catch(console.error.bind(console));
   }
+  
+
+  async postMessage(channelId, msg) {
+    // Set default bot params.
+    super.postMessage(channelId, msg, this.botParams);
+  }
+
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
     var attachments = {
