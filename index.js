@@ -73,12 +73,8 @@ class SlackCat {
     const router = new Router(bot, this.pathToModules, server);
 
     rtm.start();
-    rtm.on('start', () => {
-      server.start();
-      console.info(
-        'Starting server in ' + config.getKey('node_env') + ' mode.'
-      );
-    });
+    server.start();
+    console.info('Starting server in ' + config.getKey('node_env') + ' mode.');
 
     rtm.on('message', data => {
       router.handle(data);
