@@ -8,7 +8,6 @@ const SlackCatBot = require('./core/slack-cat-bot.js');
 const Server = require('./core/server.js');
 const { RTMClient } = require('@slack/client');
 
-
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js');
 global.BaseStorageModule = require('./core/base-storage-module.js');
@@ -77,6 +76,14 @@ class SlackCat {
     console.info('Starting server in ' + config.getKey('node_env') + ' mode.');
 
     rtm.on('message', data => {
+      router.handle(data);
+    });
+
+    rtm.on('reaction_added', data => {
+      router.handle(data);
+    });
+
+    rtm.on('member_joined_channel', data => {
       router.handle(data);
     });
   }
