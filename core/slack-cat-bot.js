@@ -2,6 +2,7 @@
 
 const SlackBot = require('slackbots');
 const extend = require('extend');
+const { WebClient } = require('@slack/client');
 
 /**
  * FIXED:
@@ -10,9 +11,9 @@ const extend = require('extend');
  *
  **/
 module.exports = class SlackCatBot extends SlackBot {
-  constructor(args) {
-    super(args);
-
+  constructor(token) {
+    super(token);
+    this.web = new WebClient(config.getKey('slack_access_token'));
     const name = config.getKey('bot_name');
     const icon_emoji = config.getKey('bot_emoji');
     const icon_url = config.getKey('bot_icon_url');
@@ -47,15 +48,30 @@ module.exports = class SlackCatBot extends SlackBot {
     // execute Promises in serial
     promiseSerial(funcs).catch(console.error.bind(console));
   }
-  
 
-  async postMessage(channelId, msg) {
-    // Set default bot params.
-    super.postMessage(channelId, msg, this.botParams);
+  async postMessage(id, text) {
+    const params = extend(
+      {
+        text: text,
+        channel: id,
+      },
+      this.botParams
+    );
+
+    this.web.chat.postMessage(params).catch(console.error);
   }
 
-
   async postMessageWithParams(channelId, msg, params) {
+    const params = extend(
+      {
+        text: text,
+        channel: id,
+        u
+      },
+      this.botParams
+    );
+
+    this.web.chat.postMessage(params).catch(console.error);
     super.postMessage(channelId, msg, params);
   }
 
