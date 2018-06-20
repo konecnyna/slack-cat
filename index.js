@@ -77,6 +77,14 @@ class SlackCat {
     rtm.on('message', data => {
       router.handle(data);
     });
+
+    rtm.on('reaction_added', data => {
+      router.handle(data);
+    });
+
+    rtm.on('member_joined_channel', data => {
+      router.handle(data);
+    });
   }
 
   runDebugCommand() {
