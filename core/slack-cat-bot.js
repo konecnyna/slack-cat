@@ -52,14 +52,13 @@ module.exports = class SlackCatBot {
     this.web.chat.postMessage(params).catch(console.error);
   }
 
-  async postMessageWithParams(channelId, msg, params) {
+  async postMessageWithParams(id, text, extras) {
     const params = extend(
       {
         text: text,
-        channel: id,
-        u,
+        channel: id,        
       },
-      this.botParams
+      extras
     );
 
     return this.web.chat.postMessage(params).catch(console.error);
