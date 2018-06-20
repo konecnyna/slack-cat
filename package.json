@@ -16,7 +16,9 @@
   "bugs": {
     "url": "https://github.com/konecnyna/slack-cat/issues"
   },
-  "engines" : { "node" : ">=9.4.0" },
+  "engines": {
+    "node": ">=9.4.0"
+  },
   "homepage": "https://github.com/konecnyna/slack-cat#readme",
   "dependencies": {
     "@slack/client": "^4.3.1",
@@ -33,7 +35,7 @@
     "public-ip": "^2.4.0",
     "request": "^2.83.0",
     "require-dir": "^0.3.2",
-    "sequelize": "^4.22.5",    
+    "sequelize": "^4.22.5",
     "sqlite3": "^4.0.0"
   },
   "devDependencies": {
