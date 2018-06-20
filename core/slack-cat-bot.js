@@ -4,15 +4,8 @@ const SlackBot = require('slackbots');
 const extend = require('extend');
 const { WebClient } = require('@slack/client');
 
-/**
- * FIXED:
- * The timeouts are for a scroll issue. When the bot responds in real time
- * there is strange behavior where slack won't scroll to the newest msg.
- *
- **/
-module.exports = class SlackCatBot extends SlackBot {
+module.exports = class SlackCatBot {
   constructor(token) {
-    super(token);
     this.web = new WebClient(config.getKey('slack_access_token'));
     const name = config.getKey('bot_name');
     const icon_emoji = config.getKey('bot_emoji');
@@ -66,13 +59,12 @@ module.exports = class SlackCatBot extends SlackBot {
       {
         text: text,
         channel: id,
-        u
+        u,
       },
       this.botParams
     );
 
-    this.web.chat.postMessage(params).catch(console.error);
-    super.postMessage(channelId, msg, params);
+    return this.web.chat.postMessage(params).catch(console.error);
   }
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
@@ -96,7 +88,7 @@ module.exports = class SlackCatBot extends SlackBot {
       attachments
     );
 
-    this.postRawMessage(channel_id, params);
+    return this.postRawMessage(channel_id, params);
   }
 
   postMessageToThread(id, text, ts, params) {
@@ -109,7 +101,8 @@ module.exports = class SlackCatBot extends SlackBot {
       },
       params || this.botParams
     );
-    return this._api('chat.postMessage', params);
+
+    return this.web.chat.postMessage(params);
   }
 
   postRawMessage(channel_id, args) {
@@ -121,11 +114,11 @@ module.exports = class SlackCatBot extends SlackBot {
       args || {}
     );
 
-    return this._api('chat.postMessage', params);
+    return this.web.chat.postMessage(params);
   }
 
   getUserNameFromId(user_id) {
-    return this._api('users.info', {
+    return this.web.users.info({
       user: user_id,
     });
   }
@@ -138,14 +131,19 @@ module.exports = class SlackCatBot extends SlackBot {
   }
 
   userDataPromise(user_id) {
-    return this._api('users.info', {
+    return this.web.users.info({
       user: user_id,
-    })
-      .then(data => {
-        return data;
+    });
+  }
+
+  getChannelById(channel) {
+    return this.web.channels
+      .list()
+      .then(res => {
+        return res.channels.find(it => {
+          return it.id === channel;
+        });
       })
-      .catch(err => {
-        return err;
-      });
+      .catch(console.error);
   }
 };

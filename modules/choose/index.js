@@ -14,7 +14,7 @@ module.exports = class Choose extends BaseModule {
   }
 
   getRandomUser(userData) {
-  	return userData.members[
+    return userData.members[
 		Math.floor( Math.random() * userData.members.length)
 	];
   }
