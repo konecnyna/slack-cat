@@ -1,6 +1,4 @@
 'use strict';
-
-const SlackBot = require('slackbots');
 const extend = require('extend');
 const { WebClient } = require('@slack/client');
 
