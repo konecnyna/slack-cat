@@ -74,7 +74,6 @@ class SlackCat {
     rtm.start();
     server.start();
     console.info('Starting server in ' + config.getKey('node_env') + ' mode.');
-
     rtm.on('message', data => {
       router.handle(data);
     });
