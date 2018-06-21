@@ -33,7 +33,7 @@ module.exports = class MTA extends BaseModule {
       `${userData.user.name} - I just sent them to you`
     );
     this.bot.postMessageToUser(
-      userData.user.name,
+      userData.user.id,
       `Here is a gist of stations: ${stops}`
     );
   }

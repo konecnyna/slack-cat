@@ -3,7 +3,7 @@ const extend = require('extend');
 const { WebClient } = require('@slack/client');
 
 module.exports = class SlackCatBot {
-  constructor(data) {    
+  constructor(data) {
     this.botInfo = data.self;
     this.web = new WebClient(config.getKey('slack_access_token'));
     const name = config.getKey('bot_name');
@@ -20,8 +20,6 @@ module.exports = class SlackCatBot {
     } else {
       this.botParams['icon_emoji'] = icon_emoji || ':cat:';
     }
-
-        
   }
 
   postMessageSequentially(data, messages) {
@@ -59,7 +57,7 @@ module.exports = class SlackCatBot {
     const params = extend(
       {
         text: text,
-        channel: id,        
+        channel: id,
       },
       extras
     );
@@ -136,17 +134,16 @@ module.exports = class SlackCatBot {
     });
   }
 
-  postMessageToUser(userId, msg) {    
-  console.log(userId)   
-   const params = extend(
+  postMessageToUser(userId, msg) {
+    const params = extend(
       {
         channel: userId,
-        text: msg,        
+        text: msg
       },
       this.botParams
     );
 
-    return this.web.chat.postMessage(params); 
+    return this.web.chat.postMessage(params);
   }
 
   getChannelById(channel) {
