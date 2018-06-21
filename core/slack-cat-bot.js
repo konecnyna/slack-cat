@@ -133,6 +133,18 @@ module.exports = class SlackCatBot {
     });
   }
 
+  postMessageToUser(userId, msg) {       
+   const params = extend(
+      {
+        channel: userId,
+        text: msg
+      },
+      this.botParams
+    );
+
+    return this.web.chat.postMessage(params); 
+  }
+
   getChannelById(channel) {
     return this.web.channels
       .list()

@@ -184,10 +184,12 @@ module.exports = class Router {
       });
 
     const userData = await this.bot.userDataPromise(data.user);
+    
     this.bot.postMessageToUser(
-      userData.user.name,
+      userData.user.id,
       'List of cmds:\n```' + list + '```'
     );
+
     this.bot.postMessage(
       data.channel,
       `<@${userData.user.id}> -- I just sent them to you.`
