@@ -62,18 +62,19 @@ class SlackCat {
       return;
     }
 
-    const bot = new SlackCatBot({
-      token: config.getKey('slack_api'), // Add a bot https://my.slack.com/services/new/bot and put the token
-    });
+    
 
     const rtm = new RTMClient(config.getKey('slack_api'));
-
-    const server = new Server();
-    const router = new Router(bot, this.pathToModules, server);
-
+    let router;
     rtm.start();
-    server.start();
-    console.info('Starting server in ' + config.getKey('node_env') + ' mode.');
+    
+    rtm.on('authenticated', data => {
+      const bot = new SlackCatBot(data);
+      const server = new Server();
+      router = new Router(bot, this.pathToModules, server);
+      server.start();      
+    });
+
     rtm.on('message', data => {
       router.handle(data);
     });
