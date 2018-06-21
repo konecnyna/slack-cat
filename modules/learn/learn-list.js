@@ -6,8 +6,6 @@ module.exports = class LearnsList {
   constructor(bot, model) {
     this.bot = bot;
     this.LearnsModel = model;
-
-    
   }
 
   async createRoutes(app) {
@@ -31,10 +29,9 @@ module.exports = class LearnsList {
       const learnData = await this.LearnsModel.findAll(params);
       const learns = [];
       res.set({ 'content-type': 'text/html; charset=utf-8' });
-      learnData.forEach(async (row, index) => {
-        console.log();
+      learnData.forEach(async (row, index) => {        
         learns.push(
-          `<h3>${index + 1}. ${this.createListItem(row.get('learn'))}</h3>`
+          `<h3>${row.get('name')}: <br/> value: ${this.createListItem(row.get('learn'))}</h3>`
         );
       });
       res.send(learns.join(''));
@@ -58,7 +55,7 @@ module.exports = class LearnsList {
     const ip = await publicIp.v4();
     await this.bot.postMessage(
       data.channel,
-      `http://${ip}?text=${data.user_text || "allText"}`
+      `http://${ip}:${config.getKey("port") || 3000}?text=${data.user_text || "allText"}`
     );
   }
 };
