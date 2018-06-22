@@ -64,7 +64,7 @@ class SlackCat {
 
     
 
-    const rtm = new RTMClient(config.getKey('slack_api'));
+    const rtm = new RTMClient(config.getKey('slack_access_token'));
     let router;
     rtm.start();
     
