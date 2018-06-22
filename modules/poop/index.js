@@ -86,7 +86,7 @@ module.exports = class Poop extends BaseStorageModule {
   }
 
   aliases() {
-    return ['poop-board'];
+    return ['poop-board', ':poop:'];
   }
 
   help() {
