@@ -80,7 +80,7 @@ module.exports = class SlackCatBot {
     var params = extend(
       {
         channel: channel_id,
-        username: this.name,
+        username: this.botParams.username,
       },
       botParams || {},
       attachments
@@ -95,7 +95,7 @@ module.exports = class SlackCatBot {
         text: text,
         channel: id,
         thread_ts: ts,
-        username: this.name,
+        username: this.botParams.username
       },
       params || this.botParams
     );
@@ -107,7 +107,7 @@ module.exports = class SlackCatBot {
     var params = extend(
       {
         channel: channel_id,
-        username: this.name,
+        username: this.botParams.username
       },
       args || {}
     );
@@ -150,7 +150,7 @@ module.exports = class SlackCatBot {
     return this.web.channels
       .list()
       .then(res => {
-        return res.channels.find(it => {
+        return res.channels.find(it => {          
           return it.id === channel;
         });
       })
