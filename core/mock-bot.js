@@ -1,6 +1,4 @@
 'use strict';
-
-const SlackBot = require('slackbots');
 var extend = require('extend');
 
 const botParams = {
