@@ -104,10 +104,9 @@ ${await this.createBody(learnData)}
       learn = learn.replace('>', '');
       if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(learn)) {
         return `<a href=${learn}>${learn}</a><br/><img src="${learn}" width=200/>`;
-      }
-
-      return `<a href=${learn} />`;
+      }    
     }
+
     return learn;
   }
 
