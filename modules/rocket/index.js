@@ -1,78 +1,44 @@
 'use strict';
 
-  const rocket = "```\n\
-     /\\      \n\
-    /  \\      \n\
-    |==|      \n\
-    |  |      \n\
-    |  |      \n\
-    |  |      \n\
-   /____\\      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-  /| |  |\\      \n\
- / | |  | \\      \n\
-/__|_|__|__\\      \n\
-   /_\\/_\\    ";
-
-const falconHeavy = "```\n\
-   :car:     \n\
-     /\\      \n\
-    /  \\      \n\
-    |==|      \n\
-    |  |      \n\
-    |  |      \n\
-    |  |      \n\
-   /____\\      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-   |    |      \n\
-  /| |  |\\      \n\
- / | |  | \\      \n\
-/__|_|__|__\\      \n\
-   /_\\/_\\    ";
-
+const rocket = `
+     /\\      
+    /  \\      
+    |==|      
+    |  |      
+    |  |      
+    |  |      
+   /____\\      
+   |    |      
+   |    |      
+   |    |      
+   |    |      
+   |    |      
+   |    |      
+   |    |      
+   |    |      
+   |    |      
+   |    |      
+  /| |  |\\      
+ / | |  | \\      
+/__|_|__|__\\      
+   /_\\/_\\    
+`;
 
 module.exports = class Rocket extends BaseModule {
   handle(data) {
-    let rocketShip = rocket 
-    
-    if (data.cmd === 'falcon-heavy') {
-      rocketShip = falconHeavy;
+    let rocketShip = rocket;
+    for (let i = 0; i < 50; i++) {
+      rocketShip += '\n   000000';
     }
 
-    for (let i = 0; i < 40; i++) {
-        	rocketShip += "\n   000000";
-        }
+    rocketShip = `\`\`\`${rocketShip}\n\`\`\``;
 
-        rocketShip += "\n```";
-
-        this.bot.postMessage(data.channel, rocketShip, {
-    	  icon_emoji: ':rocket:',
-    	});	
-    }
-
-
-  aliases() {
-    return ['falcon-heavy'];
+    this.bot.postMessage(data.channel, rocketShip, {
+      icon_emoji: ':rocket:',
+    });
   }
 
   help() {
-    return "Usage: get shit off the screen!";
+    return 'Usage: get shit off the screen!';
   }
 };
