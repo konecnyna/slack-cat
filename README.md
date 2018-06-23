@@ -32,7 +32,8 @@ new SlackCat(modules,configPath, dbPath).start();
 Example [`config.json`](https://github.com/konecnyna/slack-cat/blob/master/example/config.json.sample):
 ```
 {
-    "slack_api": "xxx",
+    "slack_verification_token": "xxx",
+    "slack_access_token": "xxx",
     "darksky_api": "xxx",
     "google_geocode_api": "xxx",
     "pager_duty_api": "xxx",
@@ -41,9 +42,14 @@ Example [`config.json`](https://github.com/konecnyna/slack-cat/blob/master/examp
     	"username": "xxx",
     	"password": "xxx"
     },
-    "modules_blacklist": []
+    "modules_blacklist": [],
+    "stock": "xxx",
+    "port": 3000,
+    "node_env": "production"
 }
 ```
+
+
 
 # Modules
 
