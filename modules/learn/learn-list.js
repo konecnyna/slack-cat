@@ -99,12 +99,10 @@ ${await this.createBody(learnData)}
   }
 
   createListItem(learn) {
-    if (learn[0] === '<') {
+    if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(learn)) {
       learn = learn.replace('<', '');
-      learn = learn.replace('>', '');
-      if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(learn)) {
-        return `<a href=${learn}>${learn}</a><br/><img src="${learn}" width=200/>`;
-      }    
+      learn = learn.replace('>', '');      
+      return `<a href=${learn}>${learn}</a><br/><img src="${learn}" width=300/>`;    
     }
 
     return learn;
