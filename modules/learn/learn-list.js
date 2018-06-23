@@ -11,31 +11,91 @@ module.exports = class LearnsList {
   async createRoutes(app) {
     app.get('/', async (req, res) => {
       const params = {
-        where: {}
+        where: {},
+        order: [['name', 'ASC']],
       };
 
       switch (req.query.text) {
-        case "allText":
+        case 'allText':
           params.where['learn_type'] = 'quote';
           break;
-        case "allImages":
+        case 'allImages':
           params.where['learn_type'] = 'image';
           break;
         default:
           params.where['name'] = req.query.text;
-          break;  
+          break;
       }
 
       const learnData = await this.LearnsModel.findAll(params);
-      const learns = [];
-      res.set({ 'content-type': 'text/html; charset=utf-8' });
-      learnData.forEach(async (row, index) => {        
-        learns.push(
-          `<h3>${row.get('name')}: <br/> value: ${this.createListItem(row.get('learn'))}</h3>`
-        );
-      });
-      res.send(learns.join(''));
+      const page = await this.createPage(res, learnData);
+      res.send(page);
     });
+  }
+
+  async createPage(res, learnData) {
+    res.set({ 'content-type': 'text/html; charset=utf-8' });
+
+    const page = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+<body style="background: #EFEFEF">
+
+<div class="container" class="p-3">
+<h1> Learns: </h1>
+<hr/>
+${await this.createBody(learnData)}
+</div>
+
+</body>
+</html>`;
+    return page;
+  }
+
+  async createBody(learnData) {
+    const cards = [];
+    let learns = [];
+    let title = null;
+
+    learnData.forEach(async (row, index) => {
+      if (title === null) {
+        title = row.get('name');
+      }
+
+      if (title !== row.get('name')) {
+        // New section.
+        cards.push(this.createCard(title, learns));
+        title = row.get('name');
+        learns = [];
+      }
+
+      learns.push(
+        `<div class="mt-2 mb-2">${learns.length + 1} - ${this.createListItem(
+          row.get('learn')
+        )}</div>`
+      );
+    });
+
+    if (cards.length === 0) {
+      cards.push(this.createCard(title, learns));
+    }
+
+    return cards.join('');
+  }
+
+  createCard(title, learns) {
+    return `
+    <div class="card p-3 mt-3">
+        <h5 class="card-title">${title}</h5>
+      <div class="card-body">
+        ${learns.join('')}
+      </div>
+    </div>
+    `;
   }
 
   createListItem(learn) {
@@ -55,7 +115,8 @@ module.exports = class LearnsList {
     const ip = await publicIp.v4();
     await this.bot.postMessage(
       data.channel,
-      `http://${ip}:${config.getKey("port") || 3000}?text=${data.user_text || "allText"}`
+      `http://${ip}:${config.getKey('port') || 3000}?text=${data.user_text ||
+        'allText'}`
     );
   }
 };
