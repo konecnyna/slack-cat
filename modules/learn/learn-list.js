@@ -69,9 +69,9 @@ ${await this.createBody(learnData)}
       }
 
       learns.push(
-        `<div class="mt-2 mb-2">${learns.length + 1} - ${this.createListItem(
+        `<div class="mt-2 mb-2">${learns.length + 1}. ${this.createListItem(
           row.get('learn')
-        )}</div>`
+        )}<span style="float:right; font-size:16px" class="badge badge-primary">${row.get('learned_by')}</span></div>`
       );
     });
 
