@@ -99,12 +99,19 @@ ${await this.createBody(learnData)}
   }
 
   createListItem(learn) {
-    if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(learn)) {
+    if (/\.(gif|jpg|jpeg|tiff|png)/i.test(learn)) {
       learn = learn.replace('<', '');
-      learn = learn.replace('>', '');      
-      return `<a href=${learn}>${learn}</a><br/><img src="${learn}" width=300/>`;    
+      learn = learn.replace('>', '');
+      return `<a href=${learn} target="_blank">${learn}</a><br/><img src="${learn}" width=200/>`;      
     }
 
+    if (/(www|http:|https:)+[^\s]+[\w]/i.test(learn)) {      
+      return `<a href=${learn} target="_blank">${learn}</a>`;
+    }
+
+    if (learn.length === 0) {
+      learn = "NO TEXT - THIS IS A BAD ENTRY.";
+    }
     return learn;
   }
 
