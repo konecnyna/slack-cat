@@ -1,7 +1,7 @@
 'use strict';
 const publicIp = require('public-ip');
 
-const ROUTE_PATH = '/learns';
+const ROUTE_PATH = 'learns';
 
 module.exports = class LearnsList {
   constructor(bot, model) {
@@ -10,7 +10,7 @@ module.exports = class LearnsList {
   }
 
   async createRoutes(app) {
-    app.get(ROUTE_PATH, async (req, res) => {
+    app.get(`/${ROUTE_PATH}`, async (req, res) => {
       const params = {
         where: {},
         order: [['name', 'ASC']],
@@ -114,7 +114,7 @@ ${await this.createBody(learnData)}
 
   async getLearns(data) {
     const ip = await publicIp.v4();
-    const args = data.user_text ? `?text=${data.user_text}` : null;
+    const args = data.user_text ? `?text=${data.user_text}` : '';
     await this.bot.postMessage(
       data.channel,
       `http://${ip}:${config.getKey('port') || 3000}/${ROUTE_PATH}${args}`
