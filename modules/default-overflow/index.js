@@ -13,7 +13,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
     let learns = false;
     if (data.user_text.length > 0) {
       const index = parseInt(data.user_text);
-      learns = await this.learn.getLearns(data.cmd, 1, false, index + 1);
+      learns = await this.learn.getLearns(data.cmd, 1, false, index - 1);
     } else {      
       learns = await this.learn.getLearns(data.cmd, 1, true, false);  
     }
