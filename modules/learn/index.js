@@ -150,7 +150,9 @@ module.exports = class Learn extends BaseStorageModule {
   }
 
   async learnGeneral(data, userData) {
-    const authorData = await this.bot.userDataPromise(data.user);
+    let authorData = await this.bot.userDataPromise(data.user);
+    authorData = authorData.replace(' ', '-');
+    
     const input = this.sanatizeInput(data.user_text);
 
     let name = input.name;    

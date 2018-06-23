@@ -1,6 +1,8 @@
 'use strict';
 const publicIp = require('public-ip');
 
+const ROUTE_PATH = '/learns';
+
 module.exports = class LearnsList {
   constructor(bot, model) {
     this.bot = bot;
@@ -8,7 +10,7 @@ module.exports = class LearnsList {
   }
 
   async createRoutes(app) {
-    app.get('/learns', async (req, res) => {
+    app.get(ROUTE_PATH, async (req, res) => {
       const params = {
         where: {},
         order: [['name', 'ASC']],
@@ -83,7 +85,8 @@ ${await this.createBody(learnData)}
   createCard(title, learns) {
     return `
     <div class="card p-3 mt-3">
-        <h5 class="card-title">${title}</h5>
+      <h5 class="card-title">${title}</h5>
+      <hr/ class="m-0 p-0">
       <div class="card-body">
         ${learns.join('')}
       </div>
@@ -111,10 +114,10 @@ ${await this.createBody(learnData)}
 
   async getLearns(data) {
     const ip = await publicIp.v4();
-    const args = data.user_text ? `?text=${data.user_text}` : '';
+    const args = data.user_text ? `?text=${data.user_text}` : null;
     await this.bot.postMessage(
       data.channel,
-      `http://${ip}:${config.getKey('port') || 3000}${args}`
+      `http://${ip}:${config.getKey('port') || 3000}/${ROUTE_PATH}${args}`
     );
   }
 };
