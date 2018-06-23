@@ -1,7 +1,6 @@
 'use strict';
 const publicIp = require('public-ip');
 
-
 module.exports = class LearnsList {
   constructor(bot, model) {
     this.bot = bot;
@@ -9,22 +8,16 @@ module.exports = class LearnsList {
   }
 
   async createRoutes(app) {
-    app.get('/', async (req, res) => {
+    app.get('/learns', async (req, res) => {
       const params = {
         where: {},
         order: [['name', 'ASC']],
       };
 
-      switch (req.query.text) {
-        case 'allText':
-          params.where['learn_type'] = 'quote';
-          break;
-        case 'allImages':
-          params.where['learn_type'] = 'image';
-          break;
-        default:
-          params.where['name'] = req.query.text;
-          break;
+      if (!req.query.text) {
+        params.where['learn_type'] = 'quote';
+      } else {
+        params.where['name'] = req.query.text;
       }
 
       const learnData = await this.LearnsModel.findAll(params);
@@ -99,10 +92,11 @@ ${await this.createBody(learnData)}
   }
 
   createListItem(learn) {
-    if (/\.(gif|jpg|jpeg|tiff|png)/i.test(learn)) {
-      learn = learn.replace('<', '');
-      learn = learn.replace('>', '');
-      return `<a href="${learn}" target="_blank">${learn}</a><br/><img src="${learn}" width=200/>`;      
+    learn = learn.replace('<', '');
+    learn = learn.replace('>', '');
+
+    if (/\.(gif|jpg|jpeg|tiff|png)/i.test(learn)) {      
+      return `<a href="${learn}" target="_blank"><img src="${learn}" width=200/></a>`;      
     }
 
     if (/(www|http:|https:)+[^\s]+[\w]/i.test(learn)) {      
@@ -117,10 +111,10 @@ ${await this.createBody(learnData)}
 
   async getLearns(data) {
     const ip = await publicIp.v4();
+    const args = data.user_text ? `?text=${data.user_text}` : '';
     await this.bot.postMessage(
       data.channel,
-      `http://${ip}:${config.getKey('port') || 3000}?text=${data.user_text ||
-        'allText'}`
+      `http://${ip}:${config.getKey('port') || 3000}${args}`
     );
   }
 };
