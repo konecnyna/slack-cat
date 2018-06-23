@@ -12,8 +12,12 @@ module.exports = class LearnOverflowAlises extends BaseModule {
   async handle(data) {
     let learns = false;
     if (data.user_text.length > 0) {
-      const index = parseInt(data.user_text);
-      learns = await this.learn.getLearns(data.cmd, 1, false, index - 1);
+      let index = parseInt(data.user_text);
+      if (index > 0) {
+        index--;
+      }
+
+      learns = await this.learn.getLearns(data.cmd, 1, false, index);
     } else {      
       learns = await this.learn.getLearns(data.cmd, 1, true, false);  
     }
