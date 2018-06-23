@@ -102,11 +102,11 @@ ${await this.createBody(learnData)}
     if (/\.(gif|jpg|jpeg|tiff|png)/i.test(learn)) {
       learn = learn.replace('<', '');
       learn = learn.replace('>', '');
-      return `<a href=${learn} target="_blank">${learn}</a><br/><img src="${learn}" width=200/>`;      
+      return `<a href="${learn}" target="_blank">${learn}</a><br/><img src="${learn}" width=200/>`;      
     }
 
     if (/(www|http:|https:)+[^\s]+[\w]/i.test(learn)) {      
-      return `<a href=${learn} target="_blank">${learn}</a>`;
+      return `<a href="${learn}" target="_blank">${learn}</a>`;
     }
 
     if (learn.length === 0) {
