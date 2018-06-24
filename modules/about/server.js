@@ -43,7 +43,7 @@ module.exports = class Server {
     <div class="p-3">
       <h1> Help: </h1>
       <hr/>
-      ${this.createBody()}
+      ${this.createBody()}      
     </div>
   </div>
   
@@ -59,11 +59,9 @@ module.exports = class Server {
     let currentModule;
     
     Object.keys(this.modules).map(key => {
-      if (!currentModule) {
-        currentModule = this.modules[key];  
-      }
+      currentModule = this.modules[key];      
       
-      if (currentModule.aliases().includes(key)) {
+      if (currentModule && currentModule.aliases().includes(key)) {        
         aliases.push(key);
         return;
       }
@@ -74,7 +72,6 @@ module.exports = class Server {
         console.error(e);
       }
       
-      currentModule = this.modules[key];          
       aliases = [];
     });
 
@@ -84,7 +81,7 @@ module.exports = class Server {
   createCard(title, help, aliases) {
     return `
     <div class="card mt-3">
-      <div class="card-header bg-info;">
+      <div class="card-header bg-info">
         <h1>${title}</h1>
       </div>
       <div class="card-body">
@@ -99,12 +96,13 @@ module.exports = class Server {
 
   createAliasesSection(aliases) {
     if (!aliases.length) {
-      return;
+      return "<div></div>";
     }
 
     const divs = aliases.map(it => {      
-        return `<div class="list-group-item list-group-item-action">${it}</div>`
+        return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`
     });
+
 
     return `
     <div class="mt-3">
