@@ -156,4 +156,8 @@ module.exports = class SlackCatBot {
       })
       .catch(console.error);
   }
+
+  setModules(modules) {        
+    this.modules = modules;
+  }
 };
