@@ -55,11 +55,9 @@ module.exports = class Server {
 
   createBody() {
     const cards = [];
-    let aliases = [];
-    // let title = null;
-    console.log(this.modules.ping.help())
-
+    let aliases = [];    
     let currentModule;
+    
     Object.keys(this.modules).map(key => {
       if (!currentModule) {
         currentModule = this.modules[key];  
