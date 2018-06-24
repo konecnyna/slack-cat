@@ -1,16 +1,16 @@
 'use strict';
-
+const Server = require('./server');
 const requireDir = require('./requiredir');
+
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 const moduleResolver = new requireDir();
 
     
 module.exports = class Router {
-  constructor(bot, pathToModules, server) {
+  constructor(bot, pathToModules) {
     this.bot = bot;
-    this.pathToModules = pathToModules;
-    this.server = server;
+    this.pathToModules = pathToModules;    
 
     this.modules = {};
     this.overflowModules = {};
@@ -19,9 +19,16 @@ module.exports = class Router {
     this.rawInputModules = {};
     this.dialogModules = {};
     this.serviceModules = {};
+    this.server = new Server();
 
     // Register all modules. Not good lazy solution cuz of aliases for now...
     this.registerModules();
+
+    // Allow modules to access other ones via bot.
+    this.bot.setModules(this.modules);
+
+   
+    this.server.start();      
   }
 
   handle(data) {
@@ -180,7 +187,7 @@ module.exports = class Router {
     Object.keys(this.modules)
       .sort()
       .forEach((key, idx) => {
-        list += idx + 1 + '. ' + key + '\n';
+        list += `${idx + 1}. ${key}\n`;
       });
 
     const userData = await this.bot.userDataPromise(data.user);

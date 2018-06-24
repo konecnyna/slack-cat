@@ -1,13 +1,12 @@
 'use strict';
-const exec = require('child_process').exec;
 
+const publicIp = require('public-ip');
 
 module.exports = class WhereAmI extends BaseModule {
   async handle(data) {
     this.bot.postMessage(data.channel, "Resolving ip...");
-    exec("curl ifconfig.me", (error, stdout, stderr) => {
-      this.bot.postMessage(data.channel, "http://" + stdout);      
-    });
+    const ip = await publicIp.v4()    
+  	this.bot.postMessage(data.channel, "http://" + ip);          
   }
 
 

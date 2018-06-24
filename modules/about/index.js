@@ -1,4 +1,8 @@
 'use strict';
+const AboutServer = require('./server');
+const aboutServer = new AboutServer();
+const publicIp = require('public-ip');
+
 
 const SOURCE_MSG = [
   {
@@ -26,11 +30,6 @@ const SOURCE_MSG = [
 
 const HELP_MSG = [
   {
-    title: 'Help:',
-    value: 'List of commands - `?cmds`\nHelp - `?<module_name> --help`',
-    short: false,
-  },
-  {
     title: 'Usage:',
     value: 'Commands are always prefixed with `?` such as `?ping`. Simply type `?ping` in any channel that has Slackcat in it and Slackcat should return `pong`',
     short: false,
@@ -48,8 +47,15 @@ const HELP_MSG = [
 ];
 
 module.exports = class About extends BaseModule {
-  handle(data) {
+
+  async handle(data) {
     if (data.cmd === 'help') {
+      const ip = await publicIp.v4();
+      HELP_MSG.unshift({
+        title: 'Help:',
+        value: `List of commands - \`?cmds\` or http://${ip}/help\nHelp - \`?<module_name> --help\``,
+        short: false,
+      });
       this.postFancyMessage(data.channel, HELP_MSG, 'https://github.com/konecnyna/slack-cat/blob/master/README.md');
       return;
     }
@@ -71,11 +77,25 @@ module.exports = class About extends BaseModule {
     });
   }
 
+  createRoutes(app) {
+    app.get(`/help`, async (req, res) => {
+      aboutServer.setModules(this.bot.modules);
+      
+      res.set({ 'content-type': 'text/html; charset=utf-8' });
+      const page = await aboutServer.createPage();
+      res.send(page);
+    }); 
+  }
+
   aliases() {
     return ['source', 'help'];
   }
 
+  getType() {
+    return [BaseModule.TYPES.ENDPOINT, BaseModule.TYPES.MODULE];
+  }
+
   help() {
-    return 'Shows you kewl info about the author(s) and useful info how to sue the cat.';
+    return 'Shows you kewl info about the author(s) and useful info how to use the cat.';
   }
 };

@@ -5,7 +5,6 @@ const path = require('path');
 const Config = require('./core/config.js');
 const Router = require('./core/router.js');
 const SlackCatBot = require('./core/slack-cat-bot.js');
-const Server = require('./core/server.js');
 const { RTMClient } = require('@slack/client');
 
 // Global Base Modules.
@@ -65,14 +64,11 @@ class SlackCat {
     
 
     const rtm = new RTMClient(config.getKey('slack_access_token'));
-    let router;
+    let router;    
     rtm.start();
     
     rtm.on('authenticated', data => {
-      const bot = new SlackCatBot(data);
-      const server = new Server();
-      router = new Router(bot, this.pathToModules, server);
-      server.start();      
+      router = new Router(new SlackCatBot(data), this.pathToModules);      
     });
 
     rtm.on('message', data => {
