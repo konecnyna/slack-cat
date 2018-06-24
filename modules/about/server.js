@@ -70,7 +70,12 @@ module.exports = class Server {
         return;
       }
 
-      cards.push(this.createCard(key, currentModule.help(), aliases));                
+      try {
+        cards.push(this.createCard(key, currentModule.help(), aliases));  
+      } catch(e) {
+        console.error(e);
+      }
+      
       currentModule = this.modules[key];          
       aliases = [];
     });
