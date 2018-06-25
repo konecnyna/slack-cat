@@ -49,7 +49,7 @@ module.exports = class WelcomeCat extends BaseStorageModule {
     const msg = welcomeMessage.get('message');
     if (msg != null) {
       const userData = await this.bot.userDataPromise(data.user);      
-      this.bot.postMessageToUser(userData.user.name, msg, botParams);              
+      this.bot.postMessageToUser(userData.user.id, msg, botParams);              
     }
       
 
