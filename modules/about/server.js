@@ -1,8 +1,7 @@
 const ROUTE_PATH = 'help';
 module.exports = class Server {
-
   setModules(modules) {
-    this.modules = modules;    
+    this.modules = modules;
   }
   async createPage() {
     const page = `
@@ -55,27 +54,37 @@ module.exports = class Server {
 
   createBody() {
     const cards = [];
-    let aliases = [];    
-    let currentModule;
-    
-    Object.keys(this.modules).map(key => {
-      currentModule = this.modules[key];      
-      
-      if (currentModule && currentModule.aliases().includes(key)) {        
-        aliases.push(key);
-        return;
-      }
+    const aliases = this.getAliases();
 
-      try {
-        cards.push(this.createCard(key, currentModule.help(), aliases));  
-      } catch(e) {
-        console.error(e);
-      }
-      
-      aliases = [];
-    });
+    // Filter out aliases.
+    Object.keys(this.modules)
+      .filter(it => {
+        return !aliases[it];
+      })
+      .map(key => {
+        // Now build master map.
+        try {
+          const currentModule = this.modules[key];
+          cards.push(
+            this.createCard(key, currentModule.help(), currentModule.aliases())
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      });
 
     return cards.join('');
+  }
+
+  getAliases() {
+    const aliases = {};
+    Object.keys(this.modules).map(it => {
+      this.modules[it].aliases().map(key => {
+        aliases[key] = true;
+      });
+    });
+
+    return aliases;
   }
 
   createCard(title, help, aliases) {
@@ -96,13 +105,12 @@ module.exports = class Server {
 
   createAliasesSection(aliases) {
     if (!aliases.length) {
-      return "<div></div>";
+      return '<div></div>';
     }
 
-    const divs = aliases.map(it => {      
-        return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`
+    const divs = aliases.map(it => {
+      return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`;
     });
-
 
     return `
     <div class="mt-3">
@@ -111,6 +119,6 @@ module.exports = class Server {
         ${divs.join('')}
       </div>
     </div>
-    `
+    `;
   }
 };

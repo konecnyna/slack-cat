@@ -159,4 +159,8 @@ module.exports = class MockBot {
       },
     };
   }
+
+  setModules(modules) {        
+    this.modules = modules;
+  }
 };
