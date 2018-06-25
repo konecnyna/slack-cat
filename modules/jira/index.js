@@ -133,7 +133,7 @@ module.exports = class Jira extends BaseModule {
   async postIssue(channel, issue) {
     const userData = await this.bot.userDataPromise(channel);
     this.bot.postMessageToUser(
-      userData.user.name,
+      userData.user.id,
       `Created: ${issue.key}. See: https://${jiraSecrets.host}/browse/${
         issue.key
       }`,
