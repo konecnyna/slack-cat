@@ -1,11 +1,18 @@
 'use strict';
 const extend = require('extend');
 const { WebClient } = require('@slack/client');
+const HolidayOverride = require('./HolidayOverride');
 
 module.exports = class SlackCatBot {
   constructor(data) {
     this.botInfo = data.self;
-    this.web = new WebClient(config.getKey('slack_access_token'));
+    this.web = new WebClient(config.getKey('slack_access_token'));    
+    
+    this.botParams = {}    
+    this.setupBotParams();
+  }
+
+  setupBotParams() {
     const name = config.getKey('bot_name');
     const icon_emoji = config.getKey('bot_emoji');
     const icon_url = config.getKey('bot_icon_url');
@@ -19,6 +26,27 @@ module.exports = class SlackCatBot {
       this.botParams['icon_url'] = icon_url;
     } else {
       this.botParams['icon_emoji'] = icon_emoji || ':cat:';
+    }
+
+    // Override slackcat for some fun holidays!
+    this.defaultParams = this.botParams;
+    if (!config.getKey('holiday_override')) {      
+      return;
+    }
+
+    this.overrideBotParams();
+    setInterval(() => {
+      this.overrideBotParams();
+    }, 60 * 1000 * 1);
+  }
+
+  overrideBotParams() {
+    const holidayOverride = new HolidayOverride();    
+    const override = holidayOverride.getOverride();
+    if (override) {      
+      this.botParams = override;
+    } else {
+      this.botParams = this.defaultParams;
     }
   }
 
