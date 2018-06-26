@@ -87,7 +87,7 @@ class SlackCat {
   runDebugCommand() {
     // Reaction debug msg
     const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'));
-    const router = new Router(new MockBot(), this.pathToModules, new Server());
+    const router = new Router(new MockBot(), this.pathToModules);
 
     if (process.argv[2].includes('member_joined_channel')) {
       router.handle(testMemberJoin);
