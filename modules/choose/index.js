@@ -3,8 +3,8 @@
 module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
-      const userData = await this.bot.getChannelById(data.channel);
-      const randUser = this.getRandomUser(userData);
+      const channelData = await this.bot.getChannelById(data.channel);      
+      const randUser = this.getRandomUser(channelData);
       const name = await this.bot.resolveUserNameFromId(randUser);
       this.bot.postMessage(data.channel, name);
     } catch (e) {
@@ -16,9 +16,9 @@ module.exports = class Choose extends BaseModule {
     }
   }
 
-  getRandomUser(userData) {
-    return userData.members[
-      Math.floor(Math.random() * userData.members.length)
+  getRandomUser(channelData) {
+    return channelData.members[
+      Math.floor(Math.random() * channelData.members.length)
     ];
   }
 

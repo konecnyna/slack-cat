@@ -95,7 +95,7 @@ module.exports = class SlackCatBot {
         text: text,
         channel: id,
         thread_ts: ts,
-        username: this.botParams.username
+        username: this.botParams.username,
       },
       params || this.botParams
     );
@@ -107,7 +107,7 @@ module.exports = class SlackCatBot {
     var params = extend(
       {
         channel: channel_id,
-        username: this.botParams.username
+        username: this.botParams.username,
       },
       args || {}
     );
@@ -138,7 +138,7 @@ module.exports = class SlackCatBot {
     const params = extend(
       {
         channel: userId,
-        text: msg
+        text: msg,
       },
       this.botParams
     );
@@ -148,16 +148,15 @@ module.exports = class SlackCatBot {
 
   getChannelById(channel) {
     return this.web.channels
-      .list()
-      .then(res => {
-        return res.channels.find(it => {          
-          return it.id === channel;
-        });
+      .info({
+        channel: channel,
       })
-      .catch(console.error);
+      .then(res => {
+        return res.channel;
+      }).catch(console.error);
   }
 
-  setModules(modules) {        
+  setModules(modules) {
     this.modules = modules;
   }
 };
