@@ -1,10 +1,11 @@
 'use strict';
+const Chooser = require('./Chooser');
+const chooser = new Chooser();
 
 module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
-      const channelData = await this.bot.getChannelById(data.channel);      
-      const randUser = this.getRandomUser(channelData);
+      const randUser = chooser.chooseRandomUser(this.bot, data.channel);
       const name = await this.bot.resolveUserNameFromId(randUser);
       this.bot.postMessage(data.channel, name);
     } catch (e) {
@@ -14,12 +15,6 @@ module.exports = class Choose extends BaseModule {
         "Couldn't find anyone. Is this a private channel? If so I can't see the user list, ya bozo."
       );
     }
-  }
-
-  getRandomUser(channelData) {
-    return channelData.members[
-      Math.floor(Math.random() * channelData.members.length)
-    ];
   }
 
   help() {
