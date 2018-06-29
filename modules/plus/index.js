@@ -69,6 +69,7 @@ module.exports = class Plus extends BaseStorageModule {
     const userData = await this.bot.getUserNameFromId(userPatternResult);
     return userData.user.profile.display_name || userData.user.name;      
   }
+  
   async handleReaction(data) {    
     if (data.reaction === 'eggplant' && cache.get(this.getPlusKey(data)) === null) {
       cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => {});
