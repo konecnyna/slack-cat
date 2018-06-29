@@ -174,17 +174,6 @@ module.exports = class SlackCatBot {
     return this.web.chat.postMessage(params);
   }
 
-  postMessageToUsers(userList, msg) {
-    return this.web.conversations.open({
-      users: userList.join(",")
-    }).then(res => {
-      this.web.chat.postMessage({
-        channel: res.channel.id,
-        text: msg
-      });
-    }).catch(console.error);
-  }
-
   getChannelById(channel) {
     return this.web.channels
       .info({
