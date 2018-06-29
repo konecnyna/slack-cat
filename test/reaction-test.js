@@ -7,8 +7,8 @@ chai.should();
 
 // Import the Rectangle class.
 const Router = require(path.join(__dirname + '/../core', 'router.js'));
-const MockBot = require(path.join(__dirname + '/../core', 'mock-bot.js'));
-const Config = require(path.join(__dirname + '/../core', 'mock-config.js'));
+const MockBot = require(path.join(__dirname + '/../core/debug', 'mock-bot.js'));
+const Config = require(path.join(__dirname + '/../core/debug', 'mock-config.js'));
 
 // Remove old dev db for tests.
 const fs = require('fs');
@@ -36,7 +36,7 @@ global.STORAGE_PATH = './storage/db-dev.sqlite';
 global.BaseModule = require('../core/base-module.js');
 global.BaseStorageModule = require('../core/base-storage-module.js');
 const Server = require('../core/server.js');
-const router = new Router(new MockBot(), null, new Server());
+const router = new Router(new MockBot(), new Server(), '');
 
 describe('Reaction Test', () => {
   // it('Test eggplant command', done => {

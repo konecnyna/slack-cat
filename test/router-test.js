@@ -10,8 +10,8 @@ require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 // Import the Rectangle class.
 const Router = require(path.join(__dirname + '/../core', 'router.js'));
-const MockBot = require(path.join(__dirname + '/../core', 'mock-bot.js'));
-const Config = require(path.join(__dirname + '/../core', 'mock-config.js'));
+const MockBot = require(path.join(__dirname + '/../core/debug', 'mock-bot.js'));
+const Config = require(path.join(__dirname + '/../core/debug', 'mock-config.js'));
 
 global.config = new Config();
 global.STORAGE_PATH = './storage/db-dev.sqlite';

@@ -1,16 +1,14 @@
 'use strict';
-const Server = require('./server');
 const requireDir = require('./requiredir');
 
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 const moduleResolver = new requireDir();
 
-    
 module.exports = class Router {
-  constructor(bot, pathToModules) {
+  constructor(bot, server, pathToModules) {
     this.bot = bot;
-    this.pathToModules = pathToModules;    
+    this.pathToModules = pathToModules;
 
     this.modules = {};
     this.overflowModules = {};
@@ -18,8 +16,7 @@ module.exports = class Router {
     this.memberJoinedModules = {};
     this.rawInputModules = {};
     this.dialogModules = {};
-    this.serviceModules = {};
-    this.server = new Server();
+    this.serviceModules = {};    
 
     // Register all modules. Not good lazy solution cuz of aliases for now...
     this.registerModules();
@@ -27,8 +24,7 @@ module.exports = class Router {
     // Allow modules to access other ones via bot.
     this.bot.setModules(this.modules);
 
-   
-    this.server.start();      
+    this.server = server;    
   }
 
   handle(data) {
@@ -41,7 +37,6 @@ module.exports = class Router {
       this.handleMemeberJoin(data);
     }
 
-    // Handle reactions
     if (data.type === 'reaction_added') {
       this.handleReaction(data);
     }
@@ -67,31 +62,61 @@ module.exports = class Router {
         return;
       }
 
-      if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {      
+      if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {
         moduleObj.createRoutes(this.server.app);
-        this.addModules(key, moduleObj, BaseModule.TYPES.DIALOG, this.dialogModules);                
+        this.addModules(
+          key,
+          moduleObj,
+          BaseModule.TYPES.DIALOG,
+          this.dialogModules
+        );
       } else if (moduleObj.getType().includes(BaseModule.TYPES.ENDPOINT)) {
-        moduleObj.createRoutes(this.server.app);        
+        moduleObj.createRoutes(this.server.app);
       }
-      
+
       // Add all modules types to cmd array.
       if (moduleObj.getType().includes(BaseModule.TYPES.MODULE)) {
         this.modules[key] = moduleObj;
         moduleObj.aliases().map(alias => {
-          if (this.modules[alias]) {  
+          if (this.modules[alias]) {
             console.error('************************************************');
             console.error('* Warning: Overwriting [' + alias + '] alias. *');
-            console.error('************************************************');      
+            console.error('************************************************');
           }
           this.modules[alias] = moduleObj;
         });
       }
 
-      this.addModules(key, moduleObj, BaseModule.TYPES.OVERFLOW_CMD, this.overflowModules);
-      this.addModules(key, moduleObj, BaseModule.TYPES.REACTION, this.reactionModules);
-      this.addModules(key, moduleObj, BaseModule.TYPES.MEMBER_JOINED_CHANNEL, this.memberJoinedModules);
-      this.addModules(key, moduleObj, BaseModule.TYPES.RAW_INPUT, this.rawInputModules);
-      this.addModules(key, moduleObj, BaseModule.TYPES.SERVICE, this.serviceModules);
+      this.addModules(
+        key,
+        moduleObj,
+        BaseModule.TYPES.OVERFLOW_CMD,
+        this.overflowModules
+      );
+      this.addModules(
+        key,
+        moduleObj,
+        BaseModule.TYPES.REACTION,
+        this.reactionModules
+      );
+      this.addModules(
+        key,
+        moduleObj,
+        BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
+        this.memberJoinedModules
+      );
+      this.addModules(
+        key,
+        moduleObj,
+        BaseModule.TYPES.RAW_INPUT,
+        this.rawInputModules
+      );
+      this.addModules(
+        key,
+        moduleObj,
+        BaseModule.TYPES.SERVICE,
+        this.serviceModules
+      );
     });
 
     this.setupDialogCallback();
@@ -99,7 +124,7 @@ module.exports = class Router {
 
   addModules(key, module, type, array) {
     if (module.getType().includes(type)) {
-        array[key] = module;
+      array[key] = module;
     }
   }
 
@@ -167,7 +192,7 @@ module.exports = class Router {
     if (!data.cmd) {
       return false;
     }
-    
+
     return data.cmd === 'commands' || data.cmd === 'cmds';
   }
 
@@ -191,7 +216,7 @@ module.exports = class Router {
       });
 
     const userData = await this.bot.userDataPromise(data.user);
-    
+
     this.bot.postMessageToUser(
       userData.user.id,
       'List of cmds:\n```' + list + '```'
@@ -206,7 +231,7 @@ module.exports = class Router {
   setupDialogCallback() {
     this.server.initHandleCallback(body => {
       Object.keys(this.dialogModules).forEach(key => {
-        const moduleObj = this.dialogModules[key];        
+        const moduleObj = this.dialogModules[key];
         if (body.callback_id === moduleObj.dialogCallbackId()) {
           moduleObj.onDialogSubmit(body);
         }

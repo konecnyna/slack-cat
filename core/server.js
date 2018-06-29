@@ -18,7 +18,9 @@ module.exports = class Server {
     );
     app.use(bodyParser.json());
 
+
     this.app = app;
+        console.log(this.app)
   }
 
   initHandleCallback(callback) {
@@ -43,9 +45,9 @@ module.exports = class Server {
   }
 
   start() {
-    const port = config.getKey("port") || 3000;
-    this.app.listen(port, () => {
-      console.log(`App listening on http://localhost:${port}!`);
-    });
+    // const port = config.getKey("port") || 3000;
+    // this.app.listen(port, () => {
+    //   console.log(`App listening on http://localhost:${port}!`);
+    // });
   }
 };
