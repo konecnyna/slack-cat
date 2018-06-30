@@ -4,18 +4,23 @@ const CronJob = require('cron').CronJob;
 const pair = new Pair();
 const mixerConfig = config.getKey('mixercat');
 
+
 module.exports = class MixerCat extends BaseStorageModule {
   constructor(bot) {
     super(bot);
-    new CronJob(
-      mixerConfig.cron,
-      () => {
-        this.pairPeople();
-      },
-      null,
-      true,
-      'America/New_York'
-    );    
+    if (mixerConfig.cron) {
+      new CronJob(
+        mixerConfig.cron,
+        () => {
+          this.pairPeople();
+        },
+        null,
+        true,
+        'America/New_York'
+      );  
+    } else {
+      console.error("No cron given for mixercat");
+    }        
   }
 
   async handle(data) {
@@ -35,7 +40,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     const matches = await pair.pairMembers(members, this.MixerCatModel);    
     matches.forEach(it => {
       if (it.length) {
-        this.bot.postMessageToUsers(it, mixerConfig.match_message);
+        this.bot.postMessageToUsers(it, mixerConfig.match_message || "Hey you two time to get some coffee!");
       }
     });
 
@@ -47,8 +52,8 @@ module.exports = class MixerCat extends BaseStorageModule {
 
   registerSqliteModel() {
     this.MixerCatModel = this.db.define('mixer-meetings', {
-      user_id: { type: this.Sequelize.STRING, primaryKey: true },
-      paired_with: { type: this.Sequelize.STRING, primaryKey: true },
+      memberOne: { type: this.Sequelize.STRING, primaryKey: true },
+      memberTwo: { type: this.Sequelize.STRING, primaryKey: true },
     });
   }
 
