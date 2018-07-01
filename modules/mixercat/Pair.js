@@ -23,6 +23,7 @@ module.exports = class Pair {
 
     return matches;
   }
+  
   async getPair(userId, users, pairedTable) {
     const potentialPairs = await this.getValidPairs(userId, users, pairedTable);
     if (!potentialPairs.length) {
@@ -40,10 +41,7 @@ module.exports = class Pair {
     const previousPairs = await pairedTable
       .findAll({
         where: {
-          memberOne: userId,
-          memberTwo: {
-            [Op.or]: [userId],
-          },
+          [Op.or]: [{ memberOne: userId }, { memberTwo: userId }],
         },
       })
       .map(it => {
@@ -68,7 +66,7 @@ module.exports = class Pair {
         memberTwo: pairedUser,
       });
     } catch (e) {
-      console.log('They have already paired DIS IS BAD!');
+      console.error(e);
     }
   }
 };
