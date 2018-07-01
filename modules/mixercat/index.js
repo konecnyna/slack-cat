@@ -4,6 +4,15 @@ const CronJob = require('cron').CronJob;
 const pair = new Pair();
 const mixerConfig = config.getKey('mixercat');
 
+const DEFAULT_PAIR_MESSAGE = `Hi! :cat:
+
+I'm in charge of getting to know your teammates better by pairing you with other people in the mixer channel.
+
+So schedule some time to grab :coffee: or :doughnut:.
+`;
+
+const DONE_PAIRING_MESSAGE =
+  "I've just paired everyone for the week! Have fun! :smile:";
 
 module.exports = class MixerCat extends BaseStorageModule {
   constructor(bot) {
@@ -17,10 +26,10 @@ module.exports = class MixerCat extends BaseStorageModule {
         null,
         true,
         'America/New_York'
-      );  
+      );
     } else {
-      console.error("No cron given for mixercat");
-    }        
+      console.error('No cron given for mixercat');
+    }
   }
 
   async handle(data) {
@@ -37,17 +46,37 @@ module.exports = class MixerCat extends BaseStorageModule {
       return false;
     }
 
-    const matches = await pair.pairMembers(members, this.MixerCatModel);    
-    matches.forEach(it => {
-      if (it.length) {
-        this.bot.postMessageToUsers(it, mixerConfig.match_message || "Hey you two time to get some coffee!");
+    const matches = await pair.pairMembers(members, this.MixerCatModel);
+    matches.forEach(async it => {
+      if (it.length && it.length >= 2) {
+        this.bot.postMessageToUsers(
+          it,
+          mixerConfig.match_message || `${DEFAULT_PAIR_MESSAGE}`
+        );
       }
     });
 
-    this.bot.postMessage(
-      mixerConfig.channel,
-      "I've just paired everyone for the week! Have fun! :smile:"
-    );
+    this.bot.postMessage(mixerConfig.channel, DONE_PAIRING_MESSAGE);
+  }
+
+  async getExtraInfo(it) {
+    let memberOne = await this.bot.web.users.info({
+      user: it[0],
+    });
+    memberOne = memberOne.user.profile;
+
+    let memberTwo = await this.bot.web.users.info({
+      user: it[1],
+    });
+    memberTwo = memberTwo.user.profile;
+
+    if (memberOne.title && memberTwo.title) {
+      return `${memberOne.real_name} has the title of ${memberOne.title}\n${
+        memberTwo.real_name
+      } has the title of ${memberTwo.title}`;
+    }
+
+    return '';
   }
 
   registerSqliteModel() {
