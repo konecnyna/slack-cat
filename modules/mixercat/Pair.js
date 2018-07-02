@@ -7,23 +7,29 @@ const Op = require('sequelize').Op;
 module.exports = class Pair {
   async pairMembers(members, mixerCatModel) {
     const matches = [];
-    const userMap = {};
+    const matchedUsers = {};
+
     for (let i = 0; i < members.length; i++) {
-      const user = members[i];
-      if (userMap[user]) {
-        continue;
+      if (availMembers < 2) {
+        // Not enough ppl to pair;
+        break;
       }
-      userMap[user] = true;
+
+      const user = members[i];
       const pairedUsers = await this.getPair(user, members, mixerCatModel);
       if (pairedUsers.length) {
-        userMap[pairedUsers[1]] = true;
         matches.push(pairedUsers);
+
+        // remove paired users so they don't match again today.
+        availMembers = availMembers.filter(it => {
+          return !pairedUsers.includes(it);
+        });
       }
     }
 
     return matches;
   }
-  
+
   async getPair(userId, users, pairedTable) {
     const potentialPairs = await this.getValidPairs(userId, users, pairedTable);
     if (!potentialPairs.length) {
