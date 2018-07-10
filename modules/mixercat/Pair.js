@@ -6,6 +6,7 @@ const Op = require('sequelize').Op;
 
 module.exports = class Pair {
   async pairMembers(members, mixerCatModel) {
+    let availMembers = members;
     const matches = [];
     const matchedUsers = {};
 
