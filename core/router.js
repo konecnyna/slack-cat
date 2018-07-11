@@ -5,8 +5,9 @@ const requireDir = require('./requiredir');
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 const moduleResolver = new requireDir();
+const { ALL } = require('../../core/constants');
 
-    
+
 module.exports = class Router {
   constructor(bot, pathToModules) {
     this.bot = bot;
@@ -112,7 +113,7 @@ module.exports = class Router {
   handleMemeberJoin(data) {
     Object.keys(this.memberJoinedModules).forEach(key => {
       const module = this.memberJoinedModules[key]
-      if (module.getChannelId() === data.channel) {
+      if (module.getChannelId() === data.channel || module.getChannelId() === ALL) {
         module.handleMemeberJoin(data, this.modules);
       }      
     });
