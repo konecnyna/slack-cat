@@ -10,14 +10,14 @@ module.exports = class Pair {
     const matches = [];
     const matchedUsers = {};
 
-    for (let i = 0; i < members.length; i++) {
-      if (availMembers < 2) {
+    for (let i = 0; i < availMembers.length; i++) {
+      if (availMembers.length < 2) {
         // Not enough ppl to pair;
         break;
       }
 
-      const user = members[i];
-      const pairedUsers = await this.getPair(user, members, mixerCatModel);
+      const user = availMembers[i];
+      const pairedUsers = await this.getPair(user, availMembers, mixerCatModel);
       if (pairedUsers.length) {
         matches.push(pairedUsers);
 
