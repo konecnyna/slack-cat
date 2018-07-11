@@ -2,8 +2,6 @@
 const axios = require('axios');
 const qs = require('querystring');
 
-const ALL = "all";
-
 module.exports = class BaseModule {
   constructor(bot) {
     if (new.target === BaseModule) {
