@@ -5,7 +5,7 @@ const requireDir = require('./requiredir');
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i');
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g');
 const moduleResolver = new requireDir();
-const { ALL } = require('../../core/constants');
+const { ALL } = require('./constants');
 
 
 module.exports = class Router {
