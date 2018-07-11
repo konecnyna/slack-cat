@@ -106,7 +106,7 @@ module.exports = class MixerCat extends BaseStorageModule {
   }
 
   getChannelId() {
-    return "CBN598GP5";
+    return mixerConfig.channel;
   }
 
 
