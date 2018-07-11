@@ -2,6 +2,7 @@
 
 const WelcomeDialog = require('./welcome-dialog');
 const WelcomeHelper = require('./welcome-helper.js');
+const { ALL } = require('../../core/constants');
 const columnMap = {
   '--enabled': 'enabled',
   '--channelMsgEnabled': 'generic_welcome',
