@@ -36,6 +36,17 @@ module.exports = class MixerCat extends BaseStorageModule {
     this.pairPeople();
   }
 
+  async handleMemeberJoin(data) {
+    const welcomeMessage = mixerConfig.welcome_message;
+
+    if (welcomeMessage === null) {
+      return;
+    }
+
+    const userData = await this.bot.userDataPromise(data.user);
+    this.bot.postMessageToUser(userData.user.id, welcomeMessage);
+  }
+
   async pairPeople() {
     const channelData = await this.bot.getChannelById(mixerConfig.channel);
     const members = channelData.members.filter(it => {
@@ -87,7 +98,11 @@ module.exports = class MixerCat extends BaseStorageModule {
   }
 
   getType() {
-    return [BaseModule.TYPES.SERVICE, BaseModule.TYPES.MODULE];
+    return [
+      BaseModule.TYPES.SERVICE,
+      BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
+      BaseModule.TYPES.MODULE,
+    ];
   }
 
   help() {
