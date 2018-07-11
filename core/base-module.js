@@ -2,12 +2,14 @@
 const axios = require('axios');
 const qs = require('querystring');
 
+const ALL = "all";
+
 module.exports = class BaseModule {
   constructor(bot) {
     if (new.target === BaseModule) {
       throw new TypeError('Cannot construct Abstract instances directly');
     }
-    
+
     if (this.help === undefined) {
       throw new TypeError('Child class must implement `help()` method');
     }
@@ -28,6 +30,12 @@ module.exports = class BaseModule {
       BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
       this.handleMemeberJoin,
       'handleMemeberJoin'
+    );
+
+    this.checkForOverridenMethod(
+      BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
+      this.getChannelId,
+      'getChannelId'
     );
 
     this.checkForOverridenMethod(
@@ -60,7 +68,7 @@ module.exports = class BaseModule {
   checkForOverridenMethod(type, func, funcName) {
     if (this.getType().includes(type) && func === undefined) {
       throw new TypeError(`${type} module must implement ${funcName}`);
-    }    
+    }
   }
 
   getUserArg(data) {
@@ -109,7 +117,7 @@ module.exports = class BaseModule {
     const { token, text, trigger_id } = body;
 
     const dialog = {
-      token: config.getKey("slack_access_token"),
+      token: config.getKey('slack_access_token'),
       trigger_id,
       dialog: JSON.stringify(dialogConfig),
     };
@@ -134,7 +142,7 @@ module.exports = class BaseModule {
       RAW_INPUT: 'raw_input',
       DIALOG: 'dialog',
       ENDPOINT: 'endpoint',
-      SERVICE: 'service'
+      SERVICE: 'service',
     };
   }
 };

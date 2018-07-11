@@ -105,6 +105,11 @@ module.exports = class MixerCat extends BaseStorageModule {
     ];
   }
 
+  getChannelId() {
+    return "CBN598GP5";
+  }
+
+
   help() {
     return 'Get paired with a random person for coffee!';
   }

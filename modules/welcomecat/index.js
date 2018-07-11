@@ -3,23 +3,22 @@
 const WelcomeDialog = require('./welcome-dialog');
 const WelcomeHelper = require('./welcome-helper.js');
 const columnMap = {
-  '--enabled' : "enabled",
-  '--channelMsgEnabled': 'generic_welcome'
-}
+  '--enabled': 'enabled',
+  '--channelMsgEnabled': 'generic_welcome',
+};
 
 const botParams = {
   icon_emoji: ':smiley_cat:',
   username: 'WelcomeCat',
 };
 
-const DIALOG_ID = "welcome-cat-dialog";
+const DIALOG_ID = 'welcome-cat-dialog';
 
 module.exports = class WelcomeCat extends BaseStorageModule {
   constructor(bot) {
     super(bot);
     this.welcomeHelper = new WelcomeHelper(this.WelcomeMessageModel, this);
     this.welcomeDialog = new WelcomeDialog(this, this.welcomeHelper);
-
   }
   async handle(data) {
     if (!data.args) {
@@ -32,7 +31,7 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       return;
     }
 
-    this.bot.postMessageWithParams(data.channel, "Bad command.", botParams);
+    this.bot.postMessageWithParams(data.channel, 'Bad command.', botParams);
   }
 
   async handleMemeberJoin(data) {
@@ -40,33 +39,33 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       data.channel
     );
 
-    
     if (welcomeMessage == null || !welcomeMessage.get('enabled')) {
       return;
     }
 
-      
     const msg = welcomeMessage.get('message');
     if (msg != null) {
-      const userData = await this.bot.userDataPromise(data.user);      
-      this.bot.postMessageToUser(userData.user.id, msg, botParams);              
+      const userData = await this.bot.userDataPromise(data.user);
+      this.bot.postMessageToUser(userData.user.id, msg, botParams);
     }
-      
 
     if (welcomeMessage.get('generic_welcome')) {
-      const userData = await this.bot.userDataPromise(data.user);      
-      this.bot.postMessageWithParams(data.channel, `Hi <@${userData.user.id}>! Welcome!`, botParams);  
-    }    
+      const userData = await this.bot.userDataPromise(data.user);
+      this.bot.postMessageWithParams(
+        data.channel,
+        `Hi <@${userData.user.id}>! Welcome!`,
+        botParams
+      );
+    }
   }
 
-  onDialogSubmit(body) {    
+  onDialogSubmit(body) {
     this.welcomeDialog.onDialogSubmit(body);
   }
 
-  createRoutes(app) {    
+  createRoutes(app) {
     this.welcomeDialog.createRoutes(app, DIALOG_ID);
   }
-
 
   dialogCallbackId() {
     return DIALOG_ID;
@@ -84,17 +83,16 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       footer: this.Sequelize.STRING,
       color: this.Sequelize.STRING,
       generic_welcome: this.Sequelize.BOOLEAN,
-      enabled: this.Sequelize.BOOLEAN
+      enabled: this.Sequelize.BOOLEAN,
     });
   }
 
+  getChannelId() {
+    return ALL;
+  }
+
   cmds() {
-    return [
-      '--test',
-      '--msg',
-      '--enabled',
-      '--channelMsgEnabled'      
-    ];
+    return ['--test', '--msg', '--enabled', '--channelMsgEnabled'];
   }
   help() {
     return `*Here is how to use WelcomeCat:*\n
@@ -108,8 +106,12 @@ That's it! Additional Arguments:
   aliases() {
     return ['welcomebot'];
   }
-  
+
   getType() {
-    return [BaseModule.TYPES.MEMBER_JOINED_CHANNEL, BaseModule.TYPES.MODULE, BaseModule.TYPES.DIALOG];
+    return [
+      BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
+      BaseModule.TYPES.MODULE,
+      BaseModule.TYPES.DIALOG,
+    ];
   }
 };
