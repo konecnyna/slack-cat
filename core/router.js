@@ -111,7 +111,10 @@ module.exports = class Router {
 
   handleMemeberJoin(data) {
     Object.keys(this.memberJoinedModules).forEach(key => {
-      this.memberJoinedModules[key].handleMemeberJoin(data, this.modules);
+      const module = this.memberJoinedModules[key]
+      if (module.getChannelId() === data.channel) {
+        module.handleMemeberJoin(data, this.modules);
+      }      
     });
   }
 
