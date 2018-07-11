@@ -4,6 +4,7 @@ const CronJob = require('cron').CronJob;
 const pair = new Pair();
 const mixerConfig = config.getKey('mixercat');
 
+
 const DEFAULT_PAIR_MESSAGE = `Hi! :cat:
 
 I'm in charge of getting to know your teammates better by pairing you with other people in the mixer channel.
