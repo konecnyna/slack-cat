@@ -12,7 +12,7 @@ const pair = new Pair();
 
 // Remove old dev db for tests.
 const fs = require('fs');
-const filePath = path.join(__dirname, 'db-dev.sqlite');
+const filePath = path.join(__dirname + '/../example', 'db-dev.sqlite');
 if (fs.existsSync(filePath)) {
   fs.unlinkSync(filePath);
 }
