@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --timeout 15000",
+    "test": "./node_modules/.bin/mocha --timeout 60000", // For large test
     "start": "node index.js"
   },
   "repository": {
