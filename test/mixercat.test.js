@@ -63,6 +63,69 @@ const testMembers15 = [
   'paul',
 ];
 
+const testMembers60 = [
+  'voice',
+  'unit',
+  'power',
+  'town',
+  'fine',
+  'certain',
+  'fly',
+  'fall',
+  'lead',
+  'cry',
+  'dark',
+  'machine',
+  'note',
+  'wait',
+  'plan',
+  'figure',
+  'star',
+  'box',
+  'noun',
+  'field',
+  'rest',
+  'correct',
+  'able',
+  'pound',
+  'done',
+  'beauty',
+  'drive',
+  'stood',
+  'contain',
+  'front',
+  'teach',
+  'week',
+  'final',
+  'gave',
+  'green',
+  'oh',
+  'quick',
+  'develop',
+  'ocean',
+  'warm',
+  'free',
+  'minute',
+  'strong',
+  'special',
+  'mind',
+  'behind',
+  'clear',
+  'tail',
+  'produce',
+  'fact',
+  'street',
+  'inch',
+  'multiply',
+  'nothing',
+  'course',
+  'stay',
+  'wheel',
+  'full',
+  'force',
+  'blue',
+];
+
 Array.prototype.flatten = function() {
   return [].concat.apply([], this);
 };
@@ -162,15 +225,37 @@ describe('Mixercat Test', () => {
     pairs.length.should.equal(105);
   });
 
+  // Set of 60 - unique pairs 1770.
+  // http://www.wolframalpha.com/input/?i=60!%2F(2!(60-2)!)
+  it('Test 60 matches', async () => {
+    const pairs = [];
+    (await pair.pairMembers(testMembers60, MixerCatModel)).forEach(it => {
+      pairs.push(it);
+    });
+
+    while (true) {
+      const match = await pair.pairMembers(testMembers60, MixerCatModel);
+      if (!match.length) {
+        break;
+      }
+
+      match.forEach(it => {
+        pairs.push(it);
+      });
+    }
+
+    pairs.length.should.equal(1770);
+  });
+
   it('Test for unique pairs every round', async () => {
     while (true) {
       const match = await pair.pairMembers(testMembers15, MixerCatModel);
       if (!match.length) {
         break;
       }
-      const flattened = match.flatten().sort();      
-      for(let i = 1; i < flattened.length; i++) {
-        const prev = flattened[i-1];
+      const flattened = match.flatten().sort();
+      for (let i = 1; i < flattened.length; i++) {
+        const prev = flattened[i - 1];
         const current = flattened[i];
         prev.should.not.equal(current);
       }
