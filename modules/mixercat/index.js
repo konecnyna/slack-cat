@@ -61,6 +61,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     const matches = await pair.pairMembers(members, this.MixerCatModel);
     matches.forEach(async it => {
       if (it.length && it.length >= 2) {
+	console.log(it)
         this.bot.postMessageToUsers(
           it,
           mixerConfig.match_message || `${DEFAULT_PAIR_MESSAGE}`
