@@ -5,47 +5,48 @@ const chooser = new Chooser();
 const Op = require('sequelize').Op;
 
 module.exports = class Pair {
-  async pairMembers(members, mixerCatModel) {
-    let availMembers = members;
+  async pairMembers(members, mixerCatModel) {    
     const matches = [];
-    const matchedUsers = {};
+    this.matchedUsers = {};
+    this.mixerCatModel = mixerCatModel;
 
-    for (let i = 0; i < availMembers.length; i++) {
-      if (availMembers.length < 2) {
+    for (let i = 0; i < members.length; i++) {      
+      if (members.length < 2) {
         // Not enough ppl to pair;
         break;
       }
 
-      const user = availMembers[i];
-      const pairedUsers = await this.getPair(user, availMembers, mixerCatModel);
+      const user = members[i];
+      if (this.matchedUsers[user]) {        
+        continue;
+      }
+
+      const pairedUsers = await this.getPair(user, members);
       if (pairedUsers.length) {
         matches.push(pairedUsers);
-
-        // remove paired users so they don't match again today.
-        availMembers = availMembers.filter(it => {
-          return !pairedUsers.includes(it);
-        });
+        this.matchedUsers[pairedUsers[0]] = true;
+        this.matchedUsers[pairedUsers[1]] = true;
       }
     }
 
     return matches;
   }
 
-  async getPair(userId, users, pairedTable) {
-    const potentialPairs = await this.getValidPairs(userId, users, pairedTable);
+  async getPair(userId, users) {
+    const potentialPairs = await this.getValidPairs(userId, users);
     if (!potentialPairs.length) {
-      // User is out of matches.
+      // User is out of matches.      
       return [];
     }
 
     const pairedMember = chooser.getRandomUser(potentialPairs);
-    const result = await this.savePair(userId, pairedMember, pairedTable);
+    const result = await this.savePair(userId, pairedMember);
 
     return [userId, pairedMember];
   }
 
-  async getValidPairs(userId, users, pairedTable) {
-    const previousPairs = await pairedTable
+  async getValidPairs(userId, users) {
+    const previousPairs = await this.mixerCatModel
       .findAll({
         where: {
           [Op.or]: [{ memberOne: userId }, { memberTwo: userId }],
@@ -62,13 +63,15 @@ module.exports = class Pair {
       });
 
     return users.filter(it => {
-      return !previousPairs.includes(it) && it !== userId;
+      return !previousPairs.includes(it) 
+        && it !== userId
+        && this.matchedUsers[it] !== true;
     });
   }
 
-  async savePair(user, pairedUser, pairedTable) {
+  async savePair(user, pairedUser) {
     try {
-      await pairedTable.create({
+      await this.mixerCatModel.create({
         memberOne: user,
         memberTwo: pairedUser,
       });
