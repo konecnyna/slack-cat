@@ -34,7 +34,7 @@ module.exports = class MixerCat extends BaseStorageModule {
   }
 
   async handle(data) {
-    this.pairPeople();
+    //this.pairPeople();
   }
 
   async handleMemeberJoin(data) {
