@@ -8,8 +8,13 @@ const botParams = {
 module.exports = class Poop extends BaseStorageModule {
   async handle(data) {
 
-    if (data.cmd === 'poop-board') {
+    if (data.cmd === 'poop-board' || data.cmd === 'poopboard') {
       this.postLeaderBoard(data);
+      return;
+    }
+
+    if (data.cmd === 'poops') {      
+      this.postUserPoops(data);
       return;
     }
 
@@ -38,9 +43,7 @@ module.exports = class Poop extends BaseStorageModule {
   }
 
   async updatePoop(data) {
-    const user = await this.bot.getUserNameFromId(data.user);
-    
-    const userName = user.user.profile.display_name || user.user.name;
+    const userName = await this.getUserName(data.user);
     const poop = await this.upsert(
       this.PoopModel,
       { where: { name: userName } },
@@ -57,6 +60,35 @@ module.exports = class Poop extends BaseStorageModule {
       user: userName,
       poops: poop.get('poops'),
     };
+  }
+
+  async getUserName(userId) {
+    const user = await this.bot.getUserNameFromId(userId);        
+    return user.user.profile.display_name || user.user.name;    
+  }
+
+  async postUserPoops(data) {
+    let user = data.user_text;    
+    if (!user) {
+      user = await this.getUserName(data.user);      
+    }
+    
+    const poopsRow = await this.PoopModel.findOne({
+      where: {
+        name: user,
+      },
+    });
+
+
+    const poops = poopsRow.get('poops');
+    let msg = ""
+    if (!poops) {
+      msg = `${user} has not been pooped... _yet_! :smirk: :poop: `;
+    } else {
+      msg = `${user} has been pooped :poop: *_${poops}_* times :poop:`;
+    }
+
+    this.bot.postMessage(data.channel, msg);
   }
 
   async postLeaderBoard(data) {
@@ -86,7 +118,7 @@ module.exports = class Poop extends BaseStorageModule {
   }
 
   aliases() {
-    return ['poop-board', ':poop:'];
+    return ['poop-board', 'poopboard', ':poop:', 'poops'];
   }
 
   help() {
