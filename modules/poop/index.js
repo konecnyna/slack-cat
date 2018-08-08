@@ -80,11 +80,12 @@ module.exports = class Poop extends BaseStorageModule {
     });
 
 
-    const poops = poopsRow.get('poops');
+    
     let msg = ""
-    if (!poops) {
+    if (!poopsRow) {
       msg = `${user} has not been pooped... _yet_! :smirk: :poop: `;
     } else {
+      const poops = poopsRow.get('poops');
       msg = `${user} has been pooped :poop: *_${poops}_* times :poop:`;
     }
 
