@@ -5,6 +5,8 @@ const botParams = {
   username: 'PoopCat',
 };
 
+const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
+
 module.exports = class Poop extends BaseStorageModule {
   async handle(data) {
 
@@ -68,8 +70,11 @@ module.exports = class Poop extends BaseStorageModule {
   }
 
   async postUserPoops(data) {
-    let user = data.user_text;    
-    if (!user) {
+    let user = data.user_text;
+    const matches = data.user_text.match(user); 
+    if (matches && matches.length > 1) {
+      user = await this.getUserNameFromId(matches[1]);
+    } else if (!user) {
       user = await this.getUserName(data.user);      
     }
     
@@ -86,7 +91,7 @@ module.exports = class Poop extends BaseStorageModule {
       msg = `${user} has not been pooped... _yet_! :smirk: :poop: `;
     } else {
       const poops = poopsRow.get('poops');
-      msg = `${user} has been pooped :poop: *_${poops}_* times :poop:`;
+      msg = `${user} has been pooped :poop: *_${poops} times_* :poop:`;
     }
 
     this.bot.postMessage(data.channel, msg);
