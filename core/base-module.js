@@ -105,14 +105,6 @@ module.exports = class BaseModule {
     return [];
   }
 
-  /**
-   * Override this method to add channels to black list from using
-   * this module
-   */
-  isBlackListed(channel) {
-    return false;
-  }
-
   getType() {
     return [BaseModule.TYPES.MODULE];
   }

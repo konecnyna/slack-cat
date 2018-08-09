@@ -3,15 +3,20 @@
 const botParams = {
   icon_emoji: ':poop:',
   username: 'PoopCat',
+  blacklist: 'channels_blacklist'
 };
 
 const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 
 module.exports = class Poop extends BaseStorageModule {
   async handle(data) {
+    if (!this.isValidConfig()) {
+      this.bot.postMessage(data.channel, `Please add key ${botParams.blacklist} to 'config.json'`);
+      return;
+    }
 
     if (this.isBlackListed(data.channel)) {
-      this.denyPooping(data.channel)
+      this.denyPooping(data.channel);
       return;
     }
 
@@ -28,9 +33,13 @@ module.exports = class Poop extends BaseStorageModule {
     this.updateAndPostPoop(data);
   }
 
+  isValidConfig() {
+    return config.getKey(botParams.blacklist) && config.getKey(botParams.blacklist).poop;
+  }
+
   async denyPooping(channel) {
-    let msg = `Not in ${data.channel} please!`
-    this.bot.postMessage(data.channel, msg)
+    const msg = `Not in ${data.channel} please!`;
+    this.bot.postMessage(data.channel, msg);
   }
 
   async updateAndPostPoop(data) {
@@ -136,8 +145,8 @@ module.exports = class Poop extends BaseStorageModule {
   }
 
   isBlackListed(channel) {
-    let channels = ['announcements', 'incident-discussion', 'product-chat']
-    return channels.indexOf(channel) !== -1
+    const channels = config.getKey(botParams.blacklist).poop;
+    return channels.includes(channel);
   }
 
   help() {
