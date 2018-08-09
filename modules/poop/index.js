@@ -10,6 +10,11 @@ const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 module.exports = class Poop extends BaseStorageModule {
   async handle(data) {
 
+    if (this.isBlackListed(data.channel)) {
+      this.denyPooping(data.channel)
+      return;
+    }
+
     if (data.cmd === 'poop-board' || data.cmd === 'poopboard') {
       this.postLeaderBoard(data);
       return;
@@ -21,6 +26,11 @@ module.exports = class Poop extends BaseStorageModule {
     }
 
     this.updateAndPostPoop(data);
+  }
+
+  async denyPooping(channel) {
+    let msg = `Not in ${data.channel} please!`
+    this.bot.postMessage(data.channel, msg)
   }
 
   async updateAndPostPoop(data) {
@@ -84,8 +94,6 @@ module.exports = class Poop extends BaseStorageModule {
       },
     });
 
-
-    
     let msg = ""
     if (!poopsRow) {
       msg = `${user} has not been pooped... _yet_! :smirk: :poop: `;
@@ -125,6 +133,11 @@ module.exports = class Poop extends BaseStorageModule {
 
   aliases() {
     return ['poop-board', 'poopboard', ':poop:', 'poops'];
+  }
+
+  isBlackListed(channel) {
+    let channels = ['announcements', 'incident-discussion', 'product-chat']
+    return channels.indexOf(channel) !== -1
   }
 
   help() {
