@@ -98,14 +98,15 @@ module.exports = class Weather extends BaseModule {
     if (!data.user_text) {
       this.bot.postMessage(
         data.channel,
-        'http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif'
+        `http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif?time=${Date.now()}`
       );
+      
       return;
     }
 
     const location = radarMap[data.user_text.toUpperCase()];
-    if (location) {
-      img = `http://images.intellicast.com/WxImages/RadarLoop/${location}_None_anim.gif`;
+    if (location) {      
+      img = `http://images.intellicast.com/WxImages/RadarLoop/${location}_None_anim.gif?time=${Date.now()}`;
       this.bot.postMessage(data.channel, img);
       return;
     }
