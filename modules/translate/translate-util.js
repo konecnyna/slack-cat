@@ -1,10 +1,10 @@
-const translationLangRegex = /to:([^\s]+)/g;
+
 const googleTranslate = require('google-translate-api');
 
 module.exports = class TranslateUtil {
   getTranslationLang(userText) {
     let lang = 'en';
-    var match = translationLangRegex.exec(userText);
+    var match = /to:([^\s]+)/.exec(userText);
     if (match !== null) {
       lang = match[1];
       userText = userText.replace(match[0], '');
