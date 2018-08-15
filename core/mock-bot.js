@@ -160,6 +160,12 @@ module.exports = class MockBot {
     };
   }
 
+  getChannelById(id) {
+    return {
+      name: "channel-name"
+    };
+  }
+
   setModules(modules) {        
     this.modules = modules;
   }
