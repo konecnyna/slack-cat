@@ -3,7 +3,6 @@ const request = require('request');
 
 const key = config.getKey('stock');
 
-
 const DATA_HIGH_KEY = '2. high';
 const DATA_LOW_KEY = '3. low';
 const DATA_CLOSE_KEY = '4. close';
@@ -26,13 +25,13 @@ module.exports = class Stock extends BaseModule {
       this.postFancyData(data, stockData);
     } catch (e) {
       this.bot.postMessage(data.channel, `I got an error: ${e}`);
-    }    
+    }
   }
 
   getData(symbol) {
     var options = {
       url: `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=60min&apikey=${key}`,
-      timeout: 45000
+      timeout: 45000,
     };
 
     return new Promise((resolve, reject) => {
@@ -44,7 +43,7 @@ module.exports = class Stock extends BaseModule {
           return;
         }
 
-        const seriesData = json['Time Series (60min)'];        
+        const seriesData = json['Time Series (60min)'];
         resolve(seriesData[Object.keys(seriesData)[0]]);
       });
     });
@@ -84,7 +83,7 @@ module.exports = class Stock extends BaseModule {
   }
 
   async postFancyMessage(stockData, data, fields, isPositive) {
-    let icon = ":bar_chart:";
+    let icon = ':bar_chart:';
     if (stockData.c && stockData.c.includes('-')) {
       icon = ':chart_with_downwards_trend:';
     } else if (stockData.c && stockData.c.includes('+')) {

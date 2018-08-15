@@ -2,24 +2,24 @@
 const util = require('util');
 
 module.exports = class HrViolations extends BaseStorageModule {
-
   async handle(data) {
-
     await this.replaceSlackUserWithUserName(data);
-    if (data.cmd === "hrviolations") {
+    if (data.cmd === 'hrviolations') {
       this.displayHrviolations(data);
       return;
     }
 
     if (!data.user_text) {
-      return
+      return;
     }
 
     // Add violation.
     this.addViolation(data);
-    this.bot.postMessage(data.channel, "Achievement unlocked: HR VIOLATION\nhttps://i.imgur.com/wjySGr5.png");
+    this.bot.postMessage(
+      data.channel,
+      'Achievement unlocked: HR VIOLATION\nhttps://i.imgur.com/wjySGr5.png'
+    );
   }
-
 
   registerSqliteModel() {
     this.HrViolations = this.db.define('hrviolations', {
@@ -34,7 +34,7 @@ module.exports = class HrViolations extends BaseStorageModule {
   }
 
   help() {
-    return "";
+    return '';
   }
 
   async displayHrviolations(data) {
@@ -45,11 +45,18 @@ module.exports = class HrViolations extends BaseStorageModule {
 
     const violations = await this.getViolations(data.user_text);
     if (violations) {
-      this.bot.postMessage(data.channel, util.format("*%s* has %d reported violations", data.user_text, violations.length));
+      this.bot.postMessage(
+        data.channel,
+        util.format(
+          '*%s* has %d reported violations',
+          data.user_text,
+          violations.length
+        )
+      );
       return;
     }
 
-    this.bot.postMessage(data.channel, "No reported HR Violations");
+    this.bot.postMessage(data.channel, 'No reported HR Violations');
   }
 
   async getLeaderBoard(data) {
@@ -58,9 +65,14 @@ module.exports = class HrViolations extends BaseStorageModule {
       { model: this.HrViolations }
     );
 
-    let msg = "";
+    let msg = '';
     violations.forEach((violation, index) => {
-      let row = util.format("*%d. %s* - %d violations\n", index + 1, violation.get('name'), violation.get('number'));
+      let row = util.format(
+        '*%d. %s* - %d violations\n',
+        index + 1,
+        violation.get('name'),
+        violation.get('number')
+      );
       msg += row;
     });
 
@@ -74,7 +86,7 @@ module.exports = class HrViolations extends BaseStorageModule {
     const hrviolations = await this.HrViolations.findAll({
       where: {
         name: keyword,
-      }
+      },
     });
 
     const msgs = [];

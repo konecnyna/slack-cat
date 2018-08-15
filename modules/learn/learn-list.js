@@ -71,7 +71,9 @@ ${await this.createBody(learnData)}
       learns.push(
         `<div class="mt-2 mb-2">${learns.length + 1}. ${this.createListItem(
           row.get('learn')
-        )}<span style="float:right; font-size:16px" class="badge badge-primary">${row.get('learned_by')}</span></div>`
+        )}<span style="float:right; font-size:16px" class="badge badge-primary">${row.get(
+          'learned_by'
+        )}</span></div>`
       );
     });
 
@@ -98,16 +100,16 @@ ${await this.createBody(learnData)}
     learn = learn.replace('<', '');
     learn = learn.replace('>', '');
 
-    if (/\.(gif|jpg|jpeg|tiff|png)/i.test(learn)) {      
-      return `<a href="${learn}" target="_blank"><img src="${learn}" width=200/></a>`;      
+    if (/\.(gif|jpg|jpeg|tiff|png)/i.test(learn)) {
+      return `<a href="${learn}" target="_blank"><img src="${learn}" width=200/></a>`;
     }
 
-    if (/(www|http:|https:)+[^\s]+[\w]/i.test(learn)) {      
+    if (/(www|http:|https:)+[^\s]+[\w]/i.test(learn)) {
       return `<a href="${learn}" target="_blank">${learn}</a>`;
     }
 
     if (learn.length === 0) {
-      learn = "NO TEXT - THIS IS A BAD ENTRY.";
+      learn = 'NO TEXT - THIS IS A BAD ENTRY.';
     }
     return learn;
   }

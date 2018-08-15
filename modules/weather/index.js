@@ -50,8 +50,16 @@ const radarMap = {
   WY: 'riw',
 };
 
-const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    
+const DAYS = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
+
 module.exports = class Weather extends BaseModule {
   async handle(data) {
     if (this.aliases().includes(data.cmd)) {
@@ -100,12 +108,12 @@ module.exports = class Weather extends BaseModule {
         data.channel,
         `http://images.intellicast.com/WxImages/RadarLoop/usa_None_anim.gif?time=${Date.now()}`
       );
-      
+
       return;
     }
 
     const location = radarMap[data.user_text.toUpperCase()];
-    if (location) {      
+    if (location) {
       img = `http://images.intellicast.com/WxImages/RadarLoop/${location}_None_anim.gif?time=${Date.now()}`;
       this.bot.postMessage(data.channel, img);
       return;
@@ -166,7 +174,7 @@ module.exports = class Weather extends BaseModule {
 
     for (let i = 0; i < 4; i++) {
       const day = weatherData.daily.data[i];
-      const weatherDate = new Date(day.time*1000);
+      const weatherDate = new Date(day.time * 1000);
       fields.push({
         title: DAYS[weatherDate.getDay()],
         value: `${this.weatherEmoji(day.icon)}`,
@@ -179,8 +187,8 @@ module.exports = class Weather extends BaseModule {
       username: 'WeatherCat',
       attachments: [
         {
-          color: "#ddd",
-          fields: fields,          
+          color: '#ddd',
+          fields: fields,
         },
       ],
     });

@@ -4,7 +4,7 @@ module.exports = class JiraCreate {
   constructor(context) {
     this.context = context;
   }
-  
+
   async createJiraTicket(body, jira) {
     try {
       return await jira.addNewIssue({

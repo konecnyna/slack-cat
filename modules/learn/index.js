@@ -15,7 +15,7 @@ module.exports = class Learn extends BaseStorageModule {
 
   registerSqliteModel() {
     this.LearnsModel = this.db.define('learns', {
-      name: {type: this.Sequelize.STRING, primaryKey: true },
+      name: { type: this.Sequelize.STRING, primaryKey: true },
       learn: this.Sequelize.STRING,
       learn_type: this.Sequelize.STRING,
       learned_by: this.Sequelize.STRING,
@@ -24,7 +24,7 @@ module.exports = class Learn extends BaseStorageModule {
 
   async handle(data) {
     if (data.cmd === 'learns') {
-      this.displayLearns(data)      
+      this.displayLearns(data);
       return;
     }
 
@@ -48,18 +48,21 @@ module.exports = class Learn extends BaseStorageModule {
   createRoutes(app) {
     this.list.createRoutes(app);
   }
-  
+
   async displayLearns(data) {
-    const msgs = await this.getLearns(data.user_text, 5, true, false);      
+    const msgs = await this.getLearns(data.user_text, 5, true, false);
     if (msgs) {
-      this.bot.postMessage(data.channel, msgs.join("\n"));  
-    }    
+      this.bot.postMessage(data.channel, msgs.join('\n'));
+    }
   }
 
-  async unlearn(data) {    
-    const input = this.sanatizeInput(data.user_text);    
+  async unlearn(data) {
+    const input = this.sanatizeInput(data.user_text);
     if (!input.name.length || !input.text.length) {
-      this.bot.postMessage(data.channel, "You forgot to give me keybword o unlearn text. You can also use `?unlearn test --index 1`");
+      this.bot.postMessage(
+        data.channel,
+        'You forgot to give me keybword o unlearn text. You can also use `?unlearn test --index 1`'
+      );
       return;
     }
 
@@ -67,52 +70,49 @@ module.exports = class Learn extends BaseStorageModule {
       const learnData = await this.LearnsModel.findAll({
         where: {
           name: input.name,
-        }
+        },
       });
 
       const index = parseInt(input.text);
       if (!learnData[index - 1]) {
-        this.bot.postMessage(data.channel, "Bad index");
+        this.bot.postMessage(data.channel, 'Bad index');
         return;
       }
-      
-      const learnText = learnData[index - 1].get('learn');      
+
+      const learnText = learnData[index - 1].get('learn');
       this.LearnsModel.destroy({
         where: {
           name: input.name,
-          learn: learnText
-        }
+          learn: learnText,
+        },
       });
     } else {
       this.LearnsModel.destroy({
         where: {
           name: input.name,
-          learn: input.text
-        }
+          learn: input.text,
+        },
       });
     }
-    
 
-    this.bot.postMessage(data.channel, "Unlearned " + input.name);
+    this.bot.postMessage(data.channel, 'Unlearned ' + input.name);
   }
 
   async getLearns(keyword, limit, random, index) {
     const params = {
       where: {
         name: keyword,
-      }
-    }
+      },
+    };
 
-
-    if (limit > 0 && !index) {      
+    if (limit > 0 && !index) {
       params['limit'] = limit;
     }
 
-    
-    if (random) {      
+    if (random) {
       params['order'] = this.Sequelize.fn('RANDOM');
     }
-    
+
     const learnData = await this.LearnsModel.findAll(params);
     if (Math.abs(index) > learnData.length) {
       // out of index.
@@ -133,7 +133,7 @@ module.exports = class Learn extends BaseStorageModule {
       msgs.push(row.get('learn'));
     });
 
-    return msgs;    
+    return msgs;
   }
 
   async handleLearn(data) {
@@ -144,21 +144,20 @@ module.exports = class Learn extends BaseStorageModule {
       return;
     }
 
-    
     const name = await this.learnGeneral(data, userData);
-    this.bot.postMessage(data.channel, 'Learned ' + name); 
+    this.bot.postMessage(data.channel, 'Learned ' + name);
   }
 
   async learnGeneral(data, userData) {
-    const authorData = await this.bot.userDataPromise(data.user);    
+    const authorData = await this.bot.userDataPromise(data.user);
     const input = this.sanatizeInput(data.user_text);
 
-    let name = input.name.replace(' ', '-');    
+    let name = input.name.replace(' ', '-');
     if (userData.matches) {
-      const userDetails = await this.bot.userDataPromise(userData.matches[1]);      
-      name = userDetails.user.name.replace(' ', '-');        
+      const userDetails = await this.bot.userDataPromise(userData.matches[1]);
+      name = userDetails.user.name.replace(' ', '-');
     }
-    
+
     this.insertLearn(data, userData, name, authorData.user.name);
     return name;
   }
@@ -166,18 +165,22 @@ module.exports = class Learn extends BaseStorageModule {
   async learnUser(data, userData) {
     const authorData = await this.bot.userDataPromise(data.user);
     const targetData = await this.bot.userDataPromise(userData.matches[1]);
-    this.insertLearn(data, userData, targetData.user.name, authorData.user.name);
+    this.insertLearn(
+      data,
+      userData,
+      targetData.user.name,
+      authorData.user.name
+    );
   }
 
-
   async insertLearn(data, userData, name, learnedby) {
-   let learnType = this.LearnType.QUOTE;
+    let learnType = this.LearnType.QUOTE;
     if (userData.text.indexOf('http') === 0) {
       learnType = this.LearnType.IMAGE;
     }
 
     const input = this.sanatizeInput(data.user_text);
-    
+
     const learnData = {
       name: name,
       learn: input.text,
@@ -185,17 +188,21 @@ module.exports = class Learn extends BaseStorageModule {
       learned_by: learnedby,
     };
 
-
-    this.LearnsModel.create(learnData);    
+    this.LearnsModel.create(learnData);
   }
 
   sanatizeInput(user_text) {
-    const split = user_text.includes("|") ? user_text.split('|') : user_text.split(' ');
-    
+    const split = user_text.includes('|')
+      ? user_text.split('|')
+      : user_text.split(' ');
+
     return {
-      "name": split[0].trim(),
-      "text": split.splice(1, split.length).join(' ').trim()
-    }
+      name: split[0].trim(),
+      text: split
+        .splice(1, split.length)
+        .join(' ')
+        .trim(),
+    };
   }
 
   getType() {
