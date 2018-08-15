@@ -3,12 +3,23 @@
 const botParams = {
   icon_emoji: ':poop:',
   username: 'PoopCat',
+  blacklist: 'channels_blacklist'
 };
 
 const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 
 module.exports = class Poop extends BaseStorageModule {
   async handle(data) {
+    if (!this.isValidConfig()) {
+      this.bot.postMessage(data.channel, `Please add key ${botParams.blacklist} to 'config.json'`);
+      return;
+    }
+
+    if (await this.isBlackListed(data.channel)) {
+      this.denyPooping(data.channel);
+      return;
+    }
+
     if (data.cmd === 'poop-board' || data.cmd === 'poopboard') {
       this.postLeaderBoard(data);
       return;
@@ -22,17 +33,23 @@ module.exports = class Poop extends BaseStorageModule {
     this.updateAndPostPoop(data);
   }
 
+  isValidConfig() {
+    return config.getKey(botParams.blacklist) && config.getKey(botParams.blacklist).poop;
+  }
+
+  async denyPooping(channel) {
+    const msg = `Not in this channel please!`;
+    this.bot.postMessage(channel, msg);
+  }
+
   async updateAndPostPoop(data) {
     const poopData = await this.updatePoop(data);
     let msg = `*${poopData.user} just got pooped!!!* ${poopData.user} pooped _${
       poopData.poops
     } times_.\nPlease lock your screen next time! http://osxdaily.com/2011/01/17/lock-screen-mac/\n`;
     if (poopData.poops === 1) {
-      msg = `*${
-        poopData.user
-      }* got pooped for the first time. That's a big stink! Don't leave your computer unlocked when you're not with it! Side effects can include hacking, stealing, destruction, and...pooping (by one of your sneaky gremlin coworkers). http://osxdaily.com/2011/01/17/lock-screen-mac/`;
+      msg = `*${poopData.user}* got pooped for the first time. That's a big stink! Don't leave your computer unlocked when you're not with it! Side effects can include hacking, stealing, destruction, and...pooping (by one of your sneaky gremlin coworkers). http://osxdaily.com/2011/01/17/lock-screen-mac/`;
     }
-
     this.bot.postMessageWithParams(data.channel, msg, botParams);
   }
 
@@ -86,7 +103,8 @@ module.exports = class Poop extends BaseStorageModule {
       },
     });
 
-    let msg = '';
+
+    let msg = ""
     if (!poopsRow) {
       msg = `${user} has not been pooped... _yet_! :smirk: :poop: `;
     } else {
@@ -125,6 +143,13 @@ module.exports = class Poop extends BaseStorageModule {
 
   aliases() {
     return ['poop-board', 'poopboard', ':poop:', 'poops'];
+  }
+
+  async isBlackListed(channel) {
+    const blacklisted = config.getKey(botParams.blacklist).poop;
+    const currentChannel = await this.bot.getChannelById(channel);
+ 
+    return blacklisted.includes(currentChannel.name);
   }
 
   help() {

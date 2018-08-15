@@ -19,6 +19,9 @@
    "modules_blacklist":[  
 
    ],
+   "channels_blacklist":{
+       "poop":["announcements"]
+   },
    "node_env":"production",
    "port":80,
    "slack_verification_token":"****",
