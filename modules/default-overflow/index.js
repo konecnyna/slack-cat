@@ -1,13 +1,12 @@
 'use strict';
 
-
 const Learn = require('../learn/index.js');
 
 module.exports = class LearnOverflowAlises extends BaseModule {
-	constructor(bot) {
-		super(bot);
-		this.learn = new Learn(bot);
-	}
+  constructor(bot) {
+    super(bot);
+    this.learn = new Learn(bot);
+  }
 
   async handle(data) {
     let learns = false;
@@ -18,13 +17,13 @@ module.exports = class LearnOverflowAlises extends BaseModule {
       }
 
       learns = await this.learn.getLearns(data.cmd, 1, false, index);
-    } else {      
-      learns = await this.learn.getLearns(data.cmd, 1, true, false);  
+    } else {
+      learns = await this.learn.getLearns(data.cmd, 1, true, false);
     }
-  	
-  	if (learns) {
-  		this.bot.postMessage(data.channel, learns.join("\n"));  	
-  	}  	
+
+    if (learns) {
+      this.bot.postMessage(data.channel, learns.join('\n'));
+    }
   }
 
   getType() {
@@ -32,6 +31,6 @@ module.exports = class LearnOverflowAlises extends BaseModule {
   }
 
   help() {
-    return "This class will handle any cmd that isnt a module. So we can do\n?learn test | funnytext \n?test\nWhich will output `funnytext`"
+    return 'This class will handle any cmd that isnt a module. So we can do\n?learn test | funnytext \n?test\nWhich will output `funnytext`';
   }
-}
+};

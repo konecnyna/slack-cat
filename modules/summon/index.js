@@ -6,7 +6,8 @@ const imgRegex = new RegExp(
   'g'
 );
 
-const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36';
+const userAgent =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36';
 const botParams = {
   icon_emoji: ':frame_with_picture:',
   username: 'ImageCat',
@@ -15,22 +16,26 @@ const botParams = {
 module.exports = class GoogleImages extends BaseModule {
   async handle(data) {
     const body = await this.getData(data);
-    
-    if (data.args && data.args.includes("--random")) {
+
+    if (data.args && data.args.includes('--random')) {
       const randomUrl = this.getRandomUrl(body, data);
       if (randomUrl) {
         this.bot.postMessageWithParams(data.channel, randomUrl, botParams);
         return;
-      }              
+      }
     }
 
     const urls = this.getUrls(body, data);
     if (urls.length) {
-      this.bot.postMessageWithParams(data.channel, urls[0], botParams);  
+      this.bot.postMessageWithParams(data.channel, urls[0], botParams);
       return;
-    }          
+    }
 
-    this.bot.postMessageWithParams(data.channel, 'No results. :slightly_frowning_face:', botParams);
+    this.bot.postMessageWithParams(
+      data.channel,
+      'No results. :slightly_frowning_face:',
+      botParams
+    );
   }
 
   aliases() {
@@ -42,8 +47,8 @@ module.exports = class GoogleImages extends BaseModule {
   }
 
   getRandomUrl(body, data) {
-    const urls = this.getUrls(body, data);        
-    return urls[Math.floor(Math.random() * urls.length - 1)];    
+    const urls = this.getUrls(body, data);
+    return urls[Math.floor(Math.random() * urls.length - 1)];
   }
 
   getUrls(body, data) {
@@ -60,7 +65,7 @@ module.exports = class GoogleImages extends BaseModule {
       // capturing group n: match[n]
       urls.push(match[1]);
 
-      match = imgRegex.exec(body)
+      match = imgRegex.exec(body);
     }
 
     return urls;
@@ -68,11 +73,11 @@ module.exports = class GoogleImages extends BaseModule {
 
   getData(data) {
     var options = {
-      url: "https://www.google.com/search",
+      url: 'https://www.google.com/search',
       headers: {
         'User-Agent': userAgent,
       },
-      qs: this.buildParams(data)
+      qs: this.buildParams(data),
     };
 
     return new Promise((resolve, reject) => {
@@ -85,26 +90,27 @@ module.exports = class GoogleImages extends BaseModule {
 
         resolve(body);
       });
-    });  
+    });
   }
 
   buildParams(data) {
     let params = {};
 
-    params['tbm'] = "isch";        
-    if (data.cmd === 'gif' || data.cmd === 'reaction') {  
-      params['tbs'] = "itp:animated";      
+    params['tbm'] = 'isch';
+    if (data.cmd === 'gif' || data.cmd === 'reaction') {
+      params['tbs'] = 'itp:animated';
     }
 
-
-    params['safe'] = "strict";
-    if(data.args && data.args.includes("--nsfw")) {
+    params['safe'] = 'strict';
+    if (data.args && data.args.includes('--nsfw')) {
       // Proceed with caution...
-      params['safe'] = "off";
+      params['safe'] = 'off';
     }
 
-
-    params["q"] = (data.cmd === 'reaction') ? `reaction gif ${data.user_text}` : data.user_text;
+    params['q'] =
+      data.cmd === 'reaction'
+        ? `reaction gif ${data.user_text}`
+        : data.user_text;
     return params;
   }
 };

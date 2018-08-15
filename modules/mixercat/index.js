@@ -4,7 +4,6 @@ const CronJob = require('cron').CronJob;
 const pair = new Pair();
 const mixerConfig = config.getKey('mixercat');
 
-
 const DEFAULT_PAIR_MESSAGE = `Hi! :cat:
 
 I'm in charge of getting to know your teammates better by pairing you with other people in the mixer channel.
@@ -61,7 +60,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     const matches = await pair.pairMembers(members, this.MixerCatModel);
     matches.forEach(async it => {
       if (it.length && it.length >= 2) {
-	console.log(it)
+        console.log(it);
         this.bot.postMessageToUsers(
           it,
           mixerConfig.match_message || `${DEFAULT_PAIR_MESSAGE}`
@@ -110,7 +109,6 @@ module.exports = class MixerCat extends BaseStorageModule {
   getChannelId() {
     return mixerConfig.channel;
   }
-
 
   help() {
     return 'Get paired with a random person for coffee!';
