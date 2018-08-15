@@ -26,7 +26,7 @@ module.exports = class TranslateUtil {
 
       return message.text;
     } catch (e) {
-      console.log('Something went wrong: ', e.message);
+      return `Something went wrong: ${e.message}. Please look for the code in the google translate URL: https://translate.google.com/#auto/zh-CN/hello`;
     }
   }
 
