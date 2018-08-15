@@ -1,4 +1,3 @@
-
 const googleTranslate = require('google-translate-api');
 
 module.exports = class TranslateUtil {
@@ -26,7 +25,9 @@ module.exports = class TranslateUtil {
 
       return message.text;
     } catch (e) {
-      return `Something went wrong: ${e.message}. Please look for the code in the google translate URL: https://translate.google.com/#auto/zh-CN/hello`;
+      return `Something went wrong: ${
+        e.message
+      }. Please look for the code in the google translate URL: https://translate.google.com/#auto/zh-CN/hello`;
     }
   }
 
