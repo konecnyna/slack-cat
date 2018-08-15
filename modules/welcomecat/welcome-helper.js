@@ -14,15 +14,15 @@ module.exports = class WeclomeHelper {
         channel: channel,
         message: msg,
         enabled: enabled,
-        generic_welcome: genericWelcome
+        generic_welcome: genericWelcome,
       },
       {
         message: msg,
         enabled: enabled,
-        generic_welcome: genericWelcome
+        generic_welcome: genericWelcome,
       }
-    );    
-    
+    );
+
     return message.get('message');
   }
 
@@ -31,18 +31,17 @@ module.exports = class WeclomeHelper {
     fields[fieldName] = value;
 
     this.model.update(fields, {
-      where: { channel: channel }
+      where: { channel: channel },
     });
   }
 
   async getOptionsForChannel(channel) {
     const welcomeObject = await this.model.findOne({
       where: {
-        channel: channel
+        channel: channel,
       },
     });
 
-  
     return welcomeObject;
   }
-}
+};

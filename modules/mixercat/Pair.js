@@ -5,19 +5,19 @@ const chooser = new Chooser();
 const Op = require('sequelize').Op;
 
 module.exports = class Pair {
-  async pairMembers(members, mixerCatModel) {    
+  async pairMembers(members, mixerCatModel) {
     const matches = [];
     this.matchedUsers = {};
     this.mixerCatModel = mixerCatModel;
 
-    for (let i = 0; i < members.length; i++) {      
+    for (let i = 0; i < members.length; i++) {
       if (members.length < 2) {
         // Not enough ppl to pair;
         break;
       }
 
       const user = members[i];
-      if (this.matchedUsers[user]) {        
+      if (this.matchedUsers[user]) {
         continue;
       }
 
@@ -35,7 +35,7 @@ module.exports = class Pair {
   async getPair(userId, users) {
     const potentialPairs = await this.getValidPairs(userId, users);
     if (!potentialPairs.length) {
-      // User is out of matches.      
+      // User is out of matches.
       return [];
     }
 
@@ -63,9 +63,11 @@ module.exports = class Pair {
       });
 
     return users.filter(it => {
-      return !previousPairs.includes(it) 
-        && it !== userId
-        && this.matchedUsers[it] !== true;
+      return (
+        !previousPairs.includes(it) &&
+        it !== userId &&
+        this.matchedUsers[it] !== true
+      );
     });
   }
 
