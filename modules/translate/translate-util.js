@@ -2,15 +2,15 @@ const googleTranslate = require('google-translate-api');
 
 module.exports = class TranslateUtil {
   getTranslationLang(userText) {
-    let lang = 'en';
+    let langCode = 'en';
     var match = /to:([^\s]+)/.exec(userText);
     if (match !== null) {
-      lang = match[1];
+      langCode = match[1];
       userText = userText.replace(match[0], '');
     }
 
     return {
-      input: lang,
+      code: langCode,
       sanatizedInput: userText,
     };
   }
@@ -20,9 +20,14 @@ module.exports = class TranslateUtil {
       let tranlationLang = this.getTranslationLang(userText);
       const message = await this.translateUserTextTo(
         tranlationLang.sanatizedInput,
-        tranlationLang.input
+        tranlationLang.code
       );
 
+      const romanization = this.parseRomization(message)
+      if (romanization) {
+        return `${message.text} (${romanization})`;
+      }
+      
       return message.text;
     } catch (e) {
       return `Something went wrong: ${
@@ -31,9 +36,9 @@ module.exports = class TranslateUtil {
     }
   }
 
-  translateUserTextTo(text, toLang) {
+  translateUserTextTo(text, langCode) {
     return new Promise((resolve, reject) => {
-      googleTranslate(text, { to: toLang })
+      googleTranslate(text, { to: langCode, raw: "ture" })
         .then(res => {
           resolve(res);
         })
@@ -41,5 +46,9 @@ module.exports = class TranslateUtil {
           reject(err);
         });
     });
+  }
+
+  parseRomization(res) {
+    return (res.raw && JSON.parse(res.raw)[0][1][2]) || '';
   }
 };
