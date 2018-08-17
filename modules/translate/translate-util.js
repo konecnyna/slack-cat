@@ -15,14 +15,14 @@ module.exports = class TranslateUtil {
     };
   }
 
-  async translate(userText) {
-    try {
-      let tranlationLang = this.getTranslationLang(userText);
-      const message = await this.translateUserTextTo(
-        tranlationLang.sanatizedInput,
-        tranlationLang.code
-      );
+  async getLangCodeAndTranslate(userText) {
+    let tranlationLang = this.getTranslationLang(userText);
+    return this.translate(tranlationLang);
+  }
 
+  async translate(translationProps) {
+    try {  
+      const message = await this.translateUserTextTo(translationProps);
       const romanization = this.parseRomization(message)
       if (romanization) {
         return `${message.text} (${romanization})`;
@@ -36,9 +36,9 @@ module.exports = class TranslateUtil {
     }
   }
 
-  translateUserTextTo(text, langCode) {
+  translateUserTextTo(props) {
     return new Promise((resolve, reject) => {
-      googleTranslate(text, { to: langCode, raw: "ture" })
+      googleTranslate(props.sanatizedInput, { to: props.code, raw: "ture" })
         .then(res => {
           resolve(res);
         })
