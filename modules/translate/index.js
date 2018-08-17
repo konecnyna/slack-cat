@@ -13,8 +13,23 @@ module.exports = class Translate extends BaseModule {
       return;
     }
 
-    const translatedMessage = await translateUtil.translate(data.user_text);
-    this.bot.postMessage(data.channel, translatedMessage);
+
+    let msg = '';
+    if (data.cmd === 'tocn') {
+      msg = await translateUtil.translate({
+        code: 'zh-CN',
+        sanatizedInput: data.user_text,
+      });
+    } else {
+      msg = await translateUtil.getLangCodeAndTranslate(data.user_text);      
+    }
+    
+    this.bot.postMessage(data.channel, msg);
+  }
+
+
+  aliases() {
+    return ['tocn'];
   }
 
   help() {
