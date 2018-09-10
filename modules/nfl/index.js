@@ -22,6 +22,11 @@ module.exports = class Stock extends BaseModule {
 
 
   postScores(data, scores) {
+    if (scores.length === 0) {
+      this.bot.postMessage(data.channel, "I couldn't find anything!");
+      return;
+    }
+
   	const fields = [];
 
   	const isShort = scores.length !== 1;
@@ -58,8 +63,7 @@ module.exports = class Stock extends BaseModule {
   	date.day = day;
   	date.month = month;
   	date.year = year;
-
-  	console.log(date);
+  	
   	return date;
   }
 
