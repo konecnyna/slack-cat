@@ -1,17 +1,17 @@
 'use strict';
 const request = require('request');
 
-const SCORE_URL = "http://www.nfl.com/liveupdate/scores/scores.json";
+const SCORE_URL = 'https://feeds.nfl.com/feeds-rs/scores.json';
 
 class Game {
-	constructor(date, network, homeTeam, homeScore, awayTeam, awayScore) {
-		this.date = date;
-		this.network = network;
-		this.homeTeam = homeTeam;
-		this.homeScore = homeScore;
-		this.awayTeam = awayTeam;
-		this.awayScore = awayScore;
-	}
+  constructor(date, homeTeam, homeScore, awayTeam, awayScore, time) {
+    this.date = date;
+    this.homeTeam = homeTeam;
+    this.homeScore = homeScore;
+    this.awayTeam = awayTeam;
+    this.awayScore = awayScore;
+    this.time = time;
+  }
 }
 
 module.exports = class Stock extends BaseModule {
@@ -20,87 +20,91 @@ module.exports = class Stock extends BaseModule {
     this.postScores(data, scores);
   }
 
-
   postScores(data, scores) {
     if (scores.length === 0) {
       this.bot.postMessage(data.channel, "I couldn't find anything!");
       return;
     }
 
-  	const fields = [];
+    const fields = [];
 
-  	const isShort = scores.length !== 1;
-  	scores.forEach(it => {
-  		fields.push({
-  			title: `${it.date.month} - ${it.date.day} - ${it.date.year} on ${it.network}`,
-  			value: `*${it.homeTeam}* - ${it.homeScore}\n*${it.awayTeam}* - ${it.awayScore}\n${isShort ? "---------" : ""}`,
-        	short: isShort
-    	});
-  	})
+    const isShort = scores.length !== 1;
+    scores.forEach(it => {
+      fields.push({
+        title: `${it.date}`,
+        value: `*${it.homeTeam}* - ${it.homeScore}\n*${it.awayTeam}* - ${
+          it.awayScore
+        }\n${it.time}\n${isShort ? '---------' : ''}`,
+        short: isShort,
+      });
+    });
 
     this.bot.postRawMessage(data.channel, {
-      icon_emoji: ":football:",
+      icon_emoji: ':football:',
       username: 'NflCat',
       attachments: [
         {
-          title: "Current Scores:",
-          fields: fields,          
+          color: '#0D47A1',
+          title: 'Current Scores:',
+          fields: fields,
         },
       ],
     });
   }
 
   parseDate(key) {
-  	if (!key) {
-  		return;
-  	}
+    if (!key) {
+      return;
+    }
 
-  	const year = key.slice(0,4);
-  	const month = key.slice(4,6);
-  	const day = key.slice(6,8);
+    const year = key.slice(0, 4);
+    const month = key.slice(4, 6);
+    const day = key.slice(6, 8);
 
-  	const date = new Date();
-  	date.day = day;
-  	date.month = month;
-  	date.year = year;
-  	
-  	return date;
+    const date = new Date();
+    date.day = day;
+    date.month = month;
+    date.year = year;
+
+    return date;
   }
 
   async getScores(userText) {
-	const scores = await this.getData();
-    
+    const scores = await this.getData();
+
     const games = [];
 
-    Object.keys(scores).forEach(it => {
-    	const game = scores[it];
-
-    	games.push(new Game(
-    		this.parseDate(it),
-    		game.media.tv,
-    		game.home.abbr,
-    		this.calcGameScore(game.home.score),
-    		game.away.abbr,
-    		this.calcGameScore(game.away.score)
-    		));
+    scores.gameScores.forEach(it => {
+      games.push(
+        new Game(
+          it.gameSchedule.gameDate,
+          it.gameSchedule.homeTeam.abbr,
+          it.score.visitorTeamScore.pointTotal,
+          it.gameSchedule.visitorTeam.abbr,
+          it.score.homeTeamScore.pointTotal,
+          this.resolvePhase(it.score)
+        )
+      );
     });
 
     if (userText) {
-    	return games.filter(it => {
-    		return it.homeTeam === userText.toUpperCase() ||
-    		it.awayTeam === userText.toUpperCase();
-    	});
+      return games.filter(it => {
+        return (
+          it.homeTeam === userText.toUpperCase() ||
+          it.awayTeam === userText.toUpperCase()
+        );
+      });
     }
 
     return games;
   }
 
-  calcGameScore(score) {
-  	if (score.T !== null) {
-  		return score.T;
-  	}
+  resolvePhase(score) {
+    if (score.phase === 'FINAL') {
+      return score.phase;
+    }
 
-  	return score["1"] + score["2"] + score["3"] + score["4"] + score["5"];
+    return `${score.phase} - ${score.time}`;
   }
 
   getData() {
@@ -115,13 +119,11 @@ module.exports = class Stock extends BaseModule {
           console.error(error);
           return;
         }
-        
+
         resolve(JSON.parse(body));
       });
     });
   }
-
-
 
   help() {
     return 'Usage: `?nfl team` should output the current/final score.';
