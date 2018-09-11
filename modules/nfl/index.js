@@ -78,9 +78,9 @@ module.exports = class Stock extends BaseModule {
         new Game(
           `${it.gameSchedule.gameDate} @ ${it.gameSchedule.gameTimeEastern}`,
           it.gameSchedule.homeTeam.abbr,
-          it.score.visitorTeamScore.pointTotal,
-          it.gameSchedule.visitorTeam.abbr,
           it.score.homeTeamScore.pointTotal,
+          it.gameSchedule.visitorTeam.abbr,
+          it.score.visitorTeamScore.pointTotal,
           this.resolvePhase(it.score)
         )
       );
