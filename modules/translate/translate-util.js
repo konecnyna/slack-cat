@@ -21,13 +21,13 @@ module.exports = class TranslateUtil {
   }
 
   async translate(translationProps) {
-    try {  
+    try {
       const message = await this.translateUserTextTo(translationProps);
-      const romanization = this.parseRomization(message)
+      const romanization = this.parseRomization(message);
       if (romanization) {
         return `${message.text} (${romanization})`;
       }
-      
+
       return message.text;
     } catch (e) {
       return `Something went wrong: ${
@@ -38,7 +38,7 @@ module.exports = class TranslateUtil {
 
   translateUserTextTo(props) {
     return new Promise((resolve, reject) => {
-      googleTranslate(props.sanatizedInput, { to: props.code, raw: "ture" })
+      googleTranslate(props.sanatizedInput, { to: props.code, raw: 'ture' })
         .then(res => {
           resolve(res);
         })
