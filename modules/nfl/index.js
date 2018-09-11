@@ -31,10 +31,9 @@ module.exports = class Stock extends BaseModule {
     const isShort = scores.length !== 1;
     scores.forEach(it => {
       fields.push({
-        title: `${it.date}`,
         value: `*${it.homeTeam}* - ${it.homeScore}\n*${it.awayTeam}* - ${
           it.awayScore
-        }\n${it.time}\n${isShort ? '---------' : ''}`,
+        }\n${it.time}\n_${it.date}_\n${isShort ? '---------' : ''}`,
         short: isShort,
       });
     });
@@ -77,7 +76,7 @@ module.exports = class Stock extends BaseModule {
     scores.gameScores.forEach(it => {
       games.push(
         new Game(
-          it.gameSchedule.gameDate,
+          `${it.gameSchedule.gameDate} @ ${it.gameSchedule.gameTimeEastern}`,
           it.gameSchedule.homeTeam.abbr,
           it.score.visitorTeamScore.pointTotal,
           it.gameSchedule.visitorTeam.abbr,
