@@ -41,11 +41,11 @@ module.exports = class Stock extends BaseModule {
 
     this.bot.postRawMessage(data.channel, {
       icon_emoji: ':football:',
-      username: 'NflCat',
+      username: 'FootballCat',
       attachments: [
         {
           color: '#0D47A1',
-          title: 'Current Scores:',
+          title: `${isShort ? 'Current Scores:' : 'Current Score:'}`,
           fields: fields,
         },
       ],
