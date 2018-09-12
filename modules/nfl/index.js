@@ -71,16 +71,19 @@ module.exports = class Stock extends BaseModule {
   async getScores(userText) {
     const scores = await this.getData();
 
-    const games = [];
+    const games = [];    
 
     scores.gameScores.forEach(it => {
+      const homeScore = it.score ? it.score.homeTeamScore.pointTotal : 0;
+      const awayScore = it.score ? it.score.visitorTeamScore.pointTotal : 0;
+
       games.push(
         new Game(
           `${it.gameSchedule.gameDate} @ ${it.gameSchedule.gameTimeEastern}`,
           it.gameSchedule.homeTeam.abbr,
-          it.score.homeTeamScore.pointTotal,
+          homeScore,
           it.gameSchedule.visitorTeam.abbr,
-          it.score.visitorTeamScore.pointTotal,
+          awayScore,
           this.resolvePhase(it.score)
         )
       );
@@ -99,6 +102,10 @@ module.exports = class Stock extends BaseModule {
   }
 
   resolvePhase(score) {
+    if (!score) {
+      return "TBD";
+    }
+
     if (score.phase === 'FINAL') {
       return score.phase;
     }
