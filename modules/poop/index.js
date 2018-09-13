@@ -10,11 +10,6 @@ const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 
 module.exports = class Poop extends BaseStorageModule {
   async handle(data) {
-    if (await this.isBlackListed(data.channel)) {
-      this.denyPooping(data.channel);
-      return;
-    }
-
     if (data.cmd === 'poop-board' || data.cmd === 'poopboard') {
       this.postLeaderBoard(data);
       return;
@@ -25,6 +20,11 @@ module.exports = class Poop extends BaseStorageModule {
       return;
     }
 
+	if (await this.isBlackListed(data.channel)) {
+      this.denyPooping(data.channel);
+      return;
+    }
+    
     this.updateAndPostPoop(data);
   }
 
