@@ -24,7 +24,7 @@ module.exports = class Poop extends BaseStorageModule {
       this.denyPooping(data.channel);
       return;
     }
-    
+
     this.updateAndPostPoop(data);
   }
 
@@ -151,7 +151,10 @@ module.exports = class Poop extends BaseStorageModule {
 
     const blacklisted = config.getKey(botParams.blacklist).poop;
     const currentChannel = await this.bot.getChannelById(channel);
-
+    if (!blacklisted || !currentChannel) {
+    	return false;
+    }
+    
     return blacklisted.includes(currentChannel.name);
   }
 
