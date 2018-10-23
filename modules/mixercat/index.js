@@ -27,13 +27,7 @@ module.exports = class MixerCat extends BaseStorageModule {
         true,
         'America/New_York'
       );
-    } else {
-      console.error('No cron given for mixercat');
     }
-  }
-
-  async handle(data) {
-    //this.pairPeople();
   }
 
   async handleMemeberJoin(data) {
@@ -101,8 +95,7 @@ module.exports = class MixerCat extends BaseStorageModule {
   getType() {
     return [
       BaseModule.TYPES.SERVICE,
-      BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
-      BaseModule.TYPES.MODULE,
+      BaseModule.TYPES.MEMBER_JOINED_CHANNEL      
     ];
   }
 
