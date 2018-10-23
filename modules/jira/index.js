@@ -61,6 +61,10 @@ module.exports = class Jira extends BaseModule {
     this.bot.postMessage(data.channel, this.help());
   }
 
+  getProjectList() {
+    return jira.listProjects();
+  }
+
   postUserTix(data, searchResults) {
     const tix = searchResults.issues.map(issue => {
       return `${issue.key} - https://${jiraSecrets.host}/browse/${issue.key}`;
@@ -126,8 +130,9 @@ module.exports = class Jira extends BaseModule {
     return CALLBACK_ID;
   }
 
-  createRoutes(app) {
-    this.jiraCreate.createRoutes(app, CALLBACK_ID);
+  async createRoutes(app) {
+    const projects = await this.getProjectList();
+    this.jiraCreate.createRoutes(app, CALLBACK_ID, projects);
   }
 
   async postIssue(channel, issue) {
