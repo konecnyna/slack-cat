@@ -10,7 +10,7 @@ module.exports = class JiraCreate {
       return await jira.addNewIssue({
         fields: {
           project: {
-            key: 'STSH',
+            key: body.submission.project,
           },
           summary: body.submission.title,
           description: body.submission.description,
@@ -24,11 +24,12 @@ module.exports = class JiraCreate {
     }
   }
 
-  createRoutes(app, callbackId) {
+  createRoutes(app, callbackId, projects) {
     app.post('/jira-create', (req, res) => {
       // extract the verification token, slash command text,
       // and trigger ID from payload
       const { token, text, trigger_id } = req.body;
+
       this.context.showDialog(
         {
           title: 'Create Jira Ticket!',
@@ -43,29 +44,19 @@ module.exports = class JiraCreate {
               hint: '30 second summary of the problem',
             },
             {
+              label: 'Project',
+              type: 'select',
+              name: 'project',
+              options: projects.map(({ key }) => ({
+                label: key,
+                value: key,
+              })),
+            },
+            {
               label: 'Description',
               type: 'textarea',
               name: 'description',
               optional: true,
-            },
-            {
-              label: 'Urgency',
-              type: 'select',
-              name: 'urgency',
-              options: [
-                {
-                  label: 'Low',
-                  value: 'Low',
-                },
-                {
-                  label: 'Medium',
-                  value: 'Medium',
-                },
-                {
-                  label: 'High',
-                  value: 'High',
-                },
-              ],
             },
           ],
         },
