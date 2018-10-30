@@ -25,6 +25,12 @@ module.exports = class BaseModule {
     );
 
     this.checkForOverridenMethod(
+      BaseModule.TYPES.MESSAGE_EDITED,
+      this.handleMessageEdited,
+      'handleMessageEdited'
+    );
+
+    this.checkForOverridenMethod(
       BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
       this.handleMemeberJoin,
       'handleMemeberJoin'
@@ -136,6 +142,7 @@ module.exports = class BaseModule {
       MODULE: 'module',
       OVERFLOW_CMD: 'overflow_cmd',
       REACTION: 'reaction',
+      MESSAGE_EDITED: 'message_edited',
       MEMBER_JOINED_CHANNEL: 'member_joined_channel',
       RAW_INPUT: 'raw_input',
       DIALOG: 'dialog',

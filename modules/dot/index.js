@@ -17,8 +17,14 @@ module.exports = class Dot extends BaseStorageModule {
       this.postUserDots(data);
       return;
     }
+  }
 
-    this.updateAndPostDot(data);
+  handleMessageEdited(data) {
+    const triggerWords = ['.', '..', '...', ':dot:', ':dot-edited:'];
+
+    if (triggerWords.includes(data.message.text)) {
+      this.updateAndPostDot(data);
+    }
   }
 
   async updateAndPostDot(data) {
@@ -45,7 +51,7 @@ module.exports = class Dot extends BaseStorageModule {
   }
 
   async updateDot(data) {
-    const userName = await this.getUserName(data.user);
+    const userName = await this.getUserName(data.message.user);
     const dot = await this.upsert(
       this.DotModel,
       { where: { name: userName } },
@@ -130,6 +136,10 @@ module.exports = class Dot extends BaseStorageModule {
 
   aliases() {
     return ['dot-board', 'dotboard', ':dot:', 'dots'];
+  }
+
+  getType() {
+    return [BaseModule.TYPES.MODULE, BaseModule.TYPES.MESSAGE_EDITED];
   }
 
   help() {
