@@ -1,14 +1,18 @@
 'use strict';
 const JiraApi = require('jira-client');
 const jiraSecrets = config.getKey('jira_api');
-const jira = new JiraApi({
-  protocol: 'https',
-  host: jiraSecrets.host,
-  username: jiraSecrets.username,
-  password: jiraSecrets.password,
-  apiVersion: '2',
-  strictSSL: true,
-});
+let jira = false;
+
+if (jiraSecrets.host) {
+  jira = new JiraApi({
+    protocol: 'https',
+    host: jiraSecrets.host,
+    username: jiraSecrets.username,
+    password: jiraSecrets.password,
+    apiVersion: '2',
+    strictSSL: true,
+  });
+}
 const QUOTES_REGEX = new RegExp('("([^"]|"")*")', 'g');
 const JiraCreate = require('./jira-create');
 const CALLBACK_ID = 'submit-jira-ticket';
@@ -131,6 +135,10 @@ module.exports = class Jira extends BaseModule {
   }
 
   async createRoutes(app) {
+    if (!jiraSecrets.host) {
+      return;
+    }
+    
     const projects = await this.getProjectList();
     this.jiraCreate.createRoutes(app, CALLBACK_ID, projects);
   }
