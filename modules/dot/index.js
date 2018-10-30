@@ -1,78 +1,66 @@
 'use strict';
 
 const botParams = {
-  icon_emoji: ':poop:',
-  username: 'PoopCat',
+  icon_emoji: ':dot:',
+  username: 'TheDot',
   blacklist: 'channels_blacklist',
 };
 
-const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
-
 module.exports = class Dot extends BaseStorageModule {
   async handle(data) {
-    if (data.cmd === 'poop-board' || data.cmd === 'poopboard') {
+    if (data.cmd === 'dot-board' || data.cmd === 'dotboard') {
       this.postLeaderBoard(data);
       return;
     }
 
-    if (data.cmd === 'poops') {
-      this.postUserPoops(data);
+    if (data.cmd === 'dots') {
+      this.postUserDots(data);
       return;
     }
 
-    if (await this.isBlackListed(data.channel)) {
-      this.denyPooping(data.channel);
-      return;
-    }
-
-    this.updateAndPostPoop(data);
+    this.updateAndPostDot(data);
   }
 
-  async denyPooping(channel) {
-    const msg = `Not in this channel please!`;
-    this.bot.postMessage(channel, msg);
-  }
-
-  async updateAndPostPoop(data) {
-    const poopData = await this.updatePoop(data);
-    let msg = `*${poopData.user} just got pooped!!!* ${poopData.user} pooped _${
-      poopData.poops
+  async updateAndPostDot(data) {
+    const dotData = await this.updateDot(data);
+    let msg = `*${dotData.user} just got dooted!!!* ${dotData.user} dooted _${
+      dotData.dots
     } times_.\nPlease lock your screen next time! http://osxdaily.com/2011/01/17/lock-screen-mac/\n`;
-    if (poopData.poops === 1) {
+    if (dotData.dots === 1) {
       msg = `*${
-        poopData.user
-      }* got pooped for the first time. That's a big stink! Don't leave your computer unlocked when you're not with it! Side effects can include hacking, stealing, destruction, and...pooping (by one of your sneaky gremlin coworkers). http://osxdaily.com/2011/01/17/lock-screen-mac/`;
+        dotData.user
+      }* got dooted for the first time. That's a big doot! Don't leave your computer unlocked when you're not with it! Side effects can include hacking, stealing, destruction, and...dooting (by one of your sneaky gremlin coworkers).`;
     }
     this.bot.postMessageWithParams(data.channel, msg, botParams);
   }
 
   registerSqliteModel() {
-    this.PoopModel = this.db.define('poops', {
+    this.DotModel = this.db.define('dots', {
       name: { type: this.Sequelize.STRING, primaryKey: true },
-      poops: {
+      dots: {
         type: this.Sequelize.INTEGER,
         defaultValue: 0,
       },
     });
   }
 
-  async updatePoop(data) {
+  async updateDot(data) {
     const userName = await this.getUserName(data.user);
-    const poop = await this.upsert(
-      this.PoopModel,
+    const dot = await this.upsert(
+      this.DotModel,
       { where: { name: userName } },
       {
         name: userName,
-        poops: 1,
+        dots: 1,
       },
       {
-        poops: this.db.literal('poops + 1'),
+        dots: this.db.literal('dots + 1'),
       }
     );
 
     return {
       user: userName,
-      poops: poop.get('poops'),
+      dots: dot.get('dots'),
     };
   }
 
@@ -81,7 +69,7 @@ module.exports = class Dot extends BaseStorageModule {
     return user.user.profile.display_name || user.user.name;
   }
 
-  async postUserPoops(data) {
+  async postUserDots(data) {
     let user = data.user_text;
     const matches = data.user_text.match(user);
     if (matches && matches.length > 1) {
@@ -90,43 +78,43 @@ module.exports = class Dot extends BaseStorageModule {
       user = await this.getUserName(data.user);
     }
 
-    const poopsRow = await this.PoopModel.findOne({
+    const dotsRow = await this.DotModel.findOne({
       where: {
         name: user,
       },
     });
 
     let msg = '';
-    if (!poopsRow) {
-      msg = `${user} has not been pooped... _yet_! :smirk: :poop: `;
+    if (!dotsRow) {
+      msg = `${user} has not been dooted... _yet_! :smirk: :dot: `;
     } else {
-      const poops = poopsRow.get('poops');
-      msg = `${user} has been pooped :poop: *_${poops} times_* :poop:`;
+      const dots = dotsRow.get('dots');
+      msg = `${user} has been dooted :dot: *_${dots} times_* :dot:`;
     }
 
     this.bot.postMessage(data.channel, msg);
   }
 
   async postLeaderBoard(data) {
-    const poops = await this.PoopModel.findAll({
-      order: [['poops', 'DESC']],
+    const dots = await this.DotModel.findAll({
+      order: [['dots', 'DESC']],
       limit: 10,
     });
 
     const fields = [];
-    poops.forEach((plus, index) => {
+    dots.forEach((plus, index) => {
       fields.push({
-        title: `${index + 1}. ${plus.get('name')} (${plus.get('poops')} poops)`,
+        title: `${index + 1}. ${plus.get('name')} (${plus.get('dots')} dots)`,
         short: false,
       });
     });
 
     this.bot.postRawMessage(data.channel, {
-      icon_emoji: ':poop:',
-      username: 'PoopBoard',
+      icon_emoji: ':dot:',
+      username: 'DotBoard',
       attachments: [
         {
-          color: '#795548',
+          color: '#000000',
           fields: fields,
         },
       ],
@@ -136,29 +124,15 @@ module.exports = class Dot extends BaseStorageModule {
   isValidConfig() {
     return (
       config.getKey(botParams.blacklist) &&
-      config.getKey(botParams.blacklist).poop
+      config.getKey(botParams.blacklist).dot
     );
   }
 
-  // aliases() {
-  //   return ['poop-board', 'poopboard', ':poop:', 'poops'];
-  // }
-
-  async isBlackListed(channel) {
-    if (!this.isValidConfig()) {
-      return;
-    }
-
-    const blacklisted = config.getKey(botParams.blacklist).poop;
-    const currentChannel = await this.bot.getChannelById(channel);
-    if (!blacklisted || !currentChannel) {
-      return false;
-    }
-
-    return blacklisted.includes(currentChannel.name);
+  aliases() {
+    return ['dot-board', 'dotboard', ':dot:', 'dots'];
   }
 
   help() {
-    return 'YOU JUST GOT POOPED!!! :poop:';
+    return 'YOU JUST GOT DOOTED!!! :poop:';
   }
 };
