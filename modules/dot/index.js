@@ -8,7 +8,7 @@ const botParams = {
 
 const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
 
-module.exports = class Poop extends BaseStorageModule {
+module.exports = class Dot extends BaseStorageModule {
   async handle(data) {
     if (data.cmd === 'poop-board' || data.cmd === 'poopboard') {
       this.postLeaderBoard(data);
@@ -140,9 +140,9 @@ module.exports = class Poop extends BaseStorageModule {
     );
   }
 
-  aliases() {
-    return ['poop-board', 'poopboard', ':poop:', 'poops'];
-  }
+  // aliases() {
+  //   return ['poop-board', 'poopboard', ':poop:', 'poops'];
+  // }
 
   async isBlackListed(channel) {
     if (!this.isValidConfig()) {

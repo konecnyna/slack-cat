@@ -61,14 +61,12 @@ class SlackCat {
       return;
     }
 
-    
-
     const rtm = new RTMClient(config.getKey('slack_access_token'));
-    let router;        
+    let router;
     rtm.start();
-    
+
     rtm.on('authenticated', data => {
-      router = new Router(new SlackCatBot(data), this.pathToModules);      
+      router = new Router(new SlackCatBot(data), this.pathToModules);
     });
 
     rtm.on('message', data => {
