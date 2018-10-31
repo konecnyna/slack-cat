@@ -1,10 +1,6 @@
 'use strict';
 
-const botParams = {
-  icon_emoji: ':dot:',
-  username: 'TheDot',
-  blacklist: 'channels_blacklist',
-};
+const dotConfig = config.getKey('dot');
 
 module.exports = class Dot extends BaseStorageModule {
   async handle(data) {
@@ -29,15 +25,15 @@ module.exports = class Dot extends BaseStorageModule {
 
   async updateAndPostDot(data) {
     const dotData = await this.updateDot(data);
-    let msg = `*${dotData.user} just got dooted!!!* ${dotData.user} dooted _${
-      dotData.dots
-    } times_.\nPlease lock your screen next time! http://osxdaily.com/2011/01/17/lock-screen-mac/\n`;
-    if (dotData.dots === 1) {
-      msg = `*${
-        dotData.user
-      }* got dooted for the first time. That's a big doot! Don't leave your computer unlocked when you're not with it! Side effects can include hacking, stealing, destruction, and...dooting (by one of your sneaky gremlin coworkers).`;
+
+    const channelData = await this.bot.getChannelById(dotConfig.channel);
+    if (channelData.members.includes(data.message.user)) {
+      let msg = `*${dotData.user} just got dooted!!!* ${dotData.user} dooted _${
+        dotData.dots
+      } times_.`;
+
+      this.bot.postMessageWithParams(data.channel, msg, dotConfig);
     }
-    this.bot.postMessageWithParams(data.channel, msg, botParams);
   }
 
   registerSqliteModel() {
@@ -129,8 +125,8 @@ module.exports = class Dot extends BaseStorageModule {
 
   isValidConfig() {
     return (
-      config.getKey(botParams.blacklist) &&
-      config.getKey(botParams.blacklist).dot
+      config.getKey(dotConfig.blacklist) &&
+      config.getKey(dotConfig.blacklist).dot
     );
   }
 
