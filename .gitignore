@@ -57,6 +57,10 @@ typings/
 # dotenv environment variables file
 .env
 
+# Editor files
+.vs
+.vscode
+
 config.json
 .DS_Store
 *.sqlite
