@@ -2,6 +2,19 @@
 
 const dotConfig = config.getKey('dot');
 
+function buildUserDottedMsg({ user, dots }) {
+  return `*${user} just dotted themselves!!!* This is the _${dots} time_ ${user} dooted. *FEAR THE :dot:!*"`;
+}
+
+function buildUserDotsMsg({ user, dotsRow }) {
+  if (!dotsRow) {
+    return `${user} hasn't dotted themselves... _yet_! :smirk: :dot: `;
+  } else {
+    const dots = dotsRow.get('dots');
+    return `${user} has dotted themselves :dot: *_${dots} times_* :dot:`;
+  }
+}
+
 module.exports = class Dot extends BaseStorageModule {
   async handle(data) {
     if (data.cmd === 'dot-board' || data.cmd === 'dotboard') {
@@ -28,17 +41,18 @@ module.exports = class Dot extends BaseStorageModule {
 
     const channelData = await this.bot.getChannelById(dotConfig.channel);
     if (channelData.members.includes(data.message.user)) {
-      let msg = `*${dotData.user} just got dooted!!!* ${dotData.user} dooted _${
-        dotData.dots
-      } times_.`;
-
-      this.bot.postMessageWithParams(data.channel, msg, dotConfig);
+      this.bot.postMessageWithParams(
+        data.channel,
+        buildUserDottedMsg(dotData),
+        dotConfig
+      );
     }
   }
 
   registerSqliteModel() {
     this.DotModel = this.db.define('dots', {
-      name: { type: this.Sequelize.STRING, primaryKey: true },
+      id: { type: this.Sequelize.STRING, primaryKey: true },
+      name: { type: this.Sequelize.STRING },
       dots: {
         type: this.Sequelize.INTEGER,
         defaultValue: 0,
@@ -47,11 +61,14 @@ module.exports = class Dot extends BaseStorageModule {
   }
 
   async updateDot(data) {
+    const { user } = data.message;
     const userName = await this.getUserName(data.message.user);
+
     const dot = await this.upsert(
       this.DotModel,
-      { where: { name: userName } },
+      { where: { id: user } },
       {
+        id: user,
         name: userName,
         dots: 1,
       },
@@ -86,15 +103,7 @@ module.exports = class Dot extends BaseStorageModule {
       },
     });
 
-    let msg = '';
-    if (!dotsRow) {
-      msg = `${user} has not been dooted... _yet_! :smirk: :dot: `;
-    } else {
-      const dots = dotsRow.get('dots');
-      msg = `${user} has been dooted :dot: *_${dots} times_* :dot:`;
-    }
-
-    this.bot.postMessage(data.channel, msg);
+    this.bot.postMessage(data.channel, buildUserDotsMsg({ user, dotsRow }));
   }
 
   async postLeaderBoard(data) {
