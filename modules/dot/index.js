@@ -73,6 +73,8 @@ module.exports = class Dot extends BaseStorageModule {
         dots: 1,
       },
       {
+        id: user,
+        name: userName,
         dots: this.db.literal('dots + 1'),
       }
     );
@@ -89,17 +91,11 @@ module.exports = class Dot extends BaseStorageModule {
   }
 
   async postUserDots(data) {
-    let user = data.user_text;
-    const matches = data.user_text.match(user);
-    if (matches && matches.length > 1) {
-      user = await this.getUserNameFromId(matches[1]);
-    } else if (!user) {
-      user = await this.getUserName(data.user);
-    }
-
+    const user = data.user_text;
+    const userId = user.slice(2, -1);
     const dotsRow = await this.DotModel.findOne({
       where: {
-        name: user,
+        id: userId,
       },
     });
 
@@ -113,9 +109,9 @@ module.exports = class Dot extends BaseStorageModule {
     });
 
     const fields = [];
-    dots.forEach((plus, index) => {
+    dots.forEach((dot, index) => {
       fields.push({
-        title: `${index + 1}. ${plus.get('name')} (${plus.get('dots')} dots)`,
+        title: `${index + 1}. ${dot.get('name')} (${dot.get('dots')} dots)`,
         short: false,
       });
     });
