@@ -37,10 +37,9 @@ module.exports = class Dot extends BaseStorageModule {
   }
 
   async updateAndPostDot(data) {
-    const dotData = await this.updateDot(data);
-
     const channelData = await this.bot.getChannelById(dotConfig.channel);
     if (channelData.members.includes(data.message.user)) {
+      const dotData = await this.updateDot(data);
       this.bot.postMessageWithParams(
         data.channel,
         buildUserDottedMsg(dotData),
