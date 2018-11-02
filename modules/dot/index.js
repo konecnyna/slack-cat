@@ -1,6 +1,10 @@
 'use strict';
 
 const dotConfig = config.getKey('dot');
+const botParams = {
+  icon_emoji: ':dot:',
+  username: 'TheDot',
+};
 
 function buildUserDottedMsg({ user, dots }) {
   return `*${user} just dotted themselves!!!* This is the _${dots} time_ ${user} dooted. *FEAR THE :dot:!*"`;
@@ -43,7 +47,7 @@ module.exports = class Dot extends BaseStorageModule {
       this.bot.postMessageWithParams(
         data.channel,
         buildUserDottedMsg(dotData),
-        dotConfig
+        botParams
       );
     }
   }
@@ -98,7 +102,11 @@ module.exports = class Dot extends BaseStorageModule {
       },
     });
 
-    this.bot.postMessage(data.channel, buildUserDotsMsg({ user, dotsRow }));
+    this.bot.postMessageWithParams(
+      data.channel,
+      buildUserDotsMsg({ user, dotsRow }),
+      botParams
+    );
   }
 
   async postLeaderBoard(data) {
@@ -116,8 +124,8 @@ module.exports = class Dot extends BaseStorageModule {
     });
 
     this.bot.postRawMessage(data.channel, {
-      icon_emoji: ':dot:',
-      username: 'DotBoard',
+      icon_emoji: botParams.icon_emoji,
+      username: botParams.username,
       attachments: [
         {
           color: '#000000',
