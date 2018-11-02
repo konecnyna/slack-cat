@@ -1,5 +1,4 @@
-{  
-   "slack_api":"xxx",
+{     
    "bot_name": "test",
    "bot_emoji": ":cat:",
    "bot_icon_url": "http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png",
@@ -25,5 +24,5 @@
    "node_env":"production",
    "port":80,
    "slack_verification_token":"****",
-   "slack_access_token":"xoxp-***"
+   "slack_access_token":"xoxb-***"
 }
