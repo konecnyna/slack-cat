@@ -6,8 +6,8 @@ const botParams = {
   username: 'TheDot',
 };
 
-function buildUserDottedMsg({ user, dots }) {
-  return `*${user} just dotted themselves!!!* This is the _${dots} time_ ${user} dooted. *FEAR THE :dot:!*"`;
+function buildUserDottedMsg({ user, dots, channel }) {
+  return `*${user} just dotted themselves over in ${channel}!!!* This is the _${dots} time_ ${user} dooted. *FEAR THE :dot:!*"`;
 }
 
 function buildUserDotsMsg({ user, dotsRow }) {
@@ -44,9 +44,11 @@ module.exports = class Dot extends BaseStorageModule {
     const channelData = await this.bot.getChannelById(dotConfig.channel);
     if (channelData.members.includes(data.message.user)) {
       const dotData = await this.updateDot(data);
+      const channel = `<#${dotConfig.channel}|${channelData.name}>`;
+
       this.bot.postMessageWithParams(
-        data.channel,
-        buildUserDottedMsg(dotData),
+        dotConfig.channel,
+        buildUserDottedMsg({ ...dotData, channel }),
         botParams
       );
     }
