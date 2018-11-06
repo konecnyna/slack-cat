@@ -1,4 +1,3 @@
-const ALL = "ALL";
-
+const ALL = 'ALL';
 
 module.exports = { ALL };

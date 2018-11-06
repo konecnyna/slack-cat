@@ -160,8 +160,6 @@ module.exports = class RequireDir {
         this.showOverriteError(key);
       }
     });
-
-    
   }
 
   showOverriteError(key) {

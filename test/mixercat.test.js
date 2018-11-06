@@ -248,7 +248,7 @@ describe('Mixercat Test', () => {
   });
 
   it('Test for unique pairs every round', async () => {
-    while (true) {      
+    while (true) {
       const match = await pair.pairMembers(testMembers15, MixerCatModel);
       if (!match.length) {
         break;
@@ -261,31 +261,22 @@ describe('Mixercat Test', () => {
         prev.should.not.equal(current);
       }
     }
-
   });
 
   it('Test that pairing is exhaustive per round', async () => {
     // This adds to a total of 10 which is all matches.
     // 2 pairs is the max for a total of 5 ppl.
-    const matchLengths = [
-      2,
-      2,
-      2,
-      2,
-      1,
-      1,
-    ];
+    const matchLengths = [2, 2, 2, 2, 1, 1];
 
     let round = 0;
 
-    while (true) {      
+    while (true) {
       const matches = await pair.pairMembers(testMembers5, MixerCatModel);
       if (!matches.length) {
         break;
       }
-      
+
       matches.length.should.equal(matchLengths[round++]);
     }
-    
   });
 });
