@@ -6,9 +6,9 @@ const HolidayOverride = require('./HolidayOverride');
 module.exports = class SlackCatBot {
   constructor(data) {
     this.botInfo = data.self;
-    this.web = new WebClient(config.getKey('slack_access_token'));    
-    
-    this.botParams = {}    
+    this.web = new WebClient(config.getKey('slack_access_token'));
+
+    this.botParams = {};
     this.setupBotParams();
   }
 
@@ -30,7 +30,7 @@ module.exports = class SlackCatBot {
 
     // Override slackcat for some fun holidays!
     this.defaultParams = this.botParams;
-    if (!config.getKey('holiday_override')) {      
+    if (!config.getKey('holiday_override')) {
       return;
     }
 
@@ -41,9 +41,9 @@ module.exports = class SlackCatBot {
   }
 
   overrideBotParams() {
-    const holidayOverride = new HolidayOverride();    
+    const holidayOverride = new HolidayOverride();
     const override = holidayOverride.getOverride();
-    if (override) {      
+    if (override) {
       this.botParams = override;
     } else {
       this.botParams = this.defaultParams;
@@ -175,14 +175,17 @@ module.exports = class SlackCatBot {
   }
 
   postMessageToUsers(userList, msg) {
-    return this.web.conversations.open({
-      users: userList.join(",")
-    }).then(res => {
-      this.web.chat.postMessage({
-        channel: res.channel.id,
-        text: msg
-      });
-    }).catch(console.error);
+    return this.web.conversations
+      .open({
+        users: userList.join(','),
+      })
+      .then(res => {
+        this.web.chat.postMessage({
+          channel: res.channel.id,
+          text: msg,
+        });
+      })
+      .catch(console.error);
   }
 
   getChannelById(channel) {
@@ -192,7 +195,8 @@ module.exports = class SlackCatBot {
       })
       .then(res => {
         return res.channel;
-      }).catch(console.error);
+      })
+      .catch(console.error);
   }
 
   setModules(modules) {
