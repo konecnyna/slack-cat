@@ -35,7 +35,10 @@ module.exports = class Dot extends BaseStorageModule {
   handleMessageEdited(data) {
     const triggerWords = ['.', '..', '...', ':dot:', ':dot-edited:'];
 
-    if (triggerWords.includes(data.message.text)) {
+    if (
+      data.subtype === 'message_changed' &&
+      triggerWords.includes(data.message.text)
+    ) {
       this.updateAndPostDot(data);
     }
   }
