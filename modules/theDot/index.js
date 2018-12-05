@@ -2,8 +2,8 @@
 
 const dotConfig = config.getKey('dot');
 const botParams = {
-  icon_emoji: ':dot:',
-  username: 'TheDot',
+  icon_emoji: ':red_circle:',
+  username: 'Dotbot',
 };
 
 function buildUserDottedMsg({ user, dots, channelTag }) {
@@ -35,7 +35,10 @@ module.exports = class Dot extends BaseStorageModule {
   handleMessageEdited(data) {
     const triggerWords = ['.', '..', '...', ':dot:', ':dot-edited:'];
 
-    if (triggerWords.includes(data.message.text)) {
+    if (
+      data.subtype === 'message_changed' &&
+      triggerWords.includes(data.message.text)
+    ) {
       this.updateAndPostDot(data);
     }
   }
