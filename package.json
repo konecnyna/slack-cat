@@ -34,7 +34,7 @@
     "memory-cache": "^0.2.0",
     "moment": "^2.21.0",
     "mta-gtfs": "^1.1.0",
-    "nodemon": "^1.18.4",
+    "nodemon": "^1.18.7",
     "public-ip": "^2.4.0",
     "request": "^2.83.0",
     "require-dir": "^0.3.2",
