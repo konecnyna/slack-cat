@@ -11,9 +11,13 @@ module.exports = class PagerDuty extends BaseModule {
       return;
     }
 
-    const body = await this.getData(data);
-    const fields = this.makeFields(body);
-    this.postFieldsToChannel(data.channel, fields);
+    const body = await this.getData(config.getKey('pager_duty_api').policies);
+    Object.keys(body).map(key => {
+      const fields = this.makeFields(body[key]);
+      const title = body[key][0].escalation_policy.summary;
+      this.postFieldsToChannel(data.channel, title, fields);
+    })
+    
   }
 
   help() {
@@ -24,11 +28,11 @@ module.exports = class PagerDuty extends BaseModule {
     return (
       config.getKey('pager_duty_api') &&
       config.getKey('pager_duty_api').key &&
-      config.getKey('pager_duty_api').policy_id
+      config.getKey('pager_duty_api').policies.length
     );
   }
 
-  postFieldsToChannel(channel, fields) {
+  postFieldsToChannel(channel, title, fields) {
     this.bot.postRawMessage(channel, {
       icon_url:
         'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png',
@@ -38,8 +42,8 @@ module.exports = class PagerDuty extends BaseModule {
           color: '#36a64f',
           author_icon:
             'https://cdn6.aptoide.com/imgs/9/6/a/96ac16c7e70a7cf636ad85f8b5c7d5b2_icon.png?w=256',
-          title: 'Pager Duty on call list:',
-          fields: Object.values(fields),
+          title: title,
+          fields: Object.values(fields).sort((a,b) => { return a.level > b.level}),
           footer: ':fire: lets hope nothings on fire :fire:',
         },
       ],
@@ -49,20 +53,15 @@ module.exports = class PagerDuty extends BaseModule {
   makeFields(policy) {
     const map = {};
     policy.map(item => {
-      const key = 'level' + item.escalation_level;
+      const key = `Level: ${item.escalation_level}`;
       if (key in map) {
         map[key].value += ', ' + item.user.summary;
       } else {
         map[key] = {
+          level: item.escalation_level,
           title: 'Level ' + item.escalation_level,
           value: item.user.summary,
-          short: true,
-        };
-
-        map[key + '_sumary'] = {
-          title: 'Summary ',
-          value: item.escalation_policy.summary,
-          short: true,
+          short: false,
         };
       }
     });
@@ -70,7 +69,7 @@ module.exports = class PagerDuty extends BaseModule {
     return map;
   }
 
-  getData() {
+  getData(policies) {
     var options = {
       url: 'https://api.pagerduty.com/oncalls',
       headers: {
@@ -89,18 +88,21 @@ module.exports = class PagerDuty extends BaseModule {
         }
 
         const json = JSON.parse(body);
-        json.oncalls.sort((a, b) => {
-          return a.escalation_level > b.escalation_level;
+        const policyGroups = {};
+        json.oncalls.map(item => {
+          for (var i = 0; i < policies.length; i++) {
+            if (policies[i].policy_id === item.escalation_policy.id) {
+              if (!policyGroups[policies[i].policy_id]) {
+                policyGroups[policies[i].policy_id] = [];
+              }
+
+              policyGroups[policies[i].policy_id].push(item);
+            }
+          }
         });
 
-        const policy = json.oncalls.filter(item => {
-          return (
-            item.escalation_policy.id ===
-            config.getKey('pager_duty_api').policy_id
-          );
-        });
 
-        resolve(policy);
+        resolve(policyGroups);
       });
     });
   }

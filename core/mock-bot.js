@@ -162,11 +162,11 @@ module.exports = class MockBot {
 
   getChannelById(id) {
     return {
-      name: "channel-name"
+      name: 'channel-name',
     };
   }
 
-  setModules(modules) {        
+  setModules(modules) {
     this.modules = modules;
   }
 };

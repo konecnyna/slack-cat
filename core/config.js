@@ -6,12 +6,11 @@ module.exports = class Config {
   constructor(configPath) {
     try {
       const contents = fs.readFileSync(configPath);
-      this.config = JSON.parse(contents);  
+      this.config = JSON.parse(contents);
     } catch (e) {
       this.config = {};
-      console.error("Running without config.json", e);
+      console.error('Running without config.json', e);
     }
-    
   }
 
   getKey(key) {

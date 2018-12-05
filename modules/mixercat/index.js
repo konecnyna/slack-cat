@@ -2,7 +2,6 @@
 const Pair = require('./Pair');
 const CronJob = require('cron').CronJob;
 const pair = new Pair();
-const mixerConfig = config.getKey('mixercat');
 
 const DEFAULT_PAIR_MESSAGE = `Hi! :cat:
 
@@ -16,10 +15,10 @@ const DONE_PAIRING_MESSAGE =
 
 module.exports = class MixerCat extends BaseStorageModule {
   constructor(bot) {
-    super(bot);
-    if (mixerConfig.cron) {
+    super(bot);    
+    if (this.getConfig().cron) {
       new CronJob(
-        mixerConfig.cron,
+        this.getConfig().cron,
         () => {
           this.pairPeople();
         },
@@ -31,7 +30,7 @@ module.exports = class MixerCat extends BaseStorageModule {
   }
 
   async handleMemeberJoin(data) {
-    const welcomeMessage = mixerConfig.welcome_message;
+    const welcomeMessage = this.getConfig().welcome_message;
 
     if (welcomeMessage === null) {
       return;
@@ -41,8 +40,8 @@ module.exports = class MixerCat extends BaseStorageModule {
     this.bot.postMessageToUser(userData.user.id, welcomeMessage);
   }
 
-  async pairPeople() {
-    const channelData = await this.bot.getChannelById(mixerConfig.channel);
+  async pairPeople(channel) {
+    const channelData = await this.bot.getChannelById(channel);
     const members = channelData.members.filter(it => {
       return it !== this.bot.botInfo.id;
     });
@@ -57,12 +56,12 @@ module.exports = class MixerCat extends BaseStorageModule {
         console.log(it);
         this.bot.postMessageToUsers(
           it,
-          mixerConfig.match_message || `${DEFAULT_PAIR_MESSAGE}`
+          this.getConfig().match_message || `${DEFAULT_PAIR_MESSAGE}`
         );
       }
     });
 
-    this.bot.postMessage(mixerConfig.channel, DONE_PAIRING_MESSAGE);
+    this.bot.postMessage(channel, DONE_PAIRING_MESSAGE);
   }
 
   async getExtraInfo(it) {
@@ -99,8 +98,12 @@ module.exports = class MixerCat extends BaseStorageModule {
     ];
   }
 
+  getConfig() {
+    return config.getKey('mixercat');
+  }
+
   getChannelId() {
-    return mixerConfig.channel;
+    return this.getConfig().channel;
   }
 
   help() {

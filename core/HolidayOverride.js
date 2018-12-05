@@ -4,11 +4,15 @@ module.exports = class HolidayOverride {
       return this.fourthOfJulyOverride();
     } else if (this.validateDate(10, [27, 28, 29, 30, 31])) {
       return this.halloweenOverride();
-    } else if (this.validateDate(12, [20, 21, 22, 23, 24, 25, 26])) {
+    } else if (this.validateDate(12, this.getRange(5, 21))) {
       return this.christmasOverride();
     }
 
     return false;
+  }
+
+  getRange(startDay, numberOfDays) {
+    return Array.from(new Array(numberOfDays), (x,i) => i + startDay)
   }
 
   validateDate(month, days) {
