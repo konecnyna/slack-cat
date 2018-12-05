@@ -2,8 +2,8 @@
 
 const dotConfig = config.getKey('dot');
 const botParams = {
-  icon_emoji: ':dot:',
-  username: 'TheDot',
+  icon_emoji: ':red_circle:',
+  username: 'Dotbot',
 };
 
 function buildUserDottedMsg({ user, dots, channelTag }) {
