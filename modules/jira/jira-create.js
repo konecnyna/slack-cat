@@ -6,11 +6,11 @@ module.exports = class JiraCreate {
   }
 
   async createJiraTicket(body, jira) {
-    try {
-      const userData = await this.bot.userDataPromise(body.user.id);
-      const currentUserRealName = userData.user.profile.real_name;
-      const currentUserEmail = userData.user.profile.email;
+    const userData = await this.context.bot.userDataPromise(body.user.id);
+    const currentUserRealName = userData.user.profile.real_name;
+    const currentUserEmail = userData.user.profile.email;
 
+    try {
       return await jira.addNewIssue({
         fields: {
           project: {
