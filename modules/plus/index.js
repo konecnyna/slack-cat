@@ -1,9 +1,7 @@
 'use strict';
 
 const util = require('util');
-const userPattern = new RegExp(/\<@([^\s]+)\>/, 'g');
-// const userPattern = new RegExp(/\<@(.*.)\>/, 'g');
-
+const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
 const PlusHelper = require('./plus-helper.js');
 const cache = require('memory-cache');
 
