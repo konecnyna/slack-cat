@@ -423,6 +423,11 @@ module.exports = class Asciimoji extends BaseModule {
     return lineArray.join('');
   }
 
+
+  aliases() {
+    return ['text', 'ascii'];
+  }
+
   help() {
     return 'Usage: `<emoji_one> <emoji_two> text`';
   }
