@@ -50,25 +50,6 @@ module.exports = class SlackCatBot {
     }
   }
 
-  postMessageSequentially(data, messages) {
-    const promiseSerial = funcs =>
-      funcs.reduce(
-        (promise, func) =>
-          promise.then(result =>
-            func().then(Array.prototype.concat.bind(result))
-          ),
-        Promise.resolve([])
-      );
-
-    // convert each url to a function that returns a promise
-    const funcs = messages.map(msg => () =>
-      this.postMessage(data.channel, msg)
-    );
-
-    // execute Promises in serial
-    promiseSerial(funcs).catch(console.error.bind(console));
-  }
-
   async postMessage(id, text) {
     const params = extend(
       {
@@ -78,7 +59,7 @@ module.exports = class SlackCatBot {
       this.botParams
     );
 
-    this.web.chat.postMessage(params).catch(console.error);
+    await this.web.chat.postMessage(params).catch(console.error);
   }
 
   async postMessageWithParams(id, text, extras) {
@@ -143,8 +124,8 @@ module.exports = class SlackCatBot {
     return this.web.chat.postMessage(params);
   }
 
-  getUserNameFromId(user_id) {
-    return this.web.users.info({
+  async getUserNameFromId(user_id) {
+    return await this.web.users.info({
       user: user_id,
     });
   }
