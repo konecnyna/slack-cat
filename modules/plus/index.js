@@ -1,7 +1,9 @@
 'use strict';
 
 const util = require('util');
-const userPattern = new RegExp(/\<@(.*.)\>/, 'i');
+const userPattern = new RegExp(/\<@([^\s]+)\>/, 'g');
+// const userPattern = new RegExp(/\<@(.*.)\>/, 'g');
+
 const PlusHelper = require('./plus-helper.js');
 const cache = require('memory-cache');
 
@@ -28,26 +30,34 @@ module.exports = class Plus extends BaseStorageModule {
 
     const matches = data.user_text.match(userPattern);
     if (data.cmd === 'pluses') {
-      let user = data.user_text;
-      if (matches && matches.length > 1) {
-        user = await this.getUserNameFromId(matches[1]);
-      }
-
-      const pluses = await this.plusHelper.displayPlusesForUser(user);
-      this.bot.postMessage(
-        data.channel,
-        `${data.user_text} has ${pluses} pluses!`
-      );
+      this.getUserPluses(data, matches);
       return;
     }
 
+    this.plusUser(data, matches);
+  }
+
+  async getUserPluses(data, matches) {
+    let user = data.user_text;
+    if (matches && matches.length > 1) {
+      user = await this.getUserNameFromId(matches[1]);
+    }
+
+    const pluses = await this.plusHelper.displayPlusesForUser(user);
+    this.bot.postMessage(
+      data.channel,
+      `${data.user_text} has ${pluses} pluses!`
+    );
+  }
+
+  async plusUser(data, matches) {    
     if ((matches && data.user === matches[1]) || data.user === data.user_text) {
       // Person is being an ahole and trying to plus themselves!
       this.bot.postMessage(data.channel, "You'll go blind like that kid!");
       return;
     }
 
-    if (!matches || matches.length < 2) {
+    if (!matches) {
       // No user was refs so plus the raw text.]
       const pluses = await this.plusHelper.plusUser(
         data.user_text.toLowerCase()
@@ -61,12 +71,15 @@ module.exports = class Plus extends BaseStorageModule {
 
     // Resolve slack handle.
     try {
-      const userName = await this.getUserNameFromId(matches[1]);
-      const pluses = await this.plusHelper.plusUser(userName);
-      this.bot.postMessage(
-        data.channel,
-        `${userName} now has ${pluses} pluses!`
-      );
+      let group;
+      while (group = userPattern.exec(data.user_text)) {
+        const userName = await this.getUserNameFromId(group[1]);
+        const pluses = await this.plusHelper.plusUser(userName);
+        await this.bot.postMessage(
+          data.channel,
+          `${userName} now has ${pluses} pluses!`
+        );  
+      }
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);

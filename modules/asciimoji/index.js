@@ -390,7 +390,9 @@ module.exports = class Asciimoji extends BaseModule {
       messageArray.push(line);
     }
 
-    this.bot.postMessageSequentially(data, messageArray);
+    messageArray.forEach(async it => {
+      await this.bot.postMessage(data.channel, it);  
+    });    
   }
 
   getLetter(letter) {

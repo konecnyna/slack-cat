@@ -66,6 +66,8 @@ module.exports = class PlusHelper {
       }
     );
 
-    return pluses.get('pluses');
+    
+
+    return await pluses.get('pluses');
   }
 };
