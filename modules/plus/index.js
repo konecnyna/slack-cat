@@ -67,16 +67,13 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
-    // Resolve slack handle.
+    
     try {
       let group;
       while (group = userPattern.exec(data.user_text)) {
         const userName = await this.getUserNameFromId(group[1]);
         const pluses = await this.plusHelper.plusUser(userName);
-        await this.bot.postMessage(
-          data.channel,
-          `${userName} now has ${pluses} pluses!`
-        );  
+        await this.bot.postMessageToThread(data.channel, `${userName} now has ${pluses} pluses!`, data.ts);        
       }
     } catch (e) {
       console.error(e);

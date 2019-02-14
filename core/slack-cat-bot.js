@@ -98,7 +98,7 @@ module.exports = class SlackCatBot {
     return this.postRawMessage(channel_id, params);
   }
 
-  postMessageToThread(id, text, ts, params) {
+  async postMessageToThread(id, text, ts, params) {
     params = extend(
       {
         text: text,
@@ -109,7 +109,7 @@ module.exports = class SlackCatBot {
       params || this.botParams
     );
 
-    return this.web.chat.postMessage(params);
+    return await this.web.chat.postMessage(params);
   }
 
   postRawMessage(channel_id, args) {
