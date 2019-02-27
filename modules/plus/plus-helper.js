@@ -43,13 +43,14 @@ module.exports = class PlusHelper {
 
   async displayBeingMeanMsg(data) {
     const userData = await this.context.bot.getUserNameFromId(data.user);
-    this.context.bot.postMessage(
+    this.context.bot.postMessageToThread(
       data.channel,
       `Don't be a meanie ${
         userData.user.display_name
           ? userData.user.display_name
           : userData.user.name
-      }`
+      }`,
+      data.ts
     );
   }
 
