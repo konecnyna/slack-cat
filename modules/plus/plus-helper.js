@@ -45,7 +45,7 @@ module.exports = class PlusHelper {
     const userData = await this.context.bot.getUserNameFromId(data.user);
     this.context.bot.postMessage(
       data.channel,
-      `Don't be a meanie  ${
+      `Don't be a meanie ${
         userData.user.display_name
           ? userData.user.display_name
           : userData.user.name
