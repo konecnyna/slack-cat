@@ -36,7 +36,7 @@ const HELP_MSG = [
   },
   {
     title: 'Troubleshooting:',
-    value: 'Issue: I typed a command and nothiing happened?',
+    value: 'Issue: I typed a command and nothing happened?',
     short: true,
   },
   {
@@ -49,7 +49,7 @@ const HELP_MSG = [
 
 module.exports = class About extends BaseModule {
   async handle(data) {
-    if (data.cmd === 'help') {
+    if (data.cmd === 'help' || data.cmd === 'commands' || data.cmd === 'cmds') {
       const ip = await publicIp.v4();
       HELP_MSG.unshift({
         title: 'Help:',
@@ -92,7 +92,7 @@ module.exports = class About extends BaseModule {
   }
 
   aliases() {
-    return ['source', 'help'];
+    return ['source', 'help', 'commands', 'cmds'];
   }
 
   getType() {
