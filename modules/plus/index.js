@@ -83,7 +83,21 @@ module.exports = class Plus extends BaseStorageModule {
     
     try {
       let group;
+      const map = {};
+
       while (group = userPattern.exec(data.user_text)) {
+        if (!map[group[1]]) {
+          map[group[1]] = 1;
+        } else {
+          map[group[1]] = map[group[1]] + 1;
+        }
+
+
+        // prevent spam.
+        if (map[group[1]] > 4) {
+          return;
+        }
+
         const userName = await this.getUserNameFromId(group[1]);
         const pluses = await this.plusHelper.plusUser(userName);
         await this.bot.postMessageToThread(data.channel, `${userName} now has ${pluses} pluses!`, data.ts);        
