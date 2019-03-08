@@ -94,7 +94,7 @@ module.exports = class Plus extends BaseStorageModule {
 
 
         // prevent spam.
-        if (map[group[1]] > 4) {
+        if (map[group[1]] > 3) {
           return;
         }
 
