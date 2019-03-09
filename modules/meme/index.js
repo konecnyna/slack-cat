@@ -2,12 +2,13 @@
 const request = require('request');
 const regex = /"(.*?)"/g;
 
+const secrets = config.getKey('apiflip');
+
 module.exports = class Meme extends BaseModule {
   async handle(data) {
     if (!data.user_text) {
       return;
     }
-
     
     let group;
     const text = [];
@@ -20,8 +21,8 @@ module.exports = class Meme extends BaseModule {
 
     const url = await this.imgflip({
       template_id: '2743696',
-      username: 'daasdasda',
-      password: 'crossword',
+      username: secrets.username,
+      password: secrets.password,
       text0: text[0], 
       text1: text[1],
     });
