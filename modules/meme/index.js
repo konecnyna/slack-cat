@@ -12,7 +12,6 @@ module.exports = class Meme extends BaseModule {
     let group;
     const text = [];
     while(group = regex.exec(data.user_text)) {
-      console.log(group)
       text.push(group[1]);      
       if (text.length === 2) {
         break;
