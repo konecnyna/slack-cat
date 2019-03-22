@@ -25,7 +25,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
       let text = learns.join('');
       const matches = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/.exec(text)
       if (matches) {
-        text = `${text}?cachebuster=${Date.now()}`
+        text = text + "?cachebuster=" + Date.now()
       }
       this.bot.postMessage(data.channel, text);
     }
