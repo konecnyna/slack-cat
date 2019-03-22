@@ -22,12 +22,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
     }
 
     if (learns) {
-      let text = learns.join('');
-      const matches = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/.exec(text)
-      if (matches) {
-        text = text + "?cachebuster=" + Date.now()
-      }
-      this.bot.postMessage(data.channel, text);
+      this.bot.postMessage(data.channel, learns.join(''));
     }
   }
 
