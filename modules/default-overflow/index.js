@@ -22,7 +22,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
     }
 
     if (learns) {
-      let text = learns.join('\n');
+      let text = learns.join('');
       const matches = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/.exec(text)
       if (matches) {
         text = `${text}?time=${Date.now()}`
