@@ -9,9 +9,10 @@ module.exports = class JiraCreate {
     const userData = await this.context.bot.userDataPromise(body.user.id);
     const currentUserRealName = userData.user.profile.real_name;
     const currentUserEmail = userData.user.profile.email;
+    const shouldAssign = body.submission.assign;
 
     try {
-      return await jira.addNewIssue({
+      const payload = {
         fields: {
           project: {
             key: body.submission.project,
@@ -19,15 +20,25 @@ module.exports = class JiraCreate {
           summary: body.submission.title,
           description: `${
             body.submission.description
-          }\n\n\nh2. Reporter:\n\n*${currentUserRealName} - (${currentUserEmail})*`,
+            }\n\n\nh2. Reporter:\n\n*${currentUserRealName} - (${currentUserEmail})*`,
           issuetype: {
             name: 'Bug',
           },
         },
-      });
+      };
+      if (shouldAssign) {
+        // payload['fields']['assignee'] = this.findUser(currentUserEmail);
+        console.log(this.findUser(jira, currentUserEmail))
+      }
+      // return await jira.addNewIssue(payload);
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async findUser(jira, email) {
+    const result = jira.searchUsers(email);
+    console.log(result)
   }
 
   createRoutes(app, callbackId, projects) {
@@ -52,11 +63,26 @@ module.exports = class JiraCreate {
             {
               label: 'Project',
               type: 'select',
-              name: 'project',
-              options: projects.map(({ key }) => ({
+              name: 'projec',
+              options: projetcts.map(({ key }) => ({
                 label: key,
                 value: key,
               })),
+            },
+            {
+              label: 'Assign to me',
+              type: 'select',
+              name: 'assign_select',
+              options: [
+                {
+                  label: "assign",
+                  value: true,
+                },
+                {
+                  label: "assign",
+                  value: false
+                }
+              ],
             },
             {
               label: 'Description',
