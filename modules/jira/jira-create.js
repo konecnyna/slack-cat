@@ -9,7 +9,7 @@ module.exports = class JiraCreate {
     const userData = await this.context.bot.userDataPromise(body.user.id)
     const currentUserRealName = userData.user.profile.real_name
     const currentUserEmail = userData.user.profile.email
-    const shouldAssign = body.submission.assign_select
+    const shouldAssign = body.submission.assign_select == 'true'
     try {
       const payload = {
         fields: {
@@ -28,8 +28,8 @@ module.exports = class JiraCreate {
 
       if (shouldAssign) {
         const user = this.findUser(jira, currentUserEmail)
-        if (user) {
-          payload['fields']['assignee'] = { name: user.name }
+        if (user && user.length) {
+          payload['fields']['assignee'] = { name: user[0].name }
         }
       }
 
