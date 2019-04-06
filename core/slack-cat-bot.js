@@ -156,7 +156,7 @@ module.exports = class SlackCatBot {
   postMessageToUser (userId, msg) {
     return this.web.conversations
       .open({
-        users: [userId, this.botInfo.id]
+        users: [userId]
       })
       .then(res => {
         this.web.chat.postMessage({
