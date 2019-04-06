@@ -40,7 +40,7 @@ module.exports = class JiraCreate {
   }
 
   async findUser (jira, email) {
-    return await jira.searchUsers(email)
+    return await jira.searchUsers({ username: email })
   }
 
   createRoutes (app, callbackId, projects) {
