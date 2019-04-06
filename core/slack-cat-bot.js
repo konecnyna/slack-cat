@@ -154,17 +154,15 @@ module.exports = class SlackCatBot {
   }
 
   postMessageToUser (userId, msg) {
-    return this.web.conversations
-      .open({
-        users: [userId]
-      })
-      .then(res => {
-        this.web.chat.postMessage({
-          channel: res.channel.id,
-          text: msg
-        })
-      })
-      .catch(console.error)
+    const params = extend(
+      {
+        channel: userId,
+        text: msg
+      },
+      this.botParams
+    )
+
+    return this.web.chat.postMessage(params)
   }
 
   postMessageToUsers (userList, msg) {
