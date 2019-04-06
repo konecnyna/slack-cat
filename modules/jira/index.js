@@ -145,6 +145,13 @@ module.exports = class Jira extends BaseModule {
 
   async postIssue (channel, issue) {
     const userData = await this.bot.userDataPromise(channel)
+    if (!issue) {
+      return this.bot.postMessageToUser(
+        userData.user.id,
+        'Failed to make ticket! :scream:'
+      )
+    }
+
     this.bot.postMessageToUser(
       userData.user.id,
       `Created: ${issue.key}. See: https://${jiraSecrets.host}/browse/${
