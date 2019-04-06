@@ -41,7 +41,7 @@ class SlackCat {
     rtm.on('authenticated', data => {
       const bot = new SlackCatBot(data)
       const moduleLoader = new MoudleLoader(bot, this.pathToModules)
-      const moudles = moduleLoader.getModules()
+      const modules = moduleLoader.getModules()
       // Fix me :(((((((((((
       bot.setModules(modules)
       router = new Router(bot, modules, new Server())
