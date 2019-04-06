@@ -1,40 +1,51 @@
-'use strict';
+'use strict'
 
 module.exports = class JiraCreate {
-  constructor(context) {
-    this.context = context;
+  constructor (context) {
+    this.context = context
   }
 
-  async createJiraTicket(body, jira) {
-    const userData = await this.context.bot.userDataPromise(body.user.id);
-    const currentUserRealName = userData.user.profile.real_name;
-    const currentUserEmail = userData.user.profile.email;
-
+  async createJiraTicket (body, jira) {
+    const userData = await this.context.bot.userDataPromise(body.user.id)
+    const currentUserRealName = userData.user.profile.real_name
+    const currentUserEmail = userData.user.profile.email
+    const shouldAssign = body.submission.assign_select
+    console.log('1231232HI!')
     try {
-      return await jira.addNewIssue({
+      const payload = {
         fields: {
           project: {
-            key: body.submission.project,
+            key: body.submission.project
           },
           summary: body.submission.title,
           description: `${
             body.submission.description
           }\n\n\nh2. Reporter:\n\n*${currentUserRealName} - (${currentUserEmail})*`,
           issuetype: {
-            name: 'Bug',
-          },
-        },
-      });
+            name: 'Bug'
+          }
+        }
+      }
+      if (shouldAssign) {
+        payload['fields']['assignee'] = currentUserEmail
+      }
+      console.log('HI!')
+      return await jira.addNewIssue(payload)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
-  createRoutes(app, callbackId, projects) {
+  async findUser (jira, email) {
+    const result = jira.searchUsers(email)
+    console.log(result)
+  }
+
+  createRoutes (app, callbackId, projects) {
     app.post('/jira-create', (req, res) => {
       // extract the verification token, slash command text,
       // and trigger ID from payload
-      const { token, text, trigger_id } = req.body;
+      const { token, text, trigger_id } = req.body
 
       this.context.showDialog(
         {
@@ -47,7 +58,7 @@ module.exports = class JiraCreate {
               type: 'text',
               name: 'title',
               value: text,
-              hint: '30 second summary of the problem',
+              hint: 'Title of the problem'
             },
             {
               label: 'Project',
@@ -55,20 +66,37 @@ module.exports = class JiraCreate {
               name: 'project',
               options: projects.map(({ key }) => ({
                 label: key,
-                value: key,
-              })),
+                value: key
+              }))
+            },
+            {
+              label: 'Assign to me',
+              type: 'select',
+              name: 'assign_select',
+              value: 'true',
+              options: [
+                {
+                  label: 'true',
+                  value: 'true'
+                },
+                {
+                  label: 'false',
+                  value: 'false'
+                }
+              ]
             },
             {
               label: 'Description',
               type: 'textarea',
               name: 'description',
               optional: true,
-            },
-          ],
+              hint: '30 second summary of the problem'
+            }
+          ]
         },
         req.body,
         res
-      );
-    });
+      )
+    })
   }
-};
+}
