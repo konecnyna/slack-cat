@@ -11,6 +11,7 @@ const { RTMClient } = require('@slack/client')
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js')
 global.BaseStorageModule = require('./core/base-storage-module.js')
+global.HolidayOverride = require('./core/HolidayOverride')
 
 const {
   testMsg,
