@@ -37,8 +37,7 @@ module.exports = class JiraCreate {
   }
 
   async findUser (jira, email) {
-    const result = jira.searchUsers(email)
-    console.log(result)
+    return await jira.searchUsers(email)
   }
 
   createRoutes (app, callbackId, projects) {
