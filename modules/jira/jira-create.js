@@ -10,7 +10,6 @@ module.exports = class JiraCreate {
     const currentUserRealName = userData.user.profile.real_name
     const currentUserEmail = userData.user.profile.email
     const shouldAssign = body.submission.assign_select
-    console.log('1231232HI!')
     try {
       const payload = {
         fields: {
@@ -26,10 +25,11 @@ module.exports = class JiraCreate {
           }
         }
       }
+
       if (shouldAssign) {
-        payload['fields']['assignee'] = currentUserEmail
+        payload['fields']['assignee'] = { name: currentUserEmail }
       }
-      console.log('HI!')
+
       return await jira.addNewIssue(payload)
     } catch (e) {
       console.log(e)
