@@ -1,5 +1,5 @@
 'use strict'
-const Server = require('./server')
+
 const requireDir = require('./requiredir')
 
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i')
@@ -8,7 +8,7 @@ const moduleResolver = new requireDir()
 const { ALL } = require('./constants')
 
 module.exports = class Router {
-  constructor (bot, pathToModules) {
+  constructor (bot, pathToModules, server) {
     this.bot = bot
     this.pathToModules = pathToModules
 
@@ -20,7 +20,7 @@ module.exports = class Router {
     this.rawInputModules = {}
     this.dialogModules = {}
     this.serviceModules = {}
-    this.server = new Server()
+    this.server = server
 
     // Register all modules. Not good lazy solution cuz of aliases for now...
     this.registerModules()
@@ -28,7 +28,9 @@ module.exports = class Router {
     // Allow modules to access other ones via bot.
     this.bot.setModules(this.modules)
 
-    this.server.start()
+    if (this.server) {
+      this.server.start()
+    }
   }
 
   handle (data) {
@@ -73,7 +75,7 @@ module.exports = class Router {
       }
 
       if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {
-        moduleObj.createRoutes(this.server.app)
+        this.createRoutes(moduleObj)
         this.addModules(
           key,
           moduleObj,
@@ -81,7 +83,7 @@ module.exports = class Router {
           this.dialogModules
         )
       } else if (moduleObj.getType().includes(BaseModule.TYPES.ENDPOINT)) {
-        moduleObj.createRoutes(this.server.app)
+        this.createRoutes(moduleObj)
       }
 
       // Add all modules types to cmd array.
@@ -136,6 +138,13 @@ module.exports = class Router {
     })
 
     this.setupDialogCallback()
+  }
+
+  createRoutes (moduleObj) {
+    if (!this.server) {
+      return
+    }
+    moduleObj.createRoutes(this.server.app)
   }
 
   addModules (key, module, type, array) {
@@ -224,6 +233,9 @@ module.exports = class Router {
   }
 
   setupDialogCallback () {
+    if (!this.server) {
+      return
+    }
     this.server.initHandleCallback(body => {
       Object.keys(this.dialogModules).forEach(key => {
         const moduleObj = this.dialogModules[key]
