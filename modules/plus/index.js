@@ -48,8 +48,21 @@ module.exports = class Plus extends BaseStorageModule {
     );
   }
 
+  hacker(data) {
+    if (data.user === data.user_text) {
+      return true;
+    }
+
+    let group;
+    while (group = userPattern.exec(data.user_text)) {
+      if (group && data.user === group[1]) {
+        return true;
+      }
+    }    
+  }
+
   async plusUser(data, matches) {    
-    if ((matches && data.user === matches[1]) || data.user === data.user_text) {
+    if (this.hacker(data)) {
       // Person is being an ahole and trying to plus themselves!
       this.bot.postMessage(data.channel, "You'll go blind like that kid!");
       return;
@@ -70,7 +83,21 @@ module.exports = class Plus extends BaseStorageModule {
     
     try {
       let group;
+      const map = {};
+
       while (group = userPattern.exec(data.user_text)) {
+        if (!map[group[1]]) {
+          map[group[1]] = 1;
+        } else {
+          map[group[1]] = map[group[1]] + 1;
+        }
+
+
+        // prevent spam.
+        if (map[group[1]] > 3) {
+          return;
+        }
+
         const userName = await this.getUserNameFromId(group[1]);
         const pluses = await this.plusHelper.plusUser(userName);
         await this.bot.postMessageToThread(data.channel, `${userName} now has ${pluses} pluses!`, data.ts);        

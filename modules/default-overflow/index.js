@@ -22,7 +22,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
     }
 
     if (learns) {
-      this.bot.postMessage(data.channel, learns.join('\n'));
+      this.bot.postMessage(data.channel, learns.join(''));
     }
   }
 

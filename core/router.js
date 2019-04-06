@@ -194,11 +194,7 @@ module.exports = class Router {
 
   handleCmdMessage(data) {
     const matches = this.addExtras(data);
-    if (this.isShowCommnads(data)) {
-      this.showCmds(data);
-      return;
-    }
-
+    
     if (matches && matches[1].toLowerCase() in this.modules) {
       const module = this.modules[data.cmd];
       if (
@@ -214,14 +210,6 @@ module.exports = class Router {
     }
 
     this.handleOverflow(data);
-  }
-
-  isShowCommnads(data) {
-    if (!data.cmd) {
-      return false;
-    }
-
-    return data.cmd === 'commands' || data.cmd === 'cmds';
   }
 
   handleOverflow(data) {
