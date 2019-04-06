@@ -1,10 +1,9 @@
 'use strict'
-
-const fs = require('fs')
 const path = require('path')
 const Config = require('./core/config.js')
 const Router = require('./core/router.js')
 const Server = require('./core/server')
+const MoudleLoader = require('./core/module-loader')
 const SlackCatBot = require('./core/slack-cat-bot.js')
 const { RTMClient } = require('@slack/client')
 
@@ -40,11 +39,12 @@ class SlackCat {
     rtm.start()
 
     rtm.on('authenticated', data => {
-      router = new Router(
-        new SlackCatBot(data),
-        this.pathToModules,
-        new Server()
-      )
+      const bot = new SlackCatBot(data)
+      const moduleLoader = new MoudleLoader(bot, this.pathToModules)
+      const moudles = moduleLoader.getModules()
+      // Fix me :(((((((((((
+      bot.setModules(modules)
+      router = new Router(bot, modules, new Server())
     })
 
     rtm.on('message', data => {
@@ -67,7 +67,9 @@ class SlackCat {
     if (process.argv.includes('--with-server')) {
       server = new Server()
     }
-    const router = new Router(new MockBot(), this.pathToModules, server)
+    const bot = new MockBot()
+    const modules = new MoudleLoader(bot, this.pathToModules)
+    const router = new Router(bot, modules.getModules(), server)
 
     if (process.argv.includes('member_joined_channel')) {
       router.handle(testMemberJoin)
