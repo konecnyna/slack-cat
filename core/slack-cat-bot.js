@@ -1,190 +1,198 @@
-'use strict';
-const extend = require('extend');
-const { WebClient } = require('@slack/client');
-const HolidayOverride = require('./HolidayOverride');
+'use strict'
+const extend = require('extend')
+const { WebClient } = require('@slack/client')
+const HolidayOverride = require('./HolidayOverride')
 
 module.exports = class SlackCatBot {
-  constructor(data) {
-    this.botInfo = data.self;
-    this.web = new WebClient(config.getKey('slack_access_token'));
+  constructor (data) {
+    this.botInfo = data.self
+    this.web = new WebClient(config.getKey('slack_access_token'))
 
-    this.botParams = {};
-    this.setupBotParams();
+    this.botParams = {}
+    this.setupBotParams()
   }
 
-  setupBotParams() {
-    const name = config.getKey('bot_name');
-    const icon_emoji = config.getKey('bot_emoji');
-    const icon_url = config.getKey('bot_icon_url');
+  setupBotParams () {
+    const name = config.getKey('bot_name')
+    const icon_emoji = config.getKey('bot_emoji')
+    const icon_url = config.getKey('bot_icon_url')
 
     this.botParams = {
-      username: name || 'SlackCat',
-    };
+      username: name || 'SlackCat'
+    }
 
     if (icon_url) {
       // url takes prority.
-      this.botParams['icon_url'] = icon_url;
+      this.botParams['icon_url'] = icon_url
     } else {
-      this.botParams['icon_emoji'] = icon_emoji || ':cat:';
+      this.botParams['icon_emoji'] = icon_emoji || ':cat:'
     }
 
     // Override slackcat for some fun holidays!
-    this.defaultParams = this.botParams;
-    if (!config.getKey('holiday_override')) {
-      return;
+    this.defaultParams = this.botParams
+    if (config.getKey('holiday_override')) {
+      this.overrideBotParams()
+      setInterval(() => {
+        this.overrideBotParams()
+      }, 60 * 1000 * 1)
     }
-
-    this.overrideBotParams();
-    setInterval(() => {
-      this.overrideBotParams();
-    }, 60 * 1000 * 1);
   }
 
-  overrideBotParams() {
-    const holidayOverride = new HolidayOverride();
-    const override = holidayOverride.getOverride();
+  overrideBotParams () {
+    const holidayOverride = new HolidayOverride()
+    const override = holidayOverride.getOverride()
     if (override) {
-      this.botParams = override;
+      this.botParams = override
     } else {
-      this.botParams = this.defaultParams;
+      this.botParams = this.defaultParams
     }
   }
 
-  async postMessage(id, text) {
+  async postMessage (id, text) {
     const params = extend(
       {
         text: text,
-        channel: id,
+        channel: id
       },
       this.botParams
-    );
+    )
 
     try {
       return await this.web.chat.postMessage(params)
     } catch (e) {
-      console.error("postMessage", e);
+      console.error('postMessage', e)
     }
   }
 
-  async postMessageWithParams(id, text, extras) {
+  async postMessageWithParams (id, text, extras) {
     const params = extend(
       {
         text: text,
-        channel: id,
+        channel: id
       },
       extras
-    );
+    )
 
-    return this.web.chat.postMessage(params).catch(console.error);
+    try {
+      return await this.web.chat.postMessage(params)
+    } catch (e) {
+      console.error('postMessage', e)
+    }
   }
 
-  postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
+  postFancyMessage (channel_id, icon_emoji, color, title, body, botParams) {
     var attachments = {
       icon_emoji: icon_emoji,
       attachments: [
         {
           color: color,
           title: title,
-          text: body,
-        },
-      ],
-    };
+          text: body
+        }
+      ]
+    }
 
     var params = extend(
       {
         channel: channel_id,
-        username: this.botParams.username,
+        username: this.botParams.username
       },
       botParams || {},
       attachments
-    );
+    )
 
-    return this.postRawMessage(channel_id, params);
+    return this.postRawMessage(channel_id, params)
   }
 
-  async postMessageToThread(id, text, ts, params) {
+  async postMessageToThread (id, text, ts, params) {
     params = extend(
       {
         text: text,
         channel: id,
         thread_ts: ts,
-        username: this.botParams.username,
+        username: this.botParams.username
       },
       params || this.botParams
-    );
+    )
 
-    return await this.web.chat.postMessage(params);
+    try {
+      return await this.web.chat.postMessage(params)
+    } catch (e) {
+      console.error('postMessageToThread', e)
+    }
   }
 
-  postRawMessage(channel_id, args) {
+  postRawMessage (channel_id, args) {
     var params = extend(
       {
         channel: channel_id,
-        username: this.botParams.username,
+        username: this.botParams.username
       },
       args || {}
-    );
+    )
 
-    return this.web.chat.postMessage(params);
+    return this.web.chat.postMessage(params)
   }
 
-  async getUserNameFromId(user_id) {
+  async getUserNameFromId (user_id) {
     return await this.web.users.info({
-      user: user_id,
-    });
+      user: user_id
+    })
   }
 
-  async resolveUserNameFromId(user_id) {
-    const randUserData = await this.userDataPromise(user_id);
+  async resolveUserNameFromId (user_id) {
+    const randUserData = await this.userDataPromise(user_id)
     return randUserData.user.profile.display_name
       ? randUserData.user.profile.display_name
-      : randUserData.user.profile.real_name;
+      : randUserData.user.profile.real_name
   }
 
-  userDataPromise(user_id) {
+  userDataPromise (user_id) {
     return this.web.users.info({
-      user: user_id,
-    });
+      user: user_id
+    })
   }
 
-  postMessageToUser(userId, msg) {
-    const params = extend(
-      {
-        channel: userId,
-        text: msg,
-      },
-      this.botParams
-    );
-
-    return this.web.chat.postMessage(params);
-  }
-
-  postMessageToUsers(userList, msg) {
+  postMessageToUser (userId, msg) {
     return this.web.conversations
       .open({
-        users: userList.join(','),
+        users: [userId, this.botInfo.id]
       })
       .then(res => {
         this.web.chat.postMessage({
           channel: res.channel.id,
-          text: msg,
-        });
+          text: msg
+        })
       })
-      .catch(console.error);
+      .catch(console.error)
   }
 
-  getChannelById(channel) {
-    return this.web.channels
-      .info({
-        channel: channel,
+  postMessageToUsers (userList, msg) {
+    return this.web.conversations
+      .open({
+        users: userList.join(',')
       })
       .then(res => {
-        return res.channel;
+        this.web.chat.postMessage({
+          channel: res.channel.id,
+          text: msg
+        })
       })
-      .catch(console.error);
+      .catch(console.error)
   }
 
-  setModules(modules) {
-    this.modules = modules;
+  getChannelById (channel) {
+    return this.web.channels
+      .info({
+        channel: channel
+      })
+      .then(res => {
+        return res.channel
+      })
+      .catch(console.error)
   }
-};
+
+  setModules (modules) {
+    this.modules = modules
+  }
+}
