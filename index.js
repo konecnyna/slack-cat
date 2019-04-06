@@ -1,109 +1,89 @@
-'use strict';
+'use strict'
 
-const fs = require('fs');
-const path = require('path');
-const Config = require('./core/config.js');
-const Router = require('./core/router.js');
-const SlackCatBot = require('./core/slack-cat-bot.js');
-const { RTMClient } = require('@slack/client');
+const fs = require('fs')
+const path = require('path')
+const Config = require('./core/config.js')
+const Router = require('./core/router.js')
+const Server = require('./core/server')
+const SlackCatBot = require('./core/slack-cat-bot.js')
+const { RTMClient } = require('@slack/client')
 
 // Global Base Modules.
-global.BaseModule = require('./core/base-module.js');
-global.BaseStorageModule = require('./core/base-storage-module.js');
+global.BaseModule = require('./core/base-module.js')
+global.BaseStorageModule = require('./core/base-storage-module.js')
 
-const testMsg = {
-  type: 'message',
-  channel: 'C7XPH1X8V',
-  user: 'U7YMR8S3H',
-  text: '',
-  ts: '1510420686.000031',
-  source_team: 'T7XPH1Q4V',
-  team: 'T7XPH1Q4V',
-};
-
-const testReaction = {
-  type: 'reaction_added',
-  user: 'U7YMR8S3H',
-  item: {
-    type: 'message',
-    channel: 'C7XPH1X8V',
-    ts: '1519401099.000639',
-  },
-  reaction: '',
-  item_user: 'U94UFE802',
-  event_ts: '1519405945.000295',
-  ts: '1519405945.000295',
-};
-
-const testMemberJoin = {
-  type: 'member_joined_channel',
-  user: 'U7YMR8S3H',
-  channel: 'C9F93HK45',
-  channel_type: 'C',
-  team: 'T7XPH1Q4V',
-  event_ts: '1519690078.000194',
-  ts: '1519690078.000194',
-};
+const {
+  testMsg,
+  testReaction,
+  testMemberJoin
+} = require('./core/models/MockMessageData')
 
 class SlackCat {
-  constructor(pathToModules, configPath, dbPath) {
-    this.pathToModules = pathToModules;
-    this.dbPath = dbPath;
+  constructor (pathToModules, configPath, dbPath) {
+    this.pathToModules = pathToModules
+    this.dbPath = dbPath
 
-    global.STORAGE_PATH = dbPath;
-    global.config = new Config(configPath);
+    global.STORAGE_PATH = dbPath
+    global.config = new Config(configPath)
   }
 
-  start() {
+  start () {
     // Run debug cmds.
     if (process.argv.length > 2) {
-      this.runDebugCommand();
-      return;
+      this.runDebugCommand()
+      return
     }
 
-    const rtm = new RTMClient(config.getKey('slack_access_token'));
-    let router;
-    rtm.start();
+    const rtm = new RTMClient(config.getKey('slack_access_token'))
+    let router
+    rtm.start()
 
     rtm.on('authenticated', data => {
-      router = new Router(new SlackCatBot(data), this.pathToModules);
-    });
+      router = new Router(
+        new SlackCatBot(data),
+        this.pathToModules,
+        new Server()
+      )
+    })
 
     rtm.on('message', data => {
-      router.handle(data);
-    });
+      router.handle(data)
+    })
 
     rtm.on('reaction_added', data => {
-      router.handle(data);
-    });
+      router.handle(data)
+    })
 
     rtm.on('member_joined_channel', data => {
-      router.handle(data);
-    });
+      router.handle(data)
+    })
   }
 
-  runDebugCommand() {
+  runDebugCommand () {
     // Reaction debug msg
-    const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'));
-    const router = new Router(new MockBot(), this.pathToModules);
+    const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'))
+    let server
+    if (process.argv.includes('--with-server')) {
+      server = new Server()
+    }
+    const router = new Router(new MockBot(), this.pathToModules, server)
 
-    if (process.argv[2].includes('member_joined_channel')) {
-      router.handle(testMemberJoin);
-      return;
+    if (process.argv.includes('member_joined_channel')) {
+      router.handle(testMemberJoin)
+      return
     }
 
     if (process.argv[2].includes(':')) {
-      testReaction.reaction = process.argv[2].replace(new RegExp(':', 'g'), '');
-      console.log('Executing reaction: ' + testReaction.reaction);
-      router.handle(testReaction);
-      return;
+      testReaction.reaction = process.argv[2].replace(new RegExp(':', 'g'), '')
+      console.log('Executing reaction: ' + testReaction.reaction)
+      router.handle(testReaction)
+      return
     }
 
     // Regular debug message
-    testMsg.text = process.argv.splice(2, process.argv.length - 1).join(' ');
-    router.handle(testMsg);
-    return;
+    testMsg.text = process.argv.splice(2, process.argv.length - 1).join(' ')
+    router.handle(testMsg)
   }
 }
 
-module.exports = SlackCat;
+module.exports = SlackCat
