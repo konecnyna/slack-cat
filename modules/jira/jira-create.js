@@ -27,7 +27,7 @@ module.exports = class JiraCreate {
       }
 
       if (shouldAssign) {
-        const user = this.findUser(jira, currentUserEmail)
+        const user = await this.findUser(jira, currentUserEmail)
         if (user && user.length) {
           payload['fields']['assignee'] = { name: user[0].name }
         }
