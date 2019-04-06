@@ -40,11 +40,14 @@ class SlackCat {
 
     rtm.on('authenticated', data => {
       const bot = new SlackCatBot(data)
-      const moduleLoader = new MoudleLoader(bot, this.pathToModules)
+      const server = new Server()
+      const moduleLoader = new MoudleLoader(bot, server, this.pathToModules)
       const modules = moduleLoader.getModules()
+
       // Fix me :(((((((((((
       bot.setModules(modules)
-      router = new Router(bot, modules, new Server())
+      router = new Router(bot, modules, server)
+      server.start()
     })
 
     rtm.on('message', data => {
@@ -67,9 +70,17 @@ class SlackCat {
     if (process.argv.includes('--with-server')) {
       server = new Server()
     }
+
     const bot = new MockBot()
-    const modules = new MoudleLoader(bot, this.pathToModules)
-    const router = new Router(bot, modules.getModules(), server)
+    const moduleLoader = new MoudleLoader(bot, server, this.pathToModules)
+    const modules = moduleLoader.getModules()
+
+    // Fix me :(((((((((((
+    bot.setModules(modules)
+    const router = new Router(bot, modules, server)
+    if (server) {
+      server.start()
+    }
 
     if (process.argv.includes('member_joined_channel')) {
       router.handle(testMemberJoin)

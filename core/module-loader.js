@@ -2,9 +2,11 @@ const requireDir = require('./requiredir')
 const moduleResolver = new requireDir()
 
 module.exports = class ModuleLoader {
-  constructor (bot, pathToModules) {
+  constructor (bot, server, pathToModules) {
     this.bot = bot
+    this.server = server
     this.pathToModules = pathToModules
+
     this.modules = {}
     this.overflowModules = {}
     this.reactionModules = {}

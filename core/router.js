@@ -19,12 +19,8 @@ module.exports = class Router {
 
     this.server = server
 
-    // Allow modules to access other ones via bot.
-    // this.bot.setModules(this.modules)
-
     if (this.server) {
       this.setupDialogCallback()
-      this.server.start()
     }
   }
 

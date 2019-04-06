@@ -1,9 +1,11 @@
-const ROUTE_PATH = 'help';
 module.exports = class Server {
-  setModules(modules) {
-    this.modules = modules;
+  setModules (modules) {
+    // this.modules = Object.keys(modules).reduce(function (r, k) {
+    //   return r.concat(k, modules[k])
+    // }, [])
+    this.modules = modules.modules
   }
-  async createPage() {
+  async createPage () {
     const page = `
 <!DOCTYPE html>
 <html>
@@ -48,46 +50,51 @@ module.exports = class Server {
   
 </body>
 </html>
-`;
-    return page;
+`
+    return page
   }
 
-  createBody() {
-    const cards = [];
-    const aliases = this.getAliases();
+  createBody () {
+    const cards = []
+    const aliases = this.getAliases()
 
     // Filter out aliases.
     Object.keys(this.modules)
       .filter(it => {
-        return !aliases[it];
+        return !aliases[it]
       })
       .map(key => {
         // Now build master map.
         try {
-          const currentModule = this.modules[key];
+          const currentModule = this.modules[key]
           cards.push(
             this.createCard(key, currentModule.help(), currentModule.aliases())
-          );
+          )
         } catch (e) {
-          console.error(e);
+          console.error(e)
         }
-      });
+      })
 
-    return cards.join('');
+    return cards.join('')
   }
 
-  getAliases() {
-    const aliases = {};
+  getAliases () {
+    const aliases = {}
+
     Object.keys(this.modules).map(it => {
-      this.modules[it].aliases().map(key => {
-        aliases[key] = true;
-      });
-    });
+      if (!this.modules[it]) {
+        return
+      }
+      const aliases = this.modules[it].aliases() || []
+      aliases.map(key => {
+        aliases[key] = true
+      })
+    })
 
-    return aliases;
+    return aliases
   }
 
-  createCard(title, help, aliases) {
+  createCard (title, help, aliases) {
     return `
     <div class="card mt-3">
       <div class="card-header bg-info">
@@ -100,17 +107,17 @@ module.exports = class Server {
         ${this.createAliasesSection(aliases)}
       </div>
     </div>
-    `;
+    `
   }
 
-  createAliasesSection(aliases) {
+  createAliasesSection (aliases) {
     if (!aliases.length) {
-      return '<div></div>';
+      return '<div></div>'
     }
 
     const divs = aliases.map(it => {
-      return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`;
-    });
+      return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`
+    })
 
     return `
     <div class="mt-3">
@@ -119,6 +126,6 @@ module.exports = class Server {
         ${divs.join('')}
       </div>
     </div>
-    `;
+    `
   }
-};
+}
