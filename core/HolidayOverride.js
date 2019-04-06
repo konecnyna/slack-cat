@@ -1,46 +1,52 @@
-module.exports = class HolidayOverride {
-  getOverride() {
-    if (this.validateDate(7, [3, 4])) {
-      return this.fourthOfJulyOverride();
-    } else if (this.validateDate(10, [27, 28, 29, 30, 31])) {
-      return this.halloweenOverride();
-    } else if (this.validateDate(12, this.getRange(5, 21))) {
-      return this.christmasOverride();
-    }
+const makeRange = (startDay, numberOfDays) => {
+  return Array.from(new Array(numberOfDays), (x, i) => i + startDay)
+}
 
-    return false;
-  }
-
-  getRange(startDay, numberOfDays) {
-    return Array.from(new Array(numberOfDays), (x,i) => i + startDay)
-  }
-
-  validateDate(month, days) {
-    const now = new Date();
-    return days.includes(now.getDate()) && now.getMonth() == month - 1;
-  }
-
-  halloweenOverride() {
-    return {
-      username: 'SpookyCat',
-      icon_emoji: ':jack_o_lantern:',
-      icon_url: '',
-    };
-  }
-
-  fourthOfJulyOverride() {
-    return {
+const overrides = [
+  {
+    month: 4,
+    days: [2, 3, 4],
+    botParams: {
       username: 'AmericaCat',
       icon_emoji: ':flag-us:',
-      icon_url: '',
-    };
-  }
-
-  christmasOverride() {
-    return {
+      icon_url: ''
+    }
+  },
+  {
+    month: 10,
+    days: [27, 28, 29, 30, 31],
+    botParams: {
+      username: 'SpookyCat',
+      icon_emoji: ':jack_o_lantern:',
+      icon_url: ''
+    }
+  },
+  {
+    month: 12,
+    days: makeRange(5, 21),
+    botParams: {
       username: 'HolidayCat',
       icon_emoji: ':christmas_tree:',
-      icon_url: '',
-    };
+      icon_url: ''
+    }
   }
-};
+]
+
+module.exports = class HolidayOverride {
+  getOverride () {
+    const override = overrides.filter(it => {
+      return this.validateDate(it.month, it.days)
+    })
+
+    if (!override || !override.length) {
+      return false
+    }
+
+    return override[0].botParams
+  }
+
+  validateDate (month, days) {
+    const now = new Date()
+    return days.includes(now.getDate()) && now.getMonth() == month - 1
+  }
+}
