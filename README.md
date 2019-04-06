@@ -136,6 +136,8 @@ eg:
 
 Will summon a google image matching test keyword.
 
+If you want to test an endpoint module you can pass `--with-server` to spin up the express debug server.
+
 # Enivorments
 
 `NODE_ENV="production" node index.js` will start the app in production mode which will use `db.sqlite`. Otherwise it will use `db-dev.sqlite`. This is useful in tests as not to corrupt production data.
