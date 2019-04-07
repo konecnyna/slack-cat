@@ -112,7 +112,10 @@ module.exports = class Server {
         ${help}
         
         ${this.createAliasesSection('Aliases', aliases)}
-        ${this.createAliasesSection('Type', types)}
+        ${this.createAliasesSection(
+    'Type',
+    Array.isArray(types) ? types : [types]
+  )}
       </div>
     </div>
     `
