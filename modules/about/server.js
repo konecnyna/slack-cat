@@ -119,7 +119,7 @@ module.exports = class Server {
   }
 
   createAliasesSection (title, items) {
-    if (!items.length) {
+    if (!items || !items.length) {
       return '<div></div>'
     }
 
