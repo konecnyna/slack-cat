@@ -1,9 +1,6 @@
 module.exports = class Server {
   setModules (modules) {
-    // this.modules = Object.keys(modules).reduce(function (r, k) {
-    //   return r.concat(k, modules[k])
-    // }, [])
-    this.modules = modules.modules
+    this.modules = modules
   }
   async createPage () {
     const page = `
@@ -43,8 +40,8 @@ module.exports = class Server {
   <div class="container" class="p-3">
     <div class="p-3">
       <h1> Help: </h1>
-      <hr/>
-      ${this.createBody()}      
+      <hr/>      
+      ${this.createSections()}      
     </div>
   </div>
   
@@ -54,47 +51,57 @@ module.exports = class Server {
     return page
   }
 
-  createBody () {
+  createSections () {
+    const sections = Object.keys(this.modules).map(key => {
+      return this.createBody(this.modules[key])
+    })
+
+    return sections.join('')
+  }
+  createBody (modules) {
     const cards = []
-    const aliases = this.getAliases()
+    const aliases = this.getAliases(modules)
 
     // Filter out aliases.
-    Object.keys(this.modules)
+    Object.keys(modules)
+      .sort()
       .filter(it => {
         return !aliases[it]
       })
       .map(key => {
         // Now build master map.
         try {
-          const currentModule = this.modules[key]
+          const currentModule = modules[key]
           cards.push(
-            this.createCard(key, currentModule.help(), currentModule.aliases())
+            this.createCard(
+              key,
+              currentModule.help(),
+              currentModule.aliases(),
+              currentModule.getType()
+            )
           )
         } catch (e) {
           console.error(e)
         }
       })
 
-    return cards.join('')
+    return `<div>${cards.join('')}</div>`
   }
 
-  getAliases () {
-    const aliases = {}
+  getAliases (modules) {
+    const aliasesMap = {}
 
-    Object.keys(this.modules).map(it => {
-      if (!this.modules[it]) {
-        return
-      }
-      const aliases = this.modules[it].aliases() || []
+    Object.keys(modules).map(it => {
+      const aliases = modules[it].aliases() || []
       aliases.map(key => {
-        aliases[key] = true
+        aliasesMap[key] = true
       })
     })
 
-    return aliases
+    return aliasesMap
   }
 
-  createCard (title, help, aliases) {
+  createCard (title, help, aliases, types) {
     return `
     <div class="card mt-3">
       <div class="card-header bg-info">
@@ -104,24 +111,25 @@ module.exports = class Server {
         <h4>Usage:</h4>
         ${help}
         
-        ${this.createAliasesSection(aliases)}
+        ${this.createAliasesSection('Aliases', aliases)}
+        ${this.createAliasesSection('Type', types)}
       </div>
     </div>
     `
   }
 
-  createAliasesSection (aliases) {
-    if (!aliases.length) {
+  createAliasesSection (title, items) {
+    if (!items.length) {
       return '<div></div>'
     }
 
-    const divs = aliases.map(it => {
+    const divs = items.map(it => {
       return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`
     })
 
     return `
     <div class="mt-3">
-      <h4>Aliases:</h4>
+      <h4>${title}:</h4>
       <div class="list-group bs-callout bs-callout-warning" style="display: inline-block;">
         ${divs.join('')}
       </div>
