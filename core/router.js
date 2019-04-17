@@ -1,35 +1,26 @@
 'use strict'
 
-const requireDir = require('./requiredir')
-
 const cmdPattern = new RegExp(/\?([^\s]+)/, 'i')
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g')
-const moduleResolver = new requireDir()
 const { ALL } = require('./constants')
 
 module.exports = class Router {
-  constructor (bot, pathToModules, server) {
+  constructor (bot, modules, server) {
     this.bot = bot
-    this.pathToModules = pathToModules
 
-    this.modules = {}
-    this.overflowModules = {}
-    this.reactionModules = {}
-    this.messageEditedModules = {}
-    this.memberJoinedModules = {}
-    this.rawInputModules = {}
-    this.dialogModules = {}
-    this.serviceModules = {}
+    this.modules = modules.modules
+    this.overflowModules = modules.overflowModules
+    this.reactionModules = modules.reactionModules
+    this.messageEditedModules = modules.messageEditedModules
+    this.memberJoinedModules = modules.memberJoinedModules
+    this.rawInputModules = modules.rawInputModules
+    this.dialogModules = modules.dialogModules
+    this.serviceModules = modules.serviceModules
+
     this.server = server
 
-    // Register all modules. Not good lazy solution cuz of aliases for now...
-    this.registerModules()
-
-    // Allow modules to access other ones via bot.
-    this.bot.setModules(this.modules)
-
     if (this.server) {
-      this.server.start()
+      this.setupDialogCallback()
     }
   }
 
@@ -54,103 +45,6 @@ module.exports = class Router {
     }
 
     this.handleMsg(data)
-  }
-
-  registerModules () {
-    // Core modules
-    const loadedModules = moduleResolver.loadModules(this.pathToModules)
-    Object.keys(loadedModules).forEach(key => {
-      const moduleObj = new loadedModules[key](this.bot)
-      if (!moduleObj) {
-        console.error('Failed to instaniate module: ' + key)
-        return
-      }
-
-      if (
-        config.getKey('modules_blacklist') &&
-        config.getKey('modules_blacklist').includes(key)
-      ) {
-        console.log('Skipping: ', key, ' in blacklist.')
-        return
-      }
-
-      if (moduleObj.getType().includes(BaseModule.TYPES.DIALOG)) {
-        this.createRoutes(moduleObj)
-        this.addModules(
-          key,
-          moduleObj,
-          BaseModule.TYPES.DIALOG,
-          this.dialogModules
-        )
-      } else if (moduleObj.getType().includes(BaseModule.TYPES.ENDPOINT)) {
-        this.createRoutes(moduleObj)
-      }
-
-      // Add all modules types to cmd array.
-      if (moduleObj.getType().includes(BaseModule.TYPES.MODULE)) {
-        this.modules[key] = moduleObj
-        moduleObj.aliases().map(alias => {
-          if (this.modules[alias]) {
-            console.error('************************************************')
-            console.error('* Warning: Overwriting [' + alias + '] alias. *')
-            console.error('************************************************')
-          }
-          this.modules[alias] = moduleObj
-        })
-      }
-
-      this.addModules(
-        key,
-        moduleObj,
-        BaseModule.TYPES.OVERFLOW_CMD,
-        this.overflowModules
-      )
-      this.addModules(
-        key,
-        moduleObj,
-        BaseModule.TYPES.REACTION,
-        this.reactionModules
-      )
-      this.addModules(
-        key,
-        moduleObj,
-        BaseModule.TYPES.MESSAGE_EDITED,
-        this.messageEditedModules
-      )
-      this.addModules(
-        key,
-        moduleObj,
-        BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
-        this.memberJoinedModules
-      )
-      this.addModules(
-        key,
-        moduleObj,
-        BaseModule.TYPES.RAW_INPUT,
-        this.rawInputModules
-      )
-      this.addModules(
-        key,
-        moduleObj,
-        BaseModule.TYPES.SERVICE,
-        this.serviceModules
-      )
-    })
-
-    this.setupDialogCallback()
-  }
-
-  createRoutes (moduleObj) {
-    if (!this.server) {
-      return
-    }
-    moduleObj.createRoutes(this.server.app)
-  }
-
-  addModules (key, module, type, array) {
-    if (module.getType().includes(type)) {
-      array[key] = module
-    }
   }
 
   handleReaction (data) {
@@ -233,9 +127,6 @@ module.exports = class Router {
   }
 
   setupDialogCallback () {
-    if (!this.server) {
-      return
-    }
     this.server.initHandleCallback(body => {
       Object.keys(this.dialogModules).forEach(key => {
         const moduleObj = this.dialogModules[key]
