@@ -1,7 +1,8 @@
 'use strict';
 
 const template = `
-.        🤠
+Howdy!
+         🤠
     xxx
   x   x　x
 👇   xx 👇
