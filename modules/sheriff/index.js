@@ -11,7 +11,7 @@ Howdy!
       👢     👢
 `;
 
-module.exports = class Asciimoji extends BaseModule {
+module.exports = class Sheriff extends BaseModule {
   async handle(data) {
     const argsSplit = data.user_text.split(' ');
     const emoji = argsSplit[0];
