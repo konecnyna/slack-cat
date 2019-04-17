@@ -1,9 +1,8 @@
-const ROUTE_PATH = 'help';
 module.exports = class Server {
-  setModules(modules) {
-    this.modules = modules;
+  setModules (modules) {
+    this.modules = modules
   }
-  async createPage() {
+  async createPage () {
     const page = `
 <!DOCTYPE html>
 <html>
@@ -41,53 +40,68 @@ module.exports = class Server {
   <div class="container" class="p-3">
     <div class="p-3">
       <h1> Help: </h1>
-      <hr/>
-      ${this.createBody()}      
+      <hr/>      
+      ${this.createSections()}      
     </div>
   </div>
   
 </body>
 </html>
-`;
-    return page;
+`
+    return page
   }
 
-  createBody() {
-    const cards = [];
-    const aliases = this.getAliases();
+  createSections () {
+    const sections = Object.keys(this.modules).map(key => {
+      return this.createBody(this.modules[key])
+    })
+
+    return sections.join('')
+  }
+  createBody (modules) {
+    const cards = []
+    const aliases = this.getAliases(modules)
 
     // Filter out aliases.
-    Object.keys(this.modules)
+    Object.keys(modules)
+      .sort()
       .filter(it => {
-        return !aliases[it];
+        return !aliases[it]
       })
       .map(key => {
         // Now build master map.
         try {
-          const currentModule = this.modules[key];
+          const currentModule = modules[key]
           cards.push(
-            this.createCard(key, currentModule.help(), currentModule.aliases())
-          );
+            this.createCard(
+              key,
+              currentModule.help(),
+              currentModule.aliases(),
+              currentModule.getType()
+            )
+          )
         } catch (e) {
-          console.error(e);
+          console.error(e)
         }
-      });
+      })
 
-    return cards.join('');
+    return `<div>${cards.join('')}</div>`
   }
 
-  getAliases() {
-    const aliases = {};
-    Object.keys(this.modules).map(it => {
-      this.modules[it].aliases().map(key => {
-        aliases[key] = true;
-      });
-    });
+  getAliases (modules) {
+    const aliasesMap = {}
 
-    return aliases;
+    Object.keys(modules).map(it => {
+      const aliases = modules[it].aliases() || []
+      aliases.map(key => {
+        aliasesMap[key] = true
+      })
+    })
+
+    return aliasesMap
   }
 
-  createCard(title, help, aliases) {
+  createCard (title, help, aliases, types) {
     return `
     <div class="card mt-3">
       <div class="card-header bg-info">
@@ -97,28 +111,32 @@ module.exports = class Server {
         <h4>Usage:</h4>
         ${help}
         
-        ${this.createAliasesSection(aliases)}
+        ${this.createAliasesSection('Aliases', aliases)}
+        ${this.createAliasesSection(
+    'Type',
+    Array.isArray(types) ? types : [types]
+  )}
       </div>
     </div>
-    `;
+    `
   }
 
-  createAliasesSection(aliases) {
-    if (!aliases.length) {
-      return '<div></div>';
+  createAliasesSection (title, items) {
+    if (!items || !items.length) {
+      return '<div></div>'
     }
 
-    const divs = aliases.map(it => {
-      return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`;
-    });
+    const divs = items.map(it => {
+      return `<div class="list-group-item list-group-item-action" style="border-radius: 0px">${it}</div>`
+    })
 
     return `
     <div class="mt-3">
-      <h4>Aliases:</h4>
+      <h4>${title}:</h4>
       <div class="list-group bs-callout bs-callout-warning" style="display: inline-block;">
         ${divs.join('')}
       </div>
     </div>
-    `;
+    `
   }
-};
+}
