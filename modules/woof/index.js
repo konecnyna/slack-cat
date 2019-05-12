@@ -2,21 +2,28 @@
 const fs = require('fs');
 const request = require('request');
 
-module.exports = class Woof extends BaseModule {
+module.exports = class Woof extends BaseStorageModule {
     async handle(data) {
-        const avatarUrl = await this.getUser(data);
+        const avatarUrl = await this.getAvatarUrl(data);
         if (!avatarUrl) {
             this.bot.postMessage(data.channel, this.help());
             return;
         }
 
+        const match = this.getUseridMatch(data)
+        const cacheUrl = await this.findUserWoof(match[1])
+        if (cacheUrl && (!data.args || !data.args.includes('--force'))) {
+            this.bot.postMessage(data.channel, `Woof! ${cacheUrl}`);
+            return;
+        }
+
         const woofUrl = await this.createWoof(avatarUrl);
         this.bot.postMessage(data.channel, `Woof! ${woofUrl}`);
+        this.saveWoofUrl(match[1], woofUrl);
     }
 
-    async getUser(data) {
-        const regex = new RegExp(/\<\@(.*?)\>/);
-        const match = regex.exec(data.user_text);
+    async getAvatarUrl(data) {
+        const match = this.getUseridMatch(data);
         if (!match) {
             return null;
         }
@@ -26,6 +33,12 @@ module.exports = class Woof extends BaseModule {
             return null;
         }
         return userData.user.profile.image_512;
+    }
+
+    getUseridMatch(data) {
+        const regex = new RegExp(/\<\@(.*?)\>/);
+        const match = regex.exec(data.user_text);
+        return match;
     }
 
     async createWoof(url) {
@@ -55,7 +68,41 @@ module.exports = class Woof extends BaseModule {
         });
     }
 
+    registerSqliteModel() {
+        this.WoofModel = this.db.define('woof', {
+            userid: { type: this.Sequelize.STRING, primaryKey: true },
+            url: this.Sequelize.STRING,
+        })
+    }
+
+    async saveWoofUrl(userid, url) {
+        await this.upsert(
+            this.WoofModel,
+            { where: { userid: userid } },
+            {
+                userid: userid,
+                url: url,
+            },
+            {
+                url: url,
+            }
+        );
+    }
+    async findUserWoof(userid) {
+        const woof = await this.WoofModel.findOne({
+            where: {
+                userid: userid,
+            },
+        });
+
+        if (!woof) {
+            return null;
+        }
+
+        return woof.get('url');
+    }
+
     help() {
-        return `Buzz's girlfriend... woof!\nUsage: ?woof @username`;
+        return `Buzz's girlfriend... woof!\nUsage: ?woof @username\nUse --force option to update cached image`;
     }
 };
