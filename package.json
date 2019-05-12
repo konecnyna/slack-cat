@@ -39,7 +39,7 @@
     "request": "^2.83.0",
     "require-dir": "^0.3.2",
     "sequelize": "^4.22.5",
-    "sqlite3": "^4.0.0"
+    "sqlite3": "^5.3.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",
