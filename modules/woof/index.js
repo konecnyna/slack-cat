@@ -5,21 +5,34 @@ const request = require('request');
 module.exports = class Woof extends BaseStorageModule {
     async handle(data) {
         const avatarUrl = await this.getAvatarUrl(data);
-        if (!avatarUrl) {
-            this.bot.postMessage(data.channel, this.help());
+        if (avatarUrl) {
+            const match = await this.getUseridMatch(data)
+            const woofUrl = await this.createWoofFromUrl(data, match[1]);
+            this.bot.postMessage(data.channel, `Woof! ${woofUrl}`);
+            this.saveWoofUrl(match[1], woofUrl);
             return;
         }
 
-        const match = this.getUseridMatch(data)
-        const cacheUrl = await this.findUserWoof(match[1])
+        const imgRegex = new RegExp(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/);
+        const imgMatch = imgRegex.exec(data.user_text);
+        if (imgMatch) {
+            const url = await this.createWoofFromUrl(data, imgMatch[0])
+            this.bot.postMessage(data.channel, `Woof! ${url}`);
+            this.saveWoofUrl(imgMatch[0], url);
+            return;
+        }
+
+
+        this.bot.postMessage(data.channel, this.help());
+    }
+
+    async createWoofFromUrl(data, key) {
+        const cacheUrl = await this.findUserWoof(key)
         if (cacheUrl && (!data.args || !data.args.includes('--force'))) {
-            this.bot.postMessage(data.channel, `Woof! ${cacheUrl}`);
-            return;
+            return cacheUrl;
         }
 
-        const woofUrl = await this.createWoof(avatarUrl);
-        this.bot.postMessage(data.channel, `Woof! ${woofUrl}`);
-        this.saveWoofUrl(match[1], woofUrl);
+        return await this.createWoof(key);
     }
 
     async getAvatarUrl(data) {
