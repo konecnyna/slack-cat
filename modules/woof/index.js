@@ -7,7 +7,7 @@ module.exports = class Woof extends BaseStorageModule {
         const avatarUrl = await this.getAvatarUrl(data);
         if (avatarUrl) {
             const match = await this.getUseridMatch(data)
-            const woofUrl = await this.createWoofFromUrl(data, match[1]);
+            const woofUrl = await this.createWoofFromUrl(data, avatarUrl, match[1]);
             this.bot.postMessage(data.channel, `Woof! ${woofUrl}`);
             this.saveWoofUrl(match[1], woofUrl);
             return;
@@ -16,7 +16,7 @@ module.exports = class Woof extends BaseStorageModule {
         const imgRegex = new RegExp(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/);
         const imgMatch = imgRegex.exec(data.user_text);
         if (imgMatch) {
-            const url = await this.createWoofFromUrl(data, imgMatch[0])
+            const url = await this.createWoofFromUrl(data, imgMatch[0], imgMatch[0])
             this.bot.postMessage(data.channel, `Woof! ${url}`);
             this.saveWoofUrl(imgMatch[0], url);
             return;
@@ -26,13 +26,13 @@ module.exports = class Woof extends BaseStorageModule {
         this.bot.postMessage(data.channel, this.help());
     }
 
-    async createWoofFromUrl(data, key) {
+    async createWoofFromUrl(data, url, key) {
         const cacheUrl = await this.findUserWoof(key)
         if (cacheUrl && (!data.args || !data.args.includes('--force'))) {
             return cacheUrl;
         }
 
-        return await this.createWoof(key);
+        return await this.createWoof(url);
     }
 
     async getAvatarUrl(data) {
