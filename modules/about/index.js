@@ -27,38 +27,14 @@ const SOURCE_MSG = [
   },
 ];
 
-const HELP_MSG = [
-  {
-    title: 'Usage:',
-    value:
-      'Commands are always prefixed with `?` such as `?ping`. Simply type `?ping` in any channel that has Slackcat in it and Slackcat should return `pong`',
-    short: false,
-  },
-  {
-    title: 'Troubleshooting:',
-    value: 'Issue: I typed a command and nothing happened?',
-    short: true,
-  },
-  {
-    title: 'Troubleshooting:',
-    value:
-      "Solution: Verify that slackcat is in the channel `/invite @slackcat`. Make sure the server hasn't crashed.",
-    short: true,
-  },
-];
+
 
 module.exports = class About extends BaseModule {
   async handle(data) {
     if (data.cmd === 'help' || data.cmd === 'commands' || data.cmd === 'cmds') {
-      const ip = await publicIp.v4();
-      HELP_MSG.unshift({
-        title: 'Help:',
-        value: `List of commands - \`?cmds\` or http://${ip}/help\nHelp - \`?<module_name> --help\``,
-        short: false,
-      });
       this.postFancyMessage(
         data.channel,
-        HELP_MSG,
+        await this.getHelpMessages(),
         'https://github.com/konecnyna/slack-cat/blob/master/README.md'
       );
       return;
@@ -79,6 +55,35 @@ module.exports = class About extends BaseModule {
         },
       ],
     });
+  }
+
+  async getHelpMessages() {
+    const ip = await publicIp.v4();
+    const port = config.getKey('port');
+    return [
+      {
+        title: 'Usage:',
+        value:
+          'Commands are always prefixed with `?` such as `?ping`. Simply type `?ping` in any channel that has Slackcat in it and Slackcat should return `pong`',
+        short: false,
+      },
+      {
+        title: 'Troubleshooting:',
+        value: 'Issue: I typed a command and nothing happened?',
+        short: true,
+      },
+      {
+        title: 'Troubleshooting:',
+        value:
+          "Solution: Verify that slackcat is in the channel `/invite @slackcat`. Make sure the server hasn't crashed.",
+        short: true,
+      },
+      {
+        title: 'Help:',
+        value: `List of commands - \`?cmds\` or http://${ip}:${port}/help\nHelp - \`?<module_name> --help\``,
+        short: false,
+      }
+    ];
   }
 
   createRoutes(app) {
