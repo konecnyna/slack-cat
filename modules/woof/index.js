@@ -13,7 +13,7 @@ module.exports = class Woof extends BaseStorageModule {
             return;
         }
 
-        const imgRegex = new RegExp(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/);
+        const imgRegex = new RegExp(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/);
         const imgMatch = imgRegex.exec(data.user_text);
         if (imgMatch) {
             const url = await this.createWoofFromUrl(data, imgMatch[0], imgMatch[0])
