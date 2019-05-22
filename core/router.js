@@ -5,7 +5,7 @@ const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g')
 const { ALL } = require('./constants')
 
 module.exports = class Router {
-  constructor (bot, modules, server) {
+  constructor(bot, modules, server) {
     this.bot = bot
 
     this.modules = modules.modules
@@ -24,7 +24,7 @@ module.exports = class Router {
     }
   }
 
-  handle (data) {
+  handle(data) {
     // Websocket starting up...
     if (data.type === 'hello') {
       return
@@ -47,19 +47,25 @@ module.exports = class Router {
     this.handleMsg(data)
   }
 
-  handleReaction (data) {
+  handleReaction(data) {
     Object.keys(this.reactionModules).forEach(key => {
       this.reactionModules[key].handleReaction(data, this.modules)
     })
   }
 
-  handleMessageEdited (data) {
+  handleMessageEdited(data) {
     Object.keys(this.messageEditedModules).forEach(key => {
       this.messageEditedModules[key].handleMessageEdited(data, this.modules)
     })
+
+    const handleMsg = data.message;
+    handleMsg['event_ts'] = data.event_ts;
+    handleMsg['ts'] = data.ts;
+    handleMsg['channel'] = data.channel
+    this.handleMsg(handleMsg);
   }
 
-  handleMemeberJoin (data) {
+  handleMemeberJoin(data) {
     Object.keys(this.memberJoinedModules).forEach(key => {
       const module = this.memberJoinedModules[key]
       if (
@@ -71,13 +77,14 @@ module.exports = class Router {
     })
   }
 
-  handleRawInput (data) {
+  handleRawInput(data) {
     Object.keys(this.rawInputModules).forEach(key => {
       this.rawInputModules[key].handleRawInput(data, this.modules)
     })
+
   }
 
-  handleMsg (data) {
+  handleMsg(data) {
     // Handle messages.
     if (
       !data.bot_id &&
@@ -95,10 +102,11 @@ module.exports = class Router {
     }
   }
 
-  handleCmdMessage (data) {
+  handleCmdMessage(data) {
     const matches = this.addExtras(data)
 
     if (matches && matches[1].toLowerCase() in this.modules) {
+      console.log("i shouldnt be")
       const module = this.modules[data.cmd]
       if (
         data.args != null &&
@@ -115,7 +123,7 @@ module.exports = class Router {
     this.handleOverflow(data)
   }
 
-  handleOverflow (data) {
+  handleOverflow(data) {
     Object.keys(this.overflowModules).forEach(key => {
       // For consistency.
       if (data.item) {
@@ -126,7 +134,7 @@ module.exports = class Router {
     })
   }
 
-  setupDialogCallback () {
+  setupDialogCallback() {
     this.server.initHandleCallback(body => {
       Object.keys(this.dialogModules).forEach(key => {
         const moduleObj = this.dialogModules[key]
@@ -137,7 +145,7 @@ module.exports = class Router {
     })
   }
 
-  addExtras (data) {
+  addExtras(data) {
     const matches = data.text.match(cmdPattern)
     if (!matches) {
       return false
