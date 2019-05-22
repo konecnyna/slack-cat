@@ -3,16 +3,17 @@ const extend = require('extend')
 const { WebClient } = require('@slack/client')
 const HolidayOverride = require('./HolidayOverride')
 
+
+
 module.exports = class SlackCatBot {
-  constructor (data) {
+  constructor(data) {
     this.botInfo = data.self
     this.web = new WebClient(config.getKey('slack_access_token'))
-
     this.botParams = {}
     this.setupBotParams()
   }
 
-  setupBotParams () {
+  setupBotParams() {
     const name = config.getKey('bot_name')
     const icon_emoji = config.getKey('bot_emoji')
     const icon_url = config.getKey('bot_icon_url')
@@ -38,7 +39,7 @@ module.exports = class SlackCatBot {
     }
   }
 
-  overrideBotParams () {
+  overrideBotParams() {
     const holidayOverride = new HolidayOverride()
     const override = holidayOverride.getOverride()
     if (override) {
@@ -48,7 +49,7 @@ module.exports = class SlackCatBot {
     }
   }
 
-  async postMessage (id, text) {
+  async postMessage(id, text) {
     const params = extend(
       {
         text: text,
@@ -64,7 +65,7 @@ module.exports = class SlackCatBot {
     }
   }
 
-  async postMessageWithParams (id, text, extras) {
+  async postMessageWithParams(id, text, extras) {
     const params = extend(
       {
         text: text,
@@ -80,7 +81,7 @@ module.exports = class SlackCatBot {
     }
   }
 
-  postFancyMessage (channel_id, icon_emoji, color, title, body, botParams) {
+  postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
     var attachments = {
       icon_emoji: icon_emoji,
       attachments: [
@@ -104,7 +105,7 @@ module.exports = class SlackCatBot {
     return this.postRawMessage(channel_id, params)
   }
 
-  async postMessageToThread (id, text, ts, params) {
+  async postMessageToThread(id, text, ts, params) {
     params = extend(
       {
         text: text,
@@ -115,14 +116,16 @@ module.exports = class SlackCatBot {
       params || this.botParams
     )
 
-    try {
-      return await this.web.chat.postMessage(params)
-    } catch (e) {
-      console.error('postMessageToThread', e)
-    }
+
+    return await this.web.chat.postMessage(params)
   }
 
-  postRawMessage (channel_id, args) {
+  async postMessageToThreadOrUpdate(id, text, ts, params) {
+
+    return await this.postMessageToThread(id, text, ts, params)
+  }
+
+  postRawMessage(channel_id, args) {
     var params = extend(
       {
         channel: channel_id,
@@ -134,26 +137,26 @@ module.exports = class SlackCatBot {
     return this.web.chat.postMessage(params)
   }
 
-  async getUserNameFromId (user_id) {
+  async getUserNameFromId(user_id) {
     return await this.web.users.info({
       user: user_id
     })
   }
 
-  async resolveUserNameFromId (user_id) {
+  async resolveUserNameFromId(user_id) {
     const randUserData = await this.userDataPromise(user_id)
     return randUserData.user.profile.display_name
       ? randUserData.user.profile.display_name
       : randUserData.user.profile.real_name
   }
 
-  userDataPromise (user_id) {
+  userDataPromise(user_id) {
     return this.web.users.info({
       user: user_id
     })
   }
 
-  postMessageToUser (userId, msg) {
+  postMessageToUser(userId, msg) {
     return this.web.conversations
       .open({
         users: userId
@@ -167,7 +170,7 @@ module.exports = class SlackCatBot {
       .catch(console.error)
   }
 
-  postMessageToUsers (userList, msg) {
+  postMessageToUsers(userList, msg) {
     return this.web.conversations
       .open({
         users: userList.join(',')
@@ -181,7 +184,7 @@ module.exports = class SlackCatBot {
       .catch(console.error)
   }
 
-  getChannelById (channel) {
+  getChannelById(channel) {
     return this.web.channels
       .info({
         channel: channel
@@ -192,7 +195,7 @@ module.exports = class SlackCatBot {
       .catch(console.error)
   }
 
-  setModules (modules) {
+  setModules(modules) {
     this.modules = modules
   }
 }
