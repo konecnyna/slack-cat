@@ -106,7 +106,6 @@ module.exports = class Router {
     const matches = this.addExtras(data)
 
     if (matches && matches[1].toLowerCase() in this.modules) {
-      console.log("i shouldnt be")
       const module = this.modules[data.cmd]
       if (
         data.args != null &&
