@@ -19,7 +19,7 @@ const {
 } = require('./core/models/MockMessageData')
 
 class SlackCat {
-  constructor (pathToModules, configPath, dbPath) {
+  constructor(pathToModules, configPath, dbPath) {
     this.pathToModules = pathToModules
     this.dbPath = dbPath
 
@@ -27,7 +27,7 @@ class SlackCat {
     global.config = new Config(configPath)
   }
 
-  start () {
+  start() {
     // Run debug cmds.
     if (process.argv.length > 2) {
       this.runDebugCommand()
@@ -35,7 +35,8 @@ class SlackCat {
     }
 
     const rtm = new RTMClient(config.getKey('slack_access_token'))
-    let router
+    let router;
+
     rtm.start()
 
     rtm.on('authenticated', data => {
@@ -63,7 +64,7 @@ class SlackCat {
     })
   }
 
-  runDebugCommand () {
+  runDebugCommand() {
     // Reaction debug msg
     const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'))
     let server
