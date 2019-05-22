@@ -93,7 +93,7 @@ module.exports = class WelcomeCat extends BaseStorageModule {
   }
 
   cmds() {
-    return ['--test', '--msg', '--enabled', '--channelMsgEnabled'];
+    return ['--test'];
   }
   help() {
     return `*Here is how to use WelcomeCat:*\n

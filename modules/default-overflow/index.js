@@ -21,7 +21,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
       learns = await this.learn.getLearns(data.cmd, 1, true, false);
     }
 
-    if (learns) {
+    if (learns.length) {
       this.bot.postMessage(data.channel, learns.join(''));
     }
   }
