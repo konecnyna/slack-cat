@@ -1,11 +1,11 @@
 'use strict'
 
 module.exports = class JiraCreate {
-  constructor (context) {
+  constructor(context) {
     this.context = context
   }
 
-  async createJiraTicket (body, jira) {
+  async createJiraTicket(body, jira) {
     const userData = await this.context.bot.userDataPromise(body.user.id)
     const currentUserRealName = userData.user.profile.real_name
     const currentUserEmail = userData.user.profile.email
@@ -19,9 +19,9 @@ module.exports = class JiraCreate {
           summary: body.submission.title,
           description: `${
             body.submission.description
-          }\n\n\nh2. Reporter:\n\n*${currentUserRealName} - (${currentUserEmail})*`,
+            }\n\n\nh2. Reporter:\n\n*${currentUserRealName} - (${currentUserEmail})*`,
           issuetype: {
-            name: 'Bug'
+            name: body.submission.type
           }
         }
       }
@@ -39,11 +39,11 @@ module.exports = class JiraCreate {
     }
   }
 
-  async findUser (jira, email) {
+  async findUser(jira, email) {
     return await jira.searchUsers({ username: email })
   }
 
-  createRoutes (app, callbackId, projects) {
+  createRoutes(app, callbackId, projects) {
     app.post('/jira-create', (req, res) => {
       // extract the verification token, slash command text,
       // and trigger ID from payload
@@ -55,6 +55,22 @@ module.exports = class JiraCreate {
           callback_id: 'submit-jira-ticket',
           submit_label: callbackId,
           elements: [
+            {
+              label: 'Type',
+              type: 'select',
+              name: 'type',
+              value: 'Bug',
+              options: [
+                {
+                  label: 'Story',
+                  value: 'Story'
+                },
+                {
+                  label: 'Bug',
+                  value: 'Bug'
+                }
+              ]
+            },
             {
               label: 'Title',
               type: 'text',
