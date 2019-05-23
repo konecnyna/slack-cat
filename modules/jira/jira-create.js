@@ -59,7 +59,7 @@ module.exports = class JiraCreate {
               label: 'Type',
               type: 'select',
               name: 'type',
-              value: 'Bug',
+              value: 'Story',
               options: [
                 {
                   label: 'Story',
