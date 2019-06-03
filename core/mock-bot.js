@@ -3,11 +3,11 @@ const extend = require('extend')
 const { user } = require('./models/MockMessageData')
 
 module.exports = class MockBot {
-  constructor () {
+  constructor() {
     this.name = 'defkon'
   }
 
-  postMessage (channelId, msg) {
+  postMessage(channelId, msg) {
     this.msg = msg
     // Set default bot params.
     if (this.callback) {
@@ -17,7 +17,7 @@ module.exports = class MockBot {
     }
   }
 
-  postMessageToThread (id, text, ts, params) {
+  postMessageToThread(id, text, ts, params) {
     if (this.callback) {
       this.callback(text)
     } else {
@@ -25,7 +25,7 @@ module.exports = class MockBot {
     }
   }
 
-  postMessageWithParams (channelId, msg, params) {
+  postMessageWithParams(channelId, msg, params) {
     this.msg = msg
     if (this.callback) {
       this.callback(msg)
@@ -34,7 +34,7 @@ module.exports = class MockBot {
     }
   }
 
-  postFancyMessage (channel_id, icon_emoji, color, title, body, botParams) {
+  postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
     var attachments = {
       icon_emoji: icon_emoji,
       attachments: [
@@ -58,7 +58,7 @@ module.exports = class MockBot {
     this.postRawMessage(channel_id, params)
   }
 
-  postRawMessage (channel_id, args) {
+  postRawMessage(channel_id, args) {
     var params = extend(
       {
         channel: channel_id,
@@ -74,11 +74,11 @@ module.exports = class MockBot {
   }
 
   // Prob a better way of doing this? Handle all the request/async functions.
-  setCallback (callback) {
+  setCallback(callback) {
     this.callback = callback
   }
 
-  postRawMessage (channel_id, args) {
+  postRawMessage(channel_id, args) {
     var params = extend(
       {
         channel: channel_id,
@@ -93,32 +93,37 @@ module.exports = class MockBot {
     console.log(JSON.stringify(params, null, 2))
   }
 
-  getUserNameFromId (user_id) {
+  getUserNameFromId(user_id) {
     return this.getFakeUser()
   }
 
-  async resolveUserNameFromId (user_id) {
+  async resolveUserNameFromId(user_id) {
     const randUserData = await this.userDataPromise(user_id)
     return randUserData.user.profile.display_name
       ? randUserData.user.profile.display_name
       : randUserData.user.profile.real_name
   }
 
-  userDataPromise (user_id) {
+  userDataPromise(user_id) {
     return this.getFakeUser()
   }
 
-  getFakeUser () {
+  getFakeUser() {
     return user
   }
 
-  getChannelById (id) {
+  getChannelById(id) {
     return {
       name: 'channel-name'
     }
   }
 
-  setModules (modules) {
+  setModules(modules) {
     this.modules = modules
+  }
+
+  async getUserNameDisplayNameFromId(id) {
+    const userData = await this.getUserNameFromId(id);
+    return userData.user.profile.display_name || userData.user.name;
   }
 }

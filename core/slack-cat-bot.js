@@ -198,4 +198,9 @@ module.exports = class SlackCatBot {
   setModules(modules) {
     this.modules = modules
   }
+
+  async getUserNameDisplayNameFromId(id) {
+    const userData = await this.bot.getUserNameFromId(id);
+    return userData.user.profile.display_name || userData.user.name;
+  }
 }
