@@ -49,7 +49,8 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   async endorseUser(data) {
-    let group = this.getUserPatternRegex().exec(data.user_text);
+    const pattern = this.getUserPatternRegex();
+    let group = pattern.exec(data.user_text);
     if (!group) {
       return false;
     }
@@ -60,27 +61,35 @@ module.exports = class Endorsements extends BaseStorageModule {
       userArray.push(group[1]);
       sanitizedEndorsement = sanitizedEndorsement.replace(group[0], '');
       // Loop
-      group = this.getUserPatternRegex().exec(data.user_text)
+      group = pattern.exec(data.user_text)
     }
 
     for (let i = 0; i < userArray.length; i++) {
-      await this.add(userArray[i], sanitizedEndorsement.trim(), data.user);
+      await this.addEndorsement(userArray[i], sanitizedEndorsement.trim(), data.user);
     }
 
     return true;
   }
 
-  async add(userId, endorsement, endorserId) {
-    try {
-      // Try catch for dup endorsements. Will fix... NEVER
-      await this.Endorsements.create({
+  async addEndorsement(userId, endorsement, endorserId) {
+    console.log("test!!!!!")
+    const exists = await this.Endorsements.findOne({
+      where: {
         userId: userId,
-        endorsement: endorsement,
-        endorserId: endorserId
-      });
-    } catch (e) {
-      console.log("Error in Endorse!", e.message);
+        endorsement: endorsement
+      }
+    });
+
+    if (exists) {
+      console.log("exsists!")
+      return;
     }
+
+    return await this.Endorsements.create({
+      userId: userId,
+      endorsement: endorsement,
+      endorserId: endorserId
+    });
   }
 
   async findAll(userId) {
