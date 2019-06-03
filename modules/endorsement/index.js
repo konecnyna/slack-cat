@@ -8,7 +8,7 @@ module.exports = class Endorsements extends BaseStorageModule {
       const msg = await this.handleEndorsements(data);
       this.bot.postMessageToThread(
         data.channel,
-        msg || 'You forgot to give me a person',
+        msg || 'You forgot to give me a person starting with @slackname',
         data.ts
       );
       return;
