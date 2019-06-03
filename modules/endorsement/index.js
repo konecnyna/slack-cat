@@ -72,7 +72,6 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   async addEndorsement(userId, endorsement, endorserId) {
-    console.log("test!!!!!")
     const exists = await this.Endorsements.findOne({
       where: {
         userId: userId,
@@ -81,7 +80,6 @@ module.exports = class Endorsements extends BaseStorageModule {
     });
 
     if (exists) {
-      console.log("exsists!")
       return;
     }
 
