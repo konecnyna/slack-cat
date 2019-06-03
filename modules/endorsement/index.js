@@ -1,7 +1,5 @@
 'use strict';
 
-const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
-
 module.exports = class Endorsements extends BaseStorageModule {
 
 
@@ -35,7 +33,7 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   async handleEndorsements(data) {
-    let group = userPattern.exec(data.user_text);
+    let group = this.getUserPatternRegex().exec(data.user_text);
     if (!group || data.user === group[1]) {
       return false;
     }
@@ -51,7 +49,7 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   async endorseUser(data) {
-    let group = userPattern.exec(data.user_text);
+    let group = this.getUserPatternRegex().exec(data.user_text);
     if (!group) {
       return false;
     }
@@ -62,7 +60,7 @@ module.exports = class Endorsements extends BaseStorageModule {
       userArray.push(group[1]);
       sanitizedEndorsement = sanitizedEndorsement.replace(group[0], '');
       // Loop
-      group = userPattern.exec(data.user_text)
+      group = this.getUserPatternRegex().exec(data.user_text)
     }
 
     for (let i = 0; i < userArray.length; i++) {
@@ -88,7 +86,9 @@ module.exports = class Endorsements extends BaseStorageModule {
     });
   }
 
-
+  getUserPatternRegex() {
+    return new RegExp(/\<@([^\s|\<]+)\>/, 'g');
+  }
   help() {
     return 'Endorse ppl for doing cool stuff! Usage:\n?endorse @username for doing kewl stuff.';
   }
