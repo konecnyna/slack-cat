@@ -71,11 +71,16 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   async add(userId, endorsement, endorserId) {
-    return await this.Endorsements.create({
-      userId: userId,
-      endorsement: endorsement,
-      endorserId: endorserId
-    });
+    try {
+      // Try catch for dup endorsements. Will fix... NEVER
+      await this.Endorsements.create({
+        userId: userId,
+        endorsement: endorsement,
+        endorserId: endorserId
+      });
+    } catch (e) {
+      console.log("Error in Endorse!", e.message);
+    }
   }
 
   async findAll(userId) {
