@@ -65,9 +65,9 @@ module.exports = class Endorsements extends BaseStorageModule {
       group = userPattern.exec(data.user_text)
     }
 
-    userArray.map(async user => {
-      await this.add(user, sanitizedEndorsement.trim(), data.user);
-    });
+    for (let i = 0; i < userArray.length; i++) {
+      await this.add(users[i], sanitizedEndorsement.trim(), data.user);
+    }
 
     return true;
   }
