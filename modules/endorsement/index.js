@@ -66,7 +66,7 @@ module.exports = class Endorsements extends BaseStorageModule {
     }
 
     for (let i = 0; i < userArray.length; i++) {
-      await this.add(users[i], sanitizedEndorsement.trim(), data.user);
+      await this.add(userArray[i], sanitizedEndorsement.trim(), data.user);
     }
 
     return true;
