@@ -200,7 +200,7 @@ module.exports = class SlackCatBot {
   }
 
   async getUserNameDisplayNameFromId(id) {
-    const userData = await this.bot.getUserNameFromId(id);
+    const userData = await this.getUserNameFromId(id);
     return userData.user.profile.display_name || userData.user.name;
   }
 }
