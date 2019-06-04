@@ -29,7 +29,7 @@ module.exports = class Endorsements extends BaseStorageModule {
       return;
     }
 
-    this.bot.postMessage(data.channel, "Endorsed!");
+    this.bot.postMessageToThread(data.channel, "Endorsed!", data.ts);
   }
 
   async handleEndorsements(data) {
