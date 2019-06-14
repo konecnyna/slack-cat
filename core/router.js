@@ -151,7 +151,7 @@ module.exports = class Router {
     }
 
     const cmd = matches[1].toLowerCase()
-    const args = data.text.match(argPattern)
+    const args = data.text.match(argPattern) || []
     data['cmd'] = cmd
     data['args'] = args
     data['user_text'] = data.text.replace(matches[0], '').trim()
