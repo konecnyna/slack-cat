@@ -50,7 +50,7 @@ module.exports = class Endorsements extends BaseStorageModule {
 
   async handleEndorsements(data) {
     let group = this.getUserPatternRegex().exec(data.user_text);
-    if (!group || data.user === group[1]) {
+    if (!group) {
       return false;
     }
 
