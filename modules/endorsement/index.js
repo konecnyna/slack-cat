@@ -45,7 +45,7 @@ module.exports = class Endorsements extends BaseStorageModule {
     const name = await this.bot.getUserNameDisplayNameFromId(userId)
     const pluses = await this.plusHelper.plusUser(name);
     console.log(pluses);
-    return `${name} has been endorsed and now has ${pluses} pluses`;
+    return `*${name}* has been endorsed and now has *${pluses} pluses*`;
   }
 
   async handleEndorsements(data) {
