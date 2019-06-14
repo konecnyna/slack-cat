@@ -1,5 +1,5 @@
 'use strict';
-
+const Sequelize = require('sequelize');
 module.exports = class BaseStorageModule extends BaseModule {
   constructor(bot) {
     super(bot);
@@ -7,30 +7,13 @@ module.exports = class BaseStorageModule extends BaseModule {
       throw new TypeError('Cannot construct Abstract instances directly');
     }
 
-    this.Sequelize = require('sequelize');
-
-    this.db = new this.Sequelize(null, null, null, {
-      dialect: 'sqlite',
-      storage: STORAGE_PATH, // global.
-      logging: false,
-      operatorsAliases: false,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-      },
-    });
-
+    this.Sequelize = Sequelize;
+    this.db = database;
     if (this.registerSqliteModel === undefined) {
-      throw new TypeError(
-        'Child class must implement `registerSqliteModel()` method'
-      );
+      throw new TypeError('Child class must implement `registerSqliteModel()` method');
     } else {
       this.registerSqliteModel();
     }
-
-    this.db.sync();
   }
 
   async upsert(model, whereClause, data, update) {
@@ -44,7 +27,5 @@ module.exports = class BaseStorageModule extends BaseModule {
       // insert
       return await model.create(data);
     }
-
-    return {};
   }
 };

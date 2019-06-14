@@ -2,7 +2,7 @@ const requireDir = require('./requiredir')
 const moduleResolver = new requireDir()
 
 module.exports = class ModuleLoader {
-  constructor (bot, server, pathToModules) {
+  constructor(bot, server, pathToModules) {
     this.bot = bot
     this.server = server
     this.pathToModules = pathToModules
@@ -19,7 +19,7 @@ module.exports = class ModuleLoader {
     this.registerModules()
   }
 
-  registerModules () {
+  registerModules() {
     // Core modules
     const loadedModules = moduleResolver.loadModules(this.pathToModules)
     Object.keys(loadedModules).forEach(key => {
@@ -99,9 +99,12 @@ module.exports = class ModuleLoader {
         this.serviceModules
       )
     })
+
+    // Models are all loaded so now we sync the database models.
+    database.sync()
   }
 
-  getModules () {
+  getModules() {
     return {
       modules: this.modules,
       overflowModules: this.overflowModules,
@@ -114,14 +117,14 @@ module.exports = class ModuleLoader {
     }
   }
 
-  createRoutes (moduleObj) {
+  createRoutes(moduleObj) {
     if (!this.server) {
       return
     }
     moduleObj.createRoutes(this.server.app)
   }
 
-  addModules (key, module, type, array) {
+  addModules(key, module, type, array) {
     if (module.getType().includes(type)) {
       array[key] = module
     }

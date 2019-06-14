@@ -112,12 +112,6 @@ module.exports = class MockBot {
     return user
   }
 
-  getChannelById(id) {
-    return {
-      name: 'channel-name'
-    }
-  }
-
   setModules(modules) {
     this.modules = modules
   }

@@ -4,7 +4,7 @@ module.exports = class PlusHelper {
   }
 
   async displayPlusesForUser(user) {
-    const pluses = await this.context.PlusModel.findOne({
+    const pluses = await this.getPlusModel().findOne({
       where: {
         name: user,
       },
@@ -14,7 +14,7 @@ module.exports = class PlusHelper {
   }
 
   async displayLeaderBoard(data) {
-    const pluses = await this.context.PlusModel.findAll({
+    const pluses = await this.getPlusModel().findAll({
       order: [['pluses', 'DESC']],
       limit: 10,
     });
@@ -46,9 +46,9 @@ module.exports = class PlusHelper {
     this.context.bot.postMessageToThread(
       data.channel,
       `Don't be a meanie ${
-        userData.user.display_name
-          ? userData.user.display_name
-          : userData.user.name
+      userData.user.display_name
+        ? userData.user.display_name
+        : userData.user.name
       }`,
       data.ts
     );
@@ -56,7 +56,7 @@ module.exports = class PlusHelper {
 
   async plusUser(userName) {
     const pluses = await this.context.upsert(
-      this.context.PlusModel,
+      this.getPlusModel(),
       { where: { name: userName } },
       {
         name: userName,
@@ -67,8 +67,12 @@ module.exports = class PlusHelper {
       }
     );
 
-    
+
 
     return await pluses.get('pluses');
+  }
+
+  getPlusModel() {
+    return database.modelManager.getModel("pluses")
   }
 };
