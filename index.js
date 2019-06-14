@@ -6,6 +6,7 @@ const Server = require('./core/server')
 const MoudleLoader = require('./core/module-loader')
 const SlackCatBot = require('./core/slack-cat-bot.js')
 const { RTMClient } = require('@slack/client')
+const Sequelize = require('sequelize');
 
 // Global Base Modules.
 global.BaseModule = require('./core/base-module.js')
@@ -20,10 +21,20 @@ const {
 
 class SlackCat {
   constructor(pathToModules, configPath, dbPath) {
-    this.pathToModules = pathToModules
-    this.dbPath = dbPath
+    global.database = new Sequelize(null, null, null, {
+      dialect: 'sqlite',
+      storage: dbPath, // global.
+      logging: false,
+      operatorsAliases: false,
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000,
+      },
+    });
 
-    global.STORAGE_PATH = dbPath
+    this.pathToModules = pathToModules
     global.config = new Config(configPath)
   }
 

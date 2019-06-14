@@ -1,7 +1,12 @@
 'use strict';
+const PlusHelper = require("../plus/plus-helper");
 
+//TODO: cleanup 
 module.exports = class Endorsements extends BaseStorageModule {
-
+  constructor(bot) {
+    super(bot);
+    this.plusHelper = new PlusHelper(this);
+  }
 
   async handle(data) {
     if (data.cmd.includes('endorsements')) {
@@ -19,9 +24,8 @@ module.exports = class Endorsements extends BaseStorageModule {
       return;
     }
 
-
-    const error = await this.endorseUser(data);
-    if (!error) {
+    const msgs = await this.endorseUser(data);
+    if (!msgs) {
       this.bot.postMessage(
         data.channel,
         `You forgot to tell me who to endorse!\n${this.help()}`
@@ -29,7 +33,19 @@ module.exports = class Endorsements extends BaseStorageModule {
       return;
     }
 
-    this.bot.postMessageToThread(data.channel, "Endorsed!", data.ts);
+    if (msgs.length === 0) {
+      this.bot.postMessageToThread(data.channel, "Endorsed!", data.ts);
+      return;
+    }
+
+    this.bot.postMessageToThread(data.channel, msgs.join("\n"), data.ts);
+  }
+
+  async plusUser(userId) {
+    const name = await this.bot.getUserNameDisplayNameFromId(userId)
+    const pluses = await this.plusHelper.plusUser(name);
+    console.log(pluses);
+    return `${name} has been endorsed and now has ${pluses} pluses`;
   }
 
   async handleEndorsements(data) {
@@ -45,30 +61,38 @@ module.exports = class Endorsements extends BaseStorageModule {
       return endorsement.get('endorsement')
     });
 
-    return `*${displayName}* has been endorsed for:\n${usersEndorsements.join("; ")}`;
+    return `*${displayName}* has been endorsed for:\n${usersEndorsements.join(" ")}`;
   }
 
   async endorseUser(data) {
     const pattern = this.getUserPatternRegex();
     let group = pattern.exec(data.user_text);
     if (!group) {
-      return false;
+      return null;
     }
 
     const userArray = [];
     let sanitizedEndorsement = data.user_text
     while (group) {
       userArray.push(group[1]);
-      sanitizedEndorsement = sanitizedEndorsement.replace(group[0], '');
+      sanitizedEndorsement = sanitizedEndorsement.replace(group[0], '').trim();
       // Loop
       group = pattern.exec(data.user_text)
     }
 
-    for (let i = 0; i < userArray.length; i++) {
-      await this.addEndorsement(userArray[i], sanitizedEndorsement.trim(), data.user);
+    if (!sanitizedEndorsement || !sanitizedEndorsement.length) {
+      return null;
     }
 
-    return true;
+    const msgs = [];
+    for (let i = 0; i < userArray.length; i++) {
+      await this.addEndorsement(userArray[i], sanitizedEndorsement.trim(), data.user);
+      if (data.cmd.includes("endorse+")) {
+        msgs.push(await this.plusUser(userArray[i]));
+      }
+    }
+
+    return msgs;
   }
 
   async addEndorsement(userId, endorsement, endorserId) {
@@ -114,7 +138,7 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   aliases() {
-    return ['endorse', 'endorsements'];
+    return ['endorse', 'endorse+', 'endorsements'];
   }
 
   getType() {
