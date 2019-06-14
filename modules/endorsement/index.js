@@ -60,7 +60,7 @@ module.exports = class Endorsements extends BaseStorageModule {
       return endorsement.get('endorsement')
     });
 
-    return `*${displayName}* has been endorsed for:\n${usersEndorsements.join("; ")}`;
+    return `*${displayName} has been endorsed for:*\n${usersEndorsements.join("; ")}`;
   }
 
   async endorseUser(data) {
