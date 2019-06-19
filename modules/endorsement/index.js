@@ -86,9 +86,7 @@ module.exports = class Endorsements extends BaseStorageModule {
     const msgs = [];
     for (let i = 0; i < userArray.length; i++) {
       await this.addEndorsement(userArray[i], sanitizedEndorsement.trim(), data.user);
-      if (data.cmd.includes("endorse+")) {
-        msgs.push(await this.plusUser(userArray[i]));
-      }
+      msgs.push(await this.plusUser(userArray[i]));
     }
 
     return msgs;
