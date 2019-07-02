@@ -73,7 +73,9 @@ module.exports = class Endorsements extends BaseStorageModule {
     const userArray = [];
     let sanitizedEndorsement = data.user_text
     while (group) {
-      userArray.push(group[1]);
+      if (group[1] != data.user) {
+        userArray.push(group[1]);
+      }
       sanitizedEndorsement = sanitizedEndorsement.replace(group[0], '').trim();
       // Loop
       group = pattern.exec(data.user_text)
