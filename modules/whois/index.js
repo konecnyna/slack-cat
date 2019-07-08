@@ -4,12 +4,16 @@ const USER_ID_REGEX = new RegExp(/\<\@(.*?)\>/);
 
 module.exports = class WhoIs extends BaseModule {
   async handle(data) {
-    const match = USER_ID_REGEX.exec(data.user_text);
     let userId = '';
-    if (match) {
-      userId = match[1];
+    if (data.cmd.includes("myinfo")) {
+      userId = data.user;
     } else {
-      userId = data.user_text;
+      const match = USER_ID_REGEX.exec(data.user_text);
+      if (match) {
+        userId = match[1];
+      } else {
+        userId = data.user_text;
+      }
     }
 
     const user = await this.bot.userDataPromise(userId);
@@ -25,11 +29,17 @@ module.exports = class WhoIs extends BaseModule {
     return `*Here is what I know:*
 
 *Name:* ${user.user.name || 'unknown'}
+*User Id:* ${user.user.id || 'unknown'}
 *Real Name:* ${user.user.profile.real_name || 'unknown'}
 *Display Name:* ${user.user.profile.display_name || 'unknown'}
 *Email:* ${user.user.profile.email || 'unknown'}
 `;
   }
+
+  aliases() {
+    return ['myinfo'];
+  }
+
 
   help() {
     return "Usage: `?helloworld2` should print:\n'Hello World Number 2!!!'";
