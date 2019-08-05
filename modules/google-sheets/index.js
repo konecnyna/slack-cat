@@ -19,7 +19,7 @@ module.exports = class GoogleSheets extends BaseModule {
   }
 
   async handle(data) {
-    const sheet = await this.googleSheetsUtil.getSheetForChannel(data.channel);
+    const sheet = await this.googleSheetsUtil.getSheetForChannel(doc, data.channel);
     if (!sheet) {
       this.bot.postMessageToThread(data.channel, HELP_MSG, data.ts);
       return;
