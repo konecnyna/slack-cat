@@ -10,15 +10,13 @@ module.exports = class SpreadSheetUtil {
   }
 
   async getDoc(doc) {
-    console.log()
     return new Promise((resolve, reject) => {
       try {
         doc.getInfo((err, info) => {
           if (err) {
             console.error(err);
             reject(err);
-          }
-
+          }          
           resolve(info.worksheets);
         });
       } catch (e) {
@@ -53,9 +51,9 @@ module.exports = class SpreadSheetUtil {
     });
   }
 
-  async getSheetForChannel(channel) {
-    await this.googleSheetsUtil.authDoc(doc);
-    const sheets = await this.googleSheetsUtil.getDoc(doc);
+  async getSheetForChannel(doc, channel) {
+    await this.authDoc(doc);
+    const sheets = await this.getDoc(doc);
     return sheets.find(it => {
       return it.title === channel
     });
