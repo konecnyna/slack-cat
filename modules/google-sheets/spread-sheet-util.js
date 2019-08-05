@@ -52,4 +52,12 @@ module.exports = class SpreadSheetUtil {
       });
     });
   }
+
+  async getSheetForChannel(channel) {
+    await this.googleSheetsUtil.authDoc(doc);
+    const sheets = await this.googleSheetsUtil.getDoc(doc);
+    return sheets.find(it => {
+      return it.title === channel
+    });
+  }
 }

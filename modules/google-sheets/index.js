@@ -16,7 +16,7 @@ module.exports = class GoogleSheets extends BaseModule {
   }
 
   async handle(data) {
-    const sheet = await this.getSheetForChannel(data.channel);
+    const sheet = await this.googleSheetsUtil.getSheetForChannel(data.channel);
     if (!sheet) {
       this.bot.postMessageToThread(data.channel, HELP_MSG, data.ts);
       return;
@@ -26,14 +26,6 @@ module.exports = class GoogleSheets extends BaseModule {
     this.postFields(data.channel, fields);
   }
 
-
-  async getSheetForChannel(channel) {
-    await this.googleSheetsUtil.authDoc(doc);
-    const sheets = await this.googleSheetsUtil.getDoc(doc);
-    return sheets.find(it => {
-      return it.title === channel
-    });
-  }
 
   async createFields(sheet) {
     const rows = await this.googleSheetsUtil.getRows(sheet);
