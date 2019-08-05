@@ -2,7 +2,10 @@
 const GoogleSpreadsheet = require("google-spreadsheet");
 const GoogleSheetsUtil = require('./spread-sheet-util');
 const sheets = config.getKey('google_sheets');
-const doc = new GoogleSpreadsheet(sheets.sheet_id);
+if (sheets && sheets.sheet_id) {
+  const doc = new GoogleSpreadsheet(sheets.sheet_id);
+}
+
 const DOC_URL = `https://docs.google.com/spreadsheets/d/${sheets.sheet_id}`
 const HELP_MSG = `
 Sorry couldn't find a sheet for this channel. Please visit: ${DOC_URL}
