@@ -24,5 +24,10 @@
    "node_env":"production",
    "port":80,
    "slack_verification_token":"****",
-   "slack_access_token":"xoxb-***"
+   "slack_access_token":"xoxb-***",
+   "google_sheets": {
+    "private_key": "-----BEGIN PRIVATE KEY----------END PRIVATE KEY-----\n",
+    "client_email": "",
+    "sheet_id": "YAMOM"
+  },
 }
