@@ -85,14 +85,14 @@
 
 
 class Card {
-  constructor(name, emoji, meanings, invertedMeanings, descriptionLink) {
+  constructor(name, number, suit, emoji, meanings, invertedMeanings, descriptionLink) {
     this.name = name;
-    this.number = "MISSING"; // roman numeral, or plain number for minor arcana
-    this.suit = "MISSING"; // suit or "major arcana"
-    this.emoji = emoji || "MISSING";
-    this.meanings = meanings || ["MISSING"];
-    this.invertedMeanings = invertedMeanings || ["MISSING"];
-    this.descriptionLink = descriptionLink || "MISSING";
+    this.number = number; // roman numeral, or plain number for minor arcana
+    this.suit = suit; // suit or "major arcana"
+    this.emoji = emoji;
+    this.meanings = meanings;
+    this.invertedMeanings = invertedMeanings;
+    this.descriptionLink = descriptionLink;
   }
 }
 
@@ -106,27 +106,27 @@ const Suits = {
 
 const allCards = {
   "fool": new Card("The Fool", "0", Suits.Major, ":mardigrasparrot:", ["Innocence", "New beginnings", "Free spirit"], ["Recklessness", "Taken advantage of", "Inconsideration"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-fool-meaning-major-arcana-tarot-card-meanings"),
-  "magician": new Card("The Magician", "I", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "highpriestess": new Card("The High Priestess", "II", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "empress": new Card("The Empress", "III", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "emperor": new Card("The Emperor", "IV", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "hierophant": new Card("The Hierophant", "V", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "lovers": new Card("The Lovers", "VI", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "chariot": new Card("The Chariot", "VII", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "strength": new Card("Strength", "VIII", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "hermit": new Card("The Hermit", "IX", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "wheeloffortune": new Card("The Wheel of Fortune", "X", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "justice": new Card("Justice", "XI", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "hangedman": new Card("The Hanged Man", "XII", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "death": new Card("Death", "XIII", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "temperance": new Card("Temperance", "XIV", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "devil": new Card("The Devil", "XV", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "tower": new Card("The Tower", "XVI", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "star": new Card("The Star", "XVII", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "moon": new Card("The Moon", "XVIII", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "sun": new Card("The Sun", "XIX", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "judgement": new Card("Judgement", "XX", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "world": new Card("The World", "XXI", Suits.Major, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "magician": new Card("The Magician", "I", Suits.Major, ":party-wizard:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "highpriestess": new Card("The High Priestess", "II", Suits.Major, ":mage:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "empress": new Card("The Empress", "III", Suits.Major, ":beyonce:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "emperor": new Card("The Emperor", "IV", Suits.Major, ":quaad:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "hierophant": new Card("The Hierophant", "V", Suits.Major, ":male_mage:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "lovers": new Card("The Lovers", "VI", Suits.Major, ":man-with-bunny-ears-partying:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "chariot": new Card("The Chariot", "VII", Suits.Major, ":steam_locomotive:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "strength": new Card("Strength", "VIII", Suits.Major, ":muscle:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "hermit": new Card("The Hermit", "IX", Suits.Major, ":lantern:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "wheeloffortune": new Card("The Wheel of Fortune", "X", Suits.Major, ":wheelofdeath:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "justice": new Card("Justice", "XI", Suits.Major, ":scales:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "hangedman": new Card("The Hanged Man", "XII", Suits.Major, ":waluigi-tpose::latin_cross:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "death": new Card("Death", "XIII", Suits.Major, ":skull_and_crossbones:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "temperance": new Card("Temperance", "XIV", Suits.Major, ":angelparrot:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "devil": new Card("The Devil", "XV", Suits.Major, ":devil-parrot:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "tower": new Card("The Tower", "XVI", Suits.Major, ":european_castle::lightning:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "star": new Card("The Star", "XVII", Suits.Major, ":star2:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "moon": new Card("The Moon", "XVIII", Suits.Major, ":moon:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "sun": new Card("The Sun", "XIX", Suits.Major, ":sun_with_face:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "judgement": new Card("Judgement", "XX", Suits.Major, ":doot:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "world": new Card("The World", "XXI", Suits.Major, ":earth_americas:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
 
   "aceofcups": new Card("The Ace of Cups", "1", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
   "aceofwands": new Card("The Ace of Wands", "1", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
@@ -197,7 +197,57 @@ const allCards = {
   "kingofwands": new Card("The King of Wands", "King", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
   "kingofswords": new Card("The King of Swords", "King", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
   "kingofpentacles": new Card("The King of Pentacles", "King", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub")
-  };
+};
+
+function validateCards() {
+  const allCardKeys = Object.keys(allCards);
+  if (allCardKeys.length != 78) {
+    console.log("Some cards are missing");
+  }
+
+  allCardKeys.forEach(function(cardKey){
+    const card = allCards[cardKey];
+    if (card.name === undefined) {
+      console.log("Card "+cardKey+" is missing a name");
+      card.name = "Unknown";
+    }
+
+    if (card.number === undefined) {
+      console.log("Card "+cardKey+" is missing a number");
+      card.number = "Unknown";
+    }
+
+    if (card.suit === undefined) {
+      console.log("Card "+cardKey+" is missing a suit");
+      card.suit = "Unknown";
+    } else if (card.suit != Suits.Major &&
+        card.suit != Suits.Wands &&
+        card.suit != Suits.Swords &&
+        card.suit != Suits.Cups &&
+        card.suit != Suits.Pentacles) {
+          console.log("Card "+cardKey+" has an unhandled suit of " + card.suit);
+    }
+
+    if (card.emoji === undefined) {
+      console.log("Card "+cardKey+" is missing an emoji");
+      card.emoji = "Unknown";
+    }
+
+    if (card.meanings === undefined) {
+      console.log("Card "+cardKey+" is missing an array of upright meanings");
+      card.meanings = ["Unknown"];
+    } else if (card.meanings.length === 0) {
+      console.log("Card "+cardKey+" has an empty an array of inverted meanings");
+    }
+
+    if (card.invertedMeanings === undefined) {
+      console.log("Card "+cardKey+" is missing an array of inverted meanings");
+      card.invertedMeanings = ["Unknown"];
+    } else if (card.invertedMeanings.length === 0) {
+      console.log("Card "+cardKey+" has an empty an array of inverted meanings");
+    }
+  });
+}
 
 function formattedCardString(card, inverted) {
   let suffix = inverted ? ", Inverted" : "";
@@ -228,6 +278,10 @@ function randomInversion() {
 
 module.exports = class TarotCards {
 
+  constructor() {
+    validateCards()
+  }
+
   random() {
     return formattedCardString(getRandomCard(), randomInversion());
   }
@@ -239,7 +293,7 @@ module.exports = class TarotCards {
     const cardKey = getCardKey(userInputKey);
     const card = allCards[cardKey];
     if (card === undefined) {
-      return 'Card "'+userInputKey+'" does not exist. FORMATTED TO' + cardKey;
+      return 'Card "'+userInputKey+'" does not exist.';
     }
     return formattedCardFullDescription(card);
   }
