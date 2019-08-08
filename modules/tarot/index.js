@@ -3,7 +3,7 @@
 const TarotCards = require('./cards.js');
 
 function responsePrefix() {
-  return "PREFIX: "
+  return ":crystal_ball::flower_playing_cards:: "
 }
 
 module.exports = class TarotModule extends BaseModule {
@@ -23,12 +23,12 @@ module.exports = class TarotModule extends BaseModule {
   }
 
   help() {
-    return 'Usage: ?tarot for a single random card, ?tarot <card name> for a specific card. EX: ?tarot The Magician, ?tarot fool'
+    return 'Usage: `?tarot` for a single random card, `?tarot <card name>` for a specific card. EX: `?tarot The Magician`, `?tarot fool`'
   }
 
-  // aliases() {
-  //   return ['tarot']
-  // }
+  aliases() {
+    return [':flower_playing_cards:']
+  }
 
   getType() {
       return [BaseModule.TYPES.MODULE];
