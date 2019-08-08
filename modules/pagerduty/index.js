@@ -43,7 +43,7 @@ module.exports = class PagerDuty extends BaseModule {
           author_icon:
             'https://cdn6.aptoide.com/imgs/9/6/a/96ac16c7e70a7cf636ad85f8b5c7d5b2_icon.png?w=256',
           title: title,
-          fields: Object.values(fields).sort((a,b) => { return a.level > b.level}),
+          fields: Object.values(fields).sort((a,b) => { return b.level - a.level }),
           footer: ':fire: lets hope nothings on fire :fire:',
         },
       ],
