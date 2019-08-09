@@ -307,7 +307,7 @@ function formattedCardString(card, inverted) {
 }
 
 function formattedCardFullDescription(card) {
-  return cardPrefix(card) + ". *Upright*: " + card.meanings.join(", ") + " | *Inverted*: " + card.invertedMeanings.join(", ") + ".";
+  return cardPrefix(card) + ".\n  | *Upright*: " + card.meanings.join(", ") + "\n  | *Inverted*: " + card.invertedMeanings.join(", ") + "\n" + card.descriptionLink;
 }
 
 function filterUserInput(userInputKey) {
@@ -363,7 +363,7 @@ module.exports = class TarotCards {
 
   describe(rawUserInput) {
     if (rawUserInput === undefined || rawUserInput === "") {
-      return "I didn't understand that at all.";
+      return random();
     }
     const userInput = filterUserInput(rawUserInput);
 
