@@ -19,7 +19,7 @@ module.exports = class TarotModule extends BaseModule {
       return
     }
 
-    this.bot.postMessage(data.channel, responsePrefix() + this.tarotCards.cardDescription(data.user_text));
+    this.bot.postMessage(data.channel, responsePrefix() + this.tarotCards.describe(data.user_text));
   }
 
   help() {
