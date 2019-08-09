@@ -299,7 +299,7 @@ function cardPrefix(card) {
 
 function formattedCardString(card, inverted) {
   const inversionString = inverted ? ", Inverted" : "";
-  let meaningString = (inverted ? card.meanings : card.invertedMeanings).join(", ");
+  let meaningString = (inverted ? card.invertedMeanings : card.meanings).join(", ");
   if (meaningString !== "") {
     meaningString = ": " + meaningString;
   }
