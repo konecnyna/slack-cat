@@ -2,28 +2,6 @@
 
 
 /*
-:000: : :mardigrasparrot: The Fool. Innocence, new beginnings, free spirit | Recklessness, taken advantage of, inconsideration
-:1train: : :party-wizard: The Magician. Willpower, desire, creation, manifestation | Trickery, illusions, out of touch
-:2train: : :mage: The High Priestess. Intuitive, unconscious, inner voice | Lack of center, lost inner voice, repressed feelings
-:3train: : :beyonce: The Empress. Motherhood, fertility, nature | Dependence, smothering, emptiness, nosiness
-:4train: : :quaad: The Emperor. Authority, structure, control, fatherhood | Tyranny, rigidity, coldness
-:5train: : :male_mage: The Hierophant. Tradition, conformity, morality, ethics | Rebellion, subversiveness, new approaches
-:6train: : :man-with-bunny-ears-partying: The Lovers. Partnerships, duality, union | Loss of balance, one-sidedness, disharmony
-:7train: : :steam_locomotive: The Chariot. Direction, control, willpower | Lack of control, lack of direction, aggression
-:eight: : :muscle: Strength. Inner strength, bravery, compassion, focus | Self doubt, weakness, insecurity
-:9train: : :lantern: The Hermit. Contemplation, search for truth, inner guidance | Loneliness, isolation, lost your way
-:keycap_ten: : :wheelofdeath: Wheel of Fortune. Change, cycles, inevitable fate | No control, clinging to control, bad luck
-:1train::1train: : :scales: Justice. Cause and effect, clarity, truth | Dishonesty, unaccountability, unfairness
-:1train::2train: : :waluigi-tpose::latin_cross: The Hanged Man. Sacrifice, release, martyrdom | Stalling, needless sacrifice, fear of sacrifice
-:1train::3train: : :skull_and_crossbones: Death. End of cycle, beginnings, change, metamorphosis | Fear of change, holding on, stagnation, decay
-:1train::4train: : :angelparrot: Temperance. Middle path, patience, finding meaning | Extremes, excess, lack of balance
-:1train::5train: : :devil-parrot: The Devil. Addiction, materialism, playfulness | Freedom, release, restoring control
-:1train::6train: : :european_castle: :lightning: The Tower. Sudden upheaval, broken pride, disaster | Disaster avoided, delayed disaster, fear of suffering
-:1train::7train: : :star2: The Star. Hope, faith, rejuvenation | Faithlessness, discouragement, insecurity
-:one::eight: : :moon: The Moon. Unconscious, illusions, intuition | Confusion, fear, misinterpretation
-:1train::9train: : :sun_with_face: The Sun. Joy, success, celebration, positivity, | negativity, depression, sadness
-:two::zero: : :doot: Judgement. Reflection, reckoning, awakening | Lack of self awareness, doubt, self loathing
-:2train::1train: : :earth_americas: The World. Fulfillment, harmony, completion | Incompletion, no closure
 :atrain::ctrain::etrain: of :wine_glass:
 :atrain::ctrain::etrain: of :dagger_knife:
 :atrain::ctrain::etrain: of :coin:
@@ -113,111 +91,111 @@ const allCards = {
 
   "empress": new Card("The Empress", "III", Suits.Major, ":beyonce:", ["Motherhood", "Fertility", "Nature"], ["Dependence", "Smothering", "Emptiness", "Nosiness"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-empress-meaning-major-arcana-tarot-card-meanings"),
 
-  "emperor": new Card("The Emperor", "IV", Suits.Major, ":quaad:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-emperor-meaning-major-arcana-tarot-card-meanings"),
+  "emperor": new Card("The Emperor", "IV", Suits.Major, ":quaad:", ["Authority", "Structure", "Control", "Fatherhood"], ["Tyranny", "Rigidity", "Coldnes"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-emperor-meaning-major-arcana-tarot-card-meanings"),
 
-  "hierophant": new Card("The Hierophant", "V", Suits.Major, ":male_mage:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-hierophant-meaning-major-arcana-tarot-card-meanings"),
+  "hierophant": new Card("The Hierophant", "V", Suits.Major, ":male_mage:", ["Tradition", "Conformity", "Morality", "Ethics"], ["Rebellion", "Subversiveness", "New approaches"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-hierophant-meaning-major-arcana-tarot-card-meanings"),
 
-  "lovers": new Card("The Lovers", "VI", Suits.Major, ":man-with-bunny-ears-partying:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-lovers-meaning-major-arcana-tarot-card-meanings"),
+  "lovers": new Card("The Lovers", "VI", Suits.Major, ":man-with-bunny-ears-partying:", ["Partnerships", "Duality", "Union"], ["Loss of balance", "One-sidedness", "Disharmony"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-lovers-meaning-major-arcana-tarot-card-meanings"),
 
-  "chariot": new Card("The Chariot", "VII", Suits.Major, ":steam_locomotive:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-chariot-meaning-major-arcana-tarot-card-meanings"),
+  "chariot": new Card("The Chariot", "VII", Suits.Major, ":steam_locomotive:", ["Direction", "Control", "Willpower"], ["Lack of control", "Lack of direction", "Aggression"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-chariot-meaning-major-arcana-tarot-card-meanings"),
 
-  "strength": new Card("Strength", "VIII", Suits.Major, ":muscle:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/strength-meaning-major-arcana-tarot-card-meanings"),
+  "strength": new Card("Strength", "VIII", Suits.Major, ":muscle:", ["Inner strength", "Bravery", "Compassion", "Focus"], ["Self doubt", "Weakness", "Insecurity"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/strength-meaning-major-arcana-tarot-card-meanings"),
 
-  "hermit": new Card("The Hermit", "IX", Suits.Major, ":lantern:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-hermit-meaning-major-arcana-tarot-card-meanings"),
+  "hermit": new Card("The Hermit", "IX", Suits.Major, ":lantern:", ["Contemplation", "Search for truth", "Inner guidance"], ["Loneliness", "Isolation", "Lost your way"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-hermit-meaning-major-arcana-tarot-card-meanings"),
 
-  "wheeloffortune": new Card("The Wheel of Fortune", "X", Suits.Major, ":wheelofdeath:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-wheel-of-fortune-meaning-major-arcana-tarot-card-meanings"),
+  "wheeloffortune": new Card("The Wheel of Fortune", "X", Suits.Major, ":wheelofdeath:", ["Change", "Cycles", "Inevitable fate"], ["No control", "Clinging to control", "Bad luck"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-wheel-of-fortune-meaning-major-arcana-tarot-card-meanings"),
 
-  "justice": new Card("Justice", "XI", Suits.Major, ":scales:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/justice-meaning-major-arcana-tarot-card-meanings"),
+  "justice": new Card("Justice", "XI", Suits.Major, ":scales:", ["Cause and effect", "Clarity", "Truth"], ["Dishonesty", "Unaccountability", "Unfairness"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/justice-meaning-major-arcana-tarot-card-meanings"),
 
-  "hangedman": new Card("The Hanged Man", "XII", Suits.Major, ":waluigi-tpose::latin_cross:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-hanged-man-meaning-major-arcana-tarot-card-meanings"),
+  "hangedman": new Card("The Hanged Man", "XII", Suits.Major, ":waluigi-tpose::latin_cross:", ["Sacrifice", "Release", "Martyrdom"], ["Stalling", "Needless sacrifice", "Fear of sacrifice"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-hanged-man-meaning-major-arcana-tarot-card-meanings"),
 
-  "death": new Card("Death", "XIII", Suits.Major, ":skull_and_crossbones:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/death-meaning-major-arcana-tarot-card-meanings"),
+  "death": new Card("Death", "XIII", Suits.Major, ":skull_and_crossbones:", ["End of cycle", "Beginnings", "Change", "Metamorphosis"], ["Fear of change", "Holding on", "Stagnation", "Decay"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/death-meaning-major-arcana-tarot-card-meanings"),
 
-  "temperance": new Card("Temperance", "XIV", Suits.Major, ":angelparrot:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/temperance-meaning-major-arcana-tarot-card-meanings"),
+  "temperance": new Card("Temperance", "XIV", Suits.Major, ":angelparrot:", ["Middle path", "Patience", "Finding meaning"], ["Extremes", "Excess", "Lack of balance"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/temperance-meaning-major-arcana-tarot-card-meanings"),
 
-  "devil": new Card("The Devil", "XV", Suits.Major, ":devil-parrot:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-devil-meaning-major-arcana-tarot-card-meanings"),
+  "devil": new Card("The Devil", "XV", Suits.Major, ":devil-parrot:", ["Addiction", "Materialism", "Playfulness"], ["Freedom", "Release", "Restoring control"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-devil-meaning-major-arcana-tarot-card-meanings"),
 
-  "tower": new Card("The Tower", "XVI", Suits.Major, ":european_castle::lightning:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-tower-meaning-major-arcana-tarot-card-meanings"),
+  "tower": new Card("The Tower", "XVI", Suits.Major, ":european_castle::lightning:", ["Sudden upheaval", "Broken pride", "Disaster"], ["Disaster avoided", "Delayed disaster", "Fear of suffering"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-tower-meaning-major-arcana-tarot-card-meanings"),
 
-  "star": new Card("The Star", "XVII", Suits.Major, ":star2:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-star-meaning-major-arcana-tarot-card-meanings"),
+  "star": new Card("The Star", "XVII", Suits.Major, ":star2:", ["Hope", "Faith", "Rejuvenation"], ["Faithlessness", "Discouragement", "Insecurity"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-star-meaning-major-arcana-tarot-card-meanings"),
 
-  "moon": new Card("The Moon", "XVIII", Suits.Major, ":moon:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-moon-meaning-major-arcana-tarot-card-meanings"),
+  "moon": new Card("The Moon", "XVIII", Suits.Major, ":moon:", ["Unconscious", "Illusions", "Intuition"], ["Confusion", "Fear", "Misinterpretation"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-moon-meaning-major-arcana-tarot-card-meanings"),
 
-  "sun": new Card("The Sun", "XIX", Suits.Major, ":sun_with_face:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-sun-meaning-major-arcana-tarot-card-meanings"),
+  "sun": new Card("The Sun", "XIX", Suits.Major, ":sun_with_face:", ["Joy", "Success", "Celebration", "Positivity"], ["Negativity", "Depression", "Sadness"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-sun-meaning-major-arcana-tarot-card-meanings"),
 
-  "judgement": new Card("Judgement", "XX", Suits.Major, ":doot:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/judgement-meaning-major-arcana-tarot-card-meanings"),
+  "judgement": new Card("Judgement", "XX", Suits.Major, ":doot:", ["Reflection", "Reckoning", "Awakening"], ["Lack of self awareness", "Doubt", "Self loathing"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/judgement-meaning-major-arcana-tarot-card-meanings"),
 
-  "world": new Card("The World", "XXI", Suits.Major, ":earth_americas:", ["UprightMeaningStub"], ["InvertedMeaningStub"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-world-meaning-major-arcana-tarot-card-meanings"),
+  "world": new Card("The World", "XXI", Suits.Major, ":earth_americas:", ["Fulfillment", "Harmony", "Completion"], ["Incompletion", "No closure"], "https://labyrinthos.co/blogs/tarot-card-meanings-list/the-world-meaning-major-arcana-tarot-card-meanings"),
 
-  "aceofcups": new Card("The Ace of Cups", "Ace", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "aceofwands": new Card("The Ace of Wands", "Ace", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "aceofswords": new Card("The Ace of Swords", "Ace", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "aceofpentacles": new Card("The Ace of Pentacles", "Ace", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "aceofcups": new Card("The Ace of Cups", "Ace", Suits.Cups, "", ["new feelings", "spirituality", "intuition"], ["emotional loss", "blocked creativity", "emptiness"], "DescLinkStub"),
+  "aceofwands": new Card("The Ace of Wands", "Ace", Suits.Wands, "", ["creation", "willpower", "inspiration", "desire"], ["lack of energy", "lack of passion", "boredom"], "DescLinkStub"),
+  "aceofswords": new Card("The Ace of Swords", "Ace", Suits.Swords, "", ["breakthrough", "clarity", "sharp mind"], ["confusion", "brutality", "chaos"], "DescLinkStub"),
+  "aceofpentacles": new Card("The Ace of Pentacles", "Ace", Suits.Pentacles, "", ["opportunity", "prosperity", "new venture"], ["lost opportunity", "missed chance", "bad investment"], "DescLinkStub"),
 
-  "twoofcups": new Card("The Two of Cups", "2", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "twoofwands": new Card("The Two of Wands", "2", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "twoofswords": new Card("The Two of Swords", "2", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "twoofpentacles": new Card("The Two of Pentacles", "2", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "twoofcups": new Card("The Two of Cups", "2", Suits.Cups, "", ["unity", "partnership", "connection"], ["imbalance", "broken communication", "tension"], "DescLinkStub"),
+  "twoofwands": new Card("The Two of Wands", "2", Suits.Wands, "", ["planning", "making decisions", "leaving home"], ["fear of change", "playing safe", "bad planning"], "DescLinkStub"),
+  "twoofswords": new Card("The Two of Swords", "2", Suits.Swords, "", ["difficult choices", "indecision", "stalemate"], ["lesser of two evils", "no right choice", "confusion"], "DescLinkStub"),
+  "twoofpentacles": new Card("The Two of Pentacles", "2", Suits.Pentacles, "", ["balancing decisions", "priorities", "adapting to change"], ["loss of balance", "disorganized", "overwhelmed"], "DescLinkStub"),
 
-  "threeofcups": new Card("The Three of Cups", "3", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "threeofwands": new Card("The Three of Wands", "3", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "threeofswords": new Card("The Three of Swords", "3", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "threeofpentacles": new Card("The Three of Pentacles", "3", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "threeofcups": new Card("The Three of Cups", "3", Suits.Cups, "", ["friendship", "community", "happiness"], ["overindulgence", "gossip", "isolation"], "DescLinkStub"),
+  "threeofwands": new Card("The Three of Wands", "3", Suits.Wands, "", ["looking ahead", "expansion", "rapid growth"], ["obstacles", "delays", "frustration"], "DescLinkStub"),
+  "threeofswords": new Card("The Three of Swords", "3", Suits.Swords, "", ["heartbreak", "suffering", "grief"], ["recovery", "forgiveness", "moving on"], "DescLinkStub"),
+  "threeofpentacles": new Card("The Three of Pentacles", "3", Suits.Pentacles, "", ["teamwork", "collaboration", "building"], ["lack of teamwork", "disorganized", "group conflict"], "DescLinkStub"),
 
-  "fourofcups": new Card("The Four of Cups", "4", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "fourofwands": new Card("The Four of Wands", "4", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "fourofswords": new Card("The Four of Swords", "4", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "fourofpentacles": new Card("The Four of Pentacles", "4", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "fourofcups": new Card("The Four of Cups", "4", Suits.Cups, "", ["apathy", "contemplation", "disconnectedness"], ["sudden awareness", "choosing happiness", "acceptance"], "DescLinkStub"),
+  "fourofwands": new Card("The Four of Wands", "4", Suits.Wands, "", ["community", "home", "celebration"], ["lack of support", "transience", "home conflicts"], "DescLinkStub"),
+  "fourofswords": new Card("The Four of Swords", "4", Suits.Swords, "", ["rest", "restoration", "contemplation"], ["restlessness", "burnout", "stress"], "DescLinkStub"),
+  "fourofpentacles": new Card("The Four of Pentacles", "4", Suits.Pentacles, "", ["conservation", "frugality", "security"], ["greediness", "stinginess", "possessiveness"], "DescLinkStub"),
 
-  "fiveofcups": new Card("The Five of Cups", "5", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "fiveofwands": new Card("The Five of Wands", "5", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "fiveofswords": new Card("The Five of Swords", "5", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "fiveofpentacles": new Card("The Five of Pentacles", "5", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "fiveofcups": new Card("The Five of Cups", "5", Suits.Cups, "", ["loss", "grief", "self-pity"], ["acceptance", "moving on", "finding peace"], "DescLinkStub"),
+  "fiveofwands": new Card("The Five of Wands", "5", Suits.Wands, "", ["competition", "rivalry", "conflict"], ["avoiding conflict", "respecting differences"], "DescLinkStub"),
+  "fiveofswords": new Card("The Five of Swords", "5", Suits.Swords, "", ["unbridled ambition", "win at all costs", "sneakiness"], ["lingering resentment", "desire to reconcile", "forgiveness"], "DescLinkStub"),
+  "fiveofpentacles": new Card("The Five of Pentacles", "5", Suits.Pentacles, "", ["need", "poverty", "insecurity"], ["recovery", "charity", "improvement"], "DescLinkStub"),
 
-  "sixofcups": new Card("The Six of Cups", "6", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "sixofwands": new Card("The Six of Wands", "6", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "sixofswords": new Card("The Six of Swords", "6", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "sixofpentacles": new Card("The Six of Pentacles", "6", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "sixofcups": new Card("The Six of Cups", "6", Suits.Cups, "", ["familiarity", "happy memories", "healing"], ["moving forward", "leaving home", "independence"], "DescLinkStub"),
+  "sixofwands": new Card("The Six of Wands", "6", Suits.Wands, "", ["victory", "success", "public reward"], ["excess pride", "lack of recognition", "punishment"], "DescLinkStub"),
+  "sixofswords": new Card("The Six of Swords", "6", Suits.Swords, "", ["transition", "leaving behind", "moving on"], ["emotional baggage", "unresolved issues", "resisting transition"], "DescLinkStub"),
+  "sixofpentacles": new Card("The Six of Pentacles", "6", Suits.Pentacles, "", ["charity", "generosity", "sharing"], ["strings attached", "stinginess", "power and domination"], "DescLinkStub"),
 
-  "sevenofcups": new Card("The Seven of Cups", "7", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "sevenofwands": new Card("The Seven of Wands", "7", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "sevenofswords": new Card("The Seven of Swords", "7", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "sevenofpentacles": new Card("The Seven of Pentacles", "7", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "sevenofcups": new Card("The Seven of Cups", "7", Suits.Cups, "", ["searching for purpose", "choices", "daydreaming"], ["lack of purpose", "diversion", "confusion"], "DescLinkStub"),
+  "sevenofwands": new Card("The Seven of Wands", "7", Suits.Wands, "", ["perseverance", "defensive", "maintaining control"], ["give up", "destroyed confidence", "overwhelmed"], "DescLinkStub"),
+  "sevenofswords": new Card("The Seven of Swords", "7", Suits.Swords, "", ["deception", "trickery", "tactics and strategy"], ["coming clean", "rethinking approach", "deception"], "DescLinkStub"),
+  "sevenofpentacles": new Card("The Seven of Pentacles", "7", Suits.Pentacles, "", ["hard work", "perseverance", "diligence"], ["work without results", "distractions", "lack of rewards"], "DescLinkStub"),
 
-  "eightofcups": new Card("The Eight of Cups", "8", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "eightofwands": new Card("The Eight of Wands", "8", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "eightofswords": new Card("The Eight of Swords", "8", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "eightofpentacles": new Card("The Eight of Pentacles", "8", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "eightofcups": new Card("The Eight of Cups", "8", Suits.Cups, "", ["walking away", "disillusionment", "leaving behind"], ["avoidance", "fear of change", "fear of loss"], "DescLinkStub"),
+  "eightofwands": new Card("The Eight of Wands", "8", Suits.Wands, "", ["rapid action", "movement", "quick decisions"], ["panic", "waiting", "slowdown"], "DescLinkStub"),
+  "eightofswords": new Card("The Eight of Swords", "8", Suits.Swords, "", ["imprisonment", "entrapment", "self-victimization"], ["self acceptance", "new perspective", "freedom"], "DescLinkStub"),
+  "eightofpentacles": new Card("The Eight of Pentacles", "8", Suits.Pentacles, "", ["apprenticeship", "passion", "high standards"], ["lack of passion", "uninspired", "no motivation"], "DescLinkStub"),
 
-  "nineofcups": new Card("The Nine of Cups", "9", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "nineofwands": new Card("The Nine of Wands", "9", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "nineofswords": new Card("The Nine of Swords", "9", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "nineofpentacles": new Card("The Nine of Pentacles", "9", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "nineofcups": new Card("The Nine of Cups", "9", Suits.Cups, "", ["satisfaction", "emotional stability", "luxury"], ["lack of inner joy", "smugness", "dissatisfaction"], "DescLinkStub"),
+  "nineofwands": new Card("The Nine of Wands", "9", Suits.Wands, "", ["resilience", "grit", "last stand"], ["exhaustion", "fatigue", "questioning motivations"], "DescLinkStub"),
+  "nineofswords": new Card("The Nine of Swords", "9", Suits.Swords, "", ["anxiety", "hopelessness", "trauma"], ["hope", "reaching out", "despair"], "DescLinkStub"),
+  "nineofpentacles": new Card("The Nine of Pentacles", "9", Suits.Pentacles, "", ["fruits of labor", "rewards", "luxury"], ["reckless spending", "living beyond means", "false success"], "DescLinkStub"),
 
-  "tenofcups": new Card("The Ten of Cups", "10", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "tenofwands": new Card("The Ten of Wands", "10", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "tenofswords": new Card("The Ten of Swords", "10", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "tenofpentacles": new Card("The Ten of Pentacles", "10", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "tenofcups": new Card("The Ten of Cups", "10", Suits.Cups, "", ["inner happiness", "fulfillment", "dreams coming true"], ["shattered dreams", "broken family", "domestic disharmony"], "DescLinkStub"),
+  "tenofwands": new Card("The Ten of Wands", "10", Suits.Wands, "", ["accomplishment", "responsibility", "burden"], ["inability to delegate", "overstressed", "burnt out"], "DescLinkStub"),
+  "tenofswords": new Card("The Ten of Swords", "10", Suits.Swords, "", ["failure", "collapse", "defeat"], ["can't get worse", "only upwards", "inevitable end"], "DescLinkStub"),
+  "tenofpentacles": new Card("The Ten of Pentacles", "10", Suits.Pentacles, "", ["legacy", "culmination", "inheritance"], ["fleeting success", "lack of stability", "lack of resources"], "DescLinkStub"),
 
-  "pageofcups": new Card("The Page of Cups", "Page", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "pageofwands": new Card("The Page of Wands", "Page", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "pageofswords": new Card("The Page of Swords", "Page", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "pageofpentacles": new Card("The Page of Pentacles", "Page", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "pageofcups": new Card("The Page of Cups", "Page", Suits.Cups, "", ["happy surprise", "dreamer", "sensitivity"], ["emotional immaturity", "insecurity", "disappointment"], "DescLinkStub"),
+  "pageofwands": new Card("The Page of Wands", "Page", Suits.Wands, "", ["exploration", "excitement", "freedom"], ["lack of direction", "procrastination", "creating conflict"], "DescLinkStub"),
+  "pageofswords": new Card("The Page of Swords", "Page", Suits.Swords, "", ["curiosity", "restlessness", "mental energy"], ["deception", "manipulation", "all talk"], "DescLinkStub"),
+  "pageofpentacles": new Card("The Page of Pentacles", "Page", Suits.Pentacles, "", ["ambition", "desire", "diligence"], ["lack of commitment", "greediness", "laziness"], "DescLinkStub"),
 
-  "knightofcups": new Card("The Knight of Cups", "Knight", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "knightofwands": new Card("The Knight of Wands", "Knight", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "knightofswords": new Card("The Knight of Swords", "Knight", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "knightofpentacles": new Card("The Knight of Pentacles", "Knight", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "knightofcups": new Card("The Knight of Cups", "Knight", Suits.Cups, "", ["following the heart", "idealist", "romantic"], ["moodiness", "disappointment"], "DescLinkStub"),
+  "knightofwands": new Card("The Knight of Wands", "Knight", Suits.Wands, "", ["action", "adventure", "fearlessness"], ["anger", "impulsiveness", "recklessness"], "DescLinkStub"),
+  "knightofswords": new Card("The Knight of Swords", "Knight", Suits.Swords, "", ["action", "impulsiveness", "defending beliefs"], ["no direction", "disregard for consequences", "unpredictability"], "DescLinkStub"),
+  "knightofpentacles": new Card("The Knight of Pentacles", "Knight", Suits.Pentacles, "", ["efficiency", "hard work", "responsibility"], ["laziness", "obsessiveness", "work without reward"], "DescLinkStub"),
 
-  "queenofcups": new Card("The Queen of Cups", "Queen", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "queenofwands": new Card("The Queen of Wands", "Queen", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "queenofswords": new Card("The Queen of Swords", "Queen", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "queenofpentacles": new Card("The Queen of Pentacles", "Queen", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
+  "queenofcups": new Card("The Queen of Cups", "Queen", Suits.Cups, "", ["compassion", "calm", "comfort"], ["martyrdom", "insecurity", "dependence"], "DescLinkStub"),
+  "queenofwands": new Card("The Queen of Wands", "Queen", Suits.Wands, "", ["courage", "determination", "joy"], ["selfishness", "jealousy", "insecurities"], "DescLinkStub"),
+  "queenofswords": new Card("The Queen of Swords", "Queen", Suits.Swords, "", ["complexity", "perceptiveness", "clear mindedness"], ["cold hearted", "cruel", "bitterness"], "DescLinkStub"),
+  "queenofpentacles": new Card("The Queen of Pentacles", "Queen", Suits.Pentacles, "", ["practicality", "creature comforts", "financial security"], ["self-centeredness", "jealousy", "smothering"], "DescLinkStub"),
 
-  "kingofcups": new Card("The King of Cups", "King", Suits.Cups, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "kingofwands": new Card("The King of Wands", "King", Suits.Wands, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "kingofswords": new Card("The King of Swords", "King", Suits.Swords, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub"),
-  "kingofpentacles": new Card("The King of Pentacles", "King", Suits.Pentacles, "", ["UprightMeaningStub"], ["InvertedMeaningStub"], "DescLinkStub")
+  "kingofcups": new Card("The King of Cups", "King", Suits.Cups, "", ["compassion", "control", "balance"], ["coldness", "moodiness", "bad advice"], "DescLinkStub"),
+  "kingofwands": new Card("The King of Wands", "King", Suits.Wands, "", ["big picture", "leader", "overcoming challenges"], ["impulsive", "overbearing", "unachievable expectations"], "DescLinkStub"),
+  "kingofswords": new Card("The King of Swords", "King", Suits.Swords, "", ["head over heart", "discipline", "truth"], ["manipulative", "cruel", "weakness"], "DescLinkStub"),
+  "kingofpentacles": new Card("The King of Pentacles", "King", Suits.Pentacles, "", ["abundance", "prosperity", "security"], ["greed", "indulgence", "sensuality"], "DescLinkStub")
 };
 
 function validateCards() {
@@ -358,7 +336,7 @@ function cardPrefix(card) {
 
 function formattedCardString(card, inverted) {
   const inversionString = inverted ? ", Inverted" : "";
-  let meaningString = (inverted ? card.meanings : card.invertedMeanings).join(",");
+  let meaningString = (inverted ? card.meanings : card.invertedMeanings).join(", ");
   if (meaningString !== "") {
     meaningString = ": " + meaningString;
   }
@@ -366,7 +344,7 @@ function formattedCardString(card, inverted) {
 }
 
 function formattedCardFullDescription(card) {
-  return cardPrefix(card) + ". *Upright*: " + card.meanings.join(",") + " | *Inverted*: " + card.invertedMeanings.join(",") + ".";
+  return cardPrefix(card) + ". *Upright*: " + card.meanings.join(", ") + " | *Inverted*: " + card.invertedMeanings.join(", ") + ".";
 }
 
 function getCardKey(userInputKey) {
