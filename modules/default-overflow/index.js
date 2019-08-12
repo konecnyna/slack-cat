@@ -10,7 +10,7 @@ module.exports = class LearnOverflowAlises extends BaseModule {
 
   async handle(data) {
     let learns = false;
-    if (data.user_text.length > 0) {
+    if (data.user_text && data.user_text.length > 0) {
       let index = parseInt(data.user_text);
       if (index > 0) {
         index--;
