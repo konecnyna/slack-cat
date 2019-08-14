@@ -129,7 +129,7 @@ module.exports = class MockBot {
     }
 
     const promises = matches.map(async it => {
-      return await this.getUserNameDisplayNameFromId(it)
+      return await this.getUserNameFromId(it)
     });
     return await Promise.all(promises);
   }
