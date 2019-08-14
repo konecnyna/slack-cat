@@ -126,14 +126,14 @@ module.exports = class MockBot {
       return [];
     }
 
-    const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
-    const matches = data.cmd.match(userPattern);
+    const rgx = /<@([^\s|\<]+)>/g
+    const matches = rgx.exec(data.cmd);
     if (!matches) {
       return []
     }
 
     const promises = matches.map(async it => {
-      return await this.getUserNameFromId(it)
+      return await this.getUserNameFromId(it[1])
     });
     return await Promise.all(promises);
   }
