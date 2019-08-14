@@ -45,6 +45,7 @@ module.exports = class Learn extends BaseStorageModule {
   async handleOverflowCmd(data) {
     const users = await this.bot.getUserNameFromCommand(data);
     let learns;
+
     if (users.length) {
       const { name } = users[0].user
       learns = await this.getLearns(name, 1, true, false);
@@ -55,11 +56,11 @@ module.exports = class Learn extends BaseStorageModule {
       }
 
       learns = await this.getLearns(data.cmd, 1, false, index);
-    } else {
+    } else if (data.cmd) {
       learns = await this.getLearns(data.cmd, 1, true, false);
     }
 
-    if (learns.length) {
+    if (learns && learns.length) {
       this.bot.postMessage(data.channel, learns.join(''));
     }
   }
