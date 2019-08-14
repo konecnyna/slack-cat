@@ -132,7 +132,7 @@ module.exports = class MockBot {
       return []
     }
 
-    const { name } = await this.getUserNameFromId(matches[1].toUpperCase()).user
-    return name
+    const slackUser = await this.getUserNameFromId(matches[1].toUpperCase())
+    return slackUser.user.name;
   }
 }
