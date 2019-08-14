@@ -132,6 +132,6 @@ module.exports = class MockBot {
       return []
     }
 
-    return await this.getUserNameFromId(it[1])
+    return await this.getUserNameFromId(matches[1])
   }
 }
