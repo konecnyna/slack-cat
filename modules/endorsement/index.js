@@ -124,6 +124,7 @@ module.exports = class Endorsements extends BaseStorageModule {
   getUserPatternRegex() {
     return new RegExp(/\<@([^\s|\<]+)\>/, 'g');
   }
+
   help() {
     return 'Endorse ppl for doing cool stuff! Usage:\n?endorse @username for doing kewl stuff.';
   }
