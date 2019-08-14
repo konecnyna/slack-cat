@@ -28,14 +28,14 @@ module.exports = class WelcomeCat extends BaseStorageModule {
     }
 
     if (data.args.includes('--test')) {
-      this.handleMemeberJoin(data);
+      this.handleMemberJoin(data);
       return;
     }
 
     this.bot.postMessageWithParams(data.channel, 'Bad command.', botParams);
   }
 
-  async handleMemeberJoin(data) {
+  async handleMemberJoin(data) {
     const welcomeMessage = await this.welcomeHelper.getOptionsForChannel(
       data.channel
     );

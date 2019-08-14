@@ -41,6 +41,26 @@ module.exports = class Learn extends BaseStorageModule {
     this.handleLearn(data);
   }
 
+
+  async handleOverflowCmd(data) {
+    let learns = false;
+
+    if (parseInt(data.user_text)) {
+      let index = parseInt(data.user_text);
+      if (index > 0) {
+        index--;
+      }
+
+      learns = await this.getLearns(data.cmd, 1, false, index);
+    } else {
+      learns = await this.getLearns(data.cmd, 1, true, false);
+    }
+
+    if (learns.length) {
+      this.bot.postMessage(data.channel, learns.join(''));
+    }
+  }
+
   aliases() {
     return ['learns', 'unlearn', 'list'];
   }
@@ -206,7 +226,7 @@ module.exports = class Learn extends BaseStorageModule {
   }
 
   getType() {
-    return [BaseModule.TYPES.ENDPOINT, BaseModule.TYPES.MODULE];
+    return [BaseModule.TYPES.ENDPOINT, BaseModule.TYPES.MODULE, BaseModule.TYPES.OVERFLOW_CMD];
   }
 
   help() {
