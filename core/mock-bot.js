@@ -132,6 +132,7 @@ module.exports = class MockBot {
       return []
     }
 
-    return await this.getUserNameFromId(matches[1])
+    const { name } = await this.getUserNameFromId(matches[1].toUpperCase()).user
+    return name
   }
 }
