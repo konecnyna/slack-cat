@@ -115,7 +115,7 @@ ${await this.createBody(learnData)}
   }
 
   async getLearns(data) {
-    const ip = await publicIp.v4();
+    const ip = config.getKey('host') || await publicIp.v4();
     const args = data.user_text ? `?text=${data.user_text}` : '';
     await this.bot.postMessage(
       data.channel,
