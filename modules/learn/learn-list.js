@@ -52,7 +52,7 @@ ${await this.createBody(learnData)}
   }
 
   async createBody(learnData) {
-    if (!learnData || !learnData.learn) {
+    if (!learnData || !learnData.length) {
       return `<div style="text-align:center">
       <h3>Couldn't find anything</h3>
       <img src="https://i.gifer.com/7VE.gif"/>
