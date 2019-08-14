@@ -122,6 +122,10 @@ module.exports = class MockBot {
   }
 
   async getUserNameFromCommand(data) {
+    if (!data.cmd) {
+      return [];
+    }
+
     const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
     const matches = data.cmd.match(userPattern);
     if (!matches) {

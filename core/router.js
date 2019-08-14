@@ -1,6 +1,6 @@
 'use strict'
 
-const cmdPattern = new RegExp(/\?([^\s]+)/, 'i')
+const cmdPattern = new RegExp(/\?\s?([^\s]+)/, 'i')
 const argPattern = new RegExp(/(\-\-([^ ]*\w))/, 'g')
 const { ALL } = require('./constants')
 

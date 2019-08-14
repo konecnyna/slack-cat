@@ -205,6 +205,10 @@ module.exports = class SlackCatBot {
   }
 
   async getUserNameFromCommand(data) {
+    if (!data.cmd) {
+      return [];
+    }
+
     const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
     const matches = data.cmd.match(userPattern);
     if (!matches) {
@@ -212,8 +216,8 @@ module.exports = class SlackCatBot {
     }
 
     const promises = matches.map(async it => {
-      return await this.getUserNameDisplayNameFromId(it)
-    })
+      return await this.getUserNameFromId(it)
+    });
     return await Promise.all(promises);
   }
 }
