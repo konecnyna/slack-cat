@@ -120,4 +120,17 @@ module.exports = class MockBot {
     const userData = await this.getUserNameFromId(id);
     return userData.user.profile.display_name || userData.user.name;
   }
+
+  async getUserNameFromCommand(data) {
+    const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
+    const matches = data.cmd.match(userPattern);
+    if (!matches) {
+      return []
+    }
+
+    const promises = matches.map(async it => {
+      return await this.getUserNameDisplayNameFromId(it)
+    })
+    return await Promise.all(promises);
+  }
 }
