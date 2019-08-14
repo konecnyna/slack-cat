@@ -215,6 +215,7 @@ module.exports = class SlackCatBot {
       return []
     }
 
-    return await this.getUserNameFromId(matches[1])
+    const { name } = await this.getUserNameFromId(matches[1].toUpperCase()).user
+    return name
   }
 }
