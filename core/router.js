@@ -31,7 +31,7 @@ module.exports = class Router {
     }
 
     if (data.type === 'member_joined_channel') {
-      this.handleMemeberJoin(data)
+      this.handleMemberJoin(data)
     }
 
     // Handle reactions
@@ -65,14 +65,14 @@ module.exports = class Router {
     this.handleMsg(handleMsg);
   }
 
-  handleMemeberJoin(data) {
+  handleMemberJoin(data) {
     Object.keys(this.memberJoinedModules).forEach(key => {
       const module = this.memberJoinedModules[key]
       if (
         module.getChannelId() === data.channel ||
         module.getChannelId() === ALL
       ) {
-        module.handleMemeberJoin(data, this.modules)
+        module.handleMemberJoin(data, this.modules)
       }
     })
   }
@@ -129,7 +129,7 @@ module.exports = class Router {
         data['channel'] = data.item.channel
       }
 
-      this.overflowModules[key].handle(data)
+      this.overflowModules[key].handleOverflowCmd(data)
     })
   }
 

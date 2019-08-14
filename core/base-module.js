@@ -12,55 +12,61 @@ module.exports = class BaseModule {
       throw new TypeError('Child class must implement `help()` method');
     }
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.MODULE,
       this.handle,
       'handle'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.REACTION,
       this.handleReaction,
       'handleReaction'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.MESSAGE_EDITED,
       this.handleMessageEdited,
       'handleMessageEdited'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
-      this.handleMemeberJoin,
-      'handleMemeberJoin'
+      this.handleMemberJoin,
+      'handleMemberJoin'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
+      BaseModule.TYPES.OVERFLOW_CMD,
+      this.handleOverflowCmd,
+      'handleOverflowCmd'
+    );
+
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.MEMBER_JOINED_CHANNEL,
       this.getChannelId,
       'getChannelId'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.RAW_INPUT,
       this.handleRawInput,
       'handleRawInput'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.DIALOG,
       this.onDialogSubmit,
       'onDialogSubmit'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.DIALOG,
       this.dialogCallbackId,
       'dialogCallbackId (Please make sure you setup dialogs correctly: https://github.com/konecnyna/slack-cat/wiki/Dialog )'
     );
 
-    this.checkForOverridenMethod(
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.ENDPOINT,
       this.createRoutes,
       'createRoutes'
@@ -69,7 +75,7 @@ module.exports = class BaseModule {
     this.bot = bot;
   }
 
-  checkForOverridenMethod(type, func, funcName) {
+  checkForOverriddenMethod(type, func, funcName) {
     if (this.getType().includes(type) && func === undefined) {
       throw new TypeError(`${type} module must implement ${funcName}`);
     }

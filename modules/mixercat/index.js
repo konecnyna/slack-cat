@@ -14,7 +14,7 @@ const DONE_PAIRING_MESSAGE =
   "I've just paired everyone for the week! Have fun! :smile:"
 
 module.exports = class MixerCat extends BaseStorageModule {
-  constructor (bot) {
+  constructor(bot) {
     super(bot)
     if (this.getConfig().cron) {
       new CronJob(
@@ -29,7 +29,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     }
   }
 
-  async handleMemeberJoin (data) {
+  async handleMemberJoin(data) {
     const welcomeMessage = this.getConfig().welcome_message
 
     if (welcomeMessage === null) {
@@ -40,7 +40,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     this.bot.postMessageToUser(userData.user.id, welcomeMessage)
   }
 
-  async pairPeople (channel) {
+  async pairPeople(channel) {
     const channelData = await this.bot.getChannelById(channel)
     const members = channelData.members.filter(it => {
       return it !== this.bot.botInfo.id
@@ -63,7 +63,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     this.bot.postMessage(channel, DONE_PAIRING_MESSAGE)
   }
 
-  async getExtraInfo (it) {
+  async getExtraInfo(it) {
     let memberOne = await this.bot.web.users.info({
       user: it[0]
     })
@@ -77,32 +77,32 @@ module.exports = class MixerCat extends BaseStorageModule {
     if (memberOne.title && memberTwo.title) {
       return `${memberOne.real_name} has the title of ${memberOne.title}\n${
         memberTwo.real_name
-      } has the title of ${memberTwo.title}`
+        } has the title of ${memberTwo.title}`
     }
 
     return ''
   }
 
-  registerSqliteModel () {
+  registerSqliteModel() {
     this.MixerCatModel = this.db.define('mixer-meetings', {
       memberOne: { type: this.Sequelize.STRING, primaryKey: true },
       memberTwo: { type: this.Sequelize.STRING, primaryKey: true }
     })
   }
 
-  getType () {
+  getType() {
     return [BaseModule.TYPES.SERVICE, BaseModule.TYPES.MEMBER_JOINED_CHANNEL]
   }
 
-  getConfig () {
+  getConfig() {
     return config.getKey('mixercat')
   }
 
-  getChannelId () {
+  getChannelId() {
     return this.getConfig().channel
   }
 
-  help () {
+  help() {
     return 'Get paired with a random person for coffee!'
   }
 }
