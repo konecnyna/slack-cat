@@ -52,9 +52,17 @@ ${await this.createBody(learnData)}
   }
 
   async createBody(learnData) {
+    if (!learnData || !learnData.learn) {
+      return `<div style="text-align:center">
+      <h3>Couldn't find anything</h3>
+      <img src="https://i.gifer.com/7VE.gif"/>
+      </div>
+      `
+    }
     const cards = [];
     let learns = [];
     let title = null;
+
 
     learnData.forEach(async (row, index) => {
       if (title === null) {
