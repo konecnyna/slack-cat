@@ -5,9 +5,9 @@ const publicIp = require('public-ip');
 
 module.exports = class WhereAmI extends BaseModule {
   async handle(data) {
-    this.bot.postMessage(data.channel, 'Resolving ip...');
+    await this.bot.postMessage(data.channel, 'Resolving ip...');
     const ip = config.getKey('host') || await publicIp.v4();
-    this.bot.postMessage(data.channel, `http://${ip}${config.getKey('port') ? ':' + config.getKey('port') : ''}`);
+    await this.bot.postMessage(data.channel, `http://${ip}${config.getKey('port') ? ':' + config.getKey('port') : ''}`);
   }
 
   help() {
