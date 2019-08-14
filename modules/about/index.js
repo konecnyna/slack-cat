@@ -58,7 +58,7 @@ module.exports = class About extends BaseModule {
   }
 
   async getHelpMessages() {
-    const ip = await publicIp.v4();
+    const ip = config.getKey('host') || await publicIp.v4();
     const port = config.getKey('port');
     return [
       {
