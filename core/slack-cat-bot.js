@@ -206,13 +206,13 @@ module.exports = class SlackCatBot {
 
   async getUserNameFromCommand(data) {
     if (!data.cmd) {
-      return [];
+      return null;
     }
 
     const rgx = /<@([^\s|\<]+)>/g
     const matches = rgx.exec(data.cmd);
     if (!matches) {
-      return []
+      return null
     }
 
     const slackUser = await this.getUserNameFromId(matches[1].toUpperCase())
