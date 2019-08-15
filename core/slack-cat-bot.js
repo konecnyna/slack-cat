@@ -204,13 +204,13 @@ module.exports = class SlackCatBot {
     return userData.user.profile.display_name || userData.user.name;
   }
 
-  async getUserNameFromCommand(data) {
-    if (!data.cmd) {
+  async getUserNameFromText(text) {
+    if (!text) {
       return null;
     }
 
     const rgx = /<@([^\s|\<]+)>/g
-    const matches = rgx.exec(data.cmd);
+    const matches = rgx.exec(text);
     if (!matches) {
       return null
     }
