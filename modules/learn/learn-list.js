@@ -124,7 +124,12 @@ ${await this.createBody(learnData)}
 
   async getLearns(data) {
     const ip = config.getKey('host') || await publicIp.v4();
-    const args = data.user_text ? `?text=${data.user_text}` : '';
+    const user = await this.bot.getUserNameFromCommand(data);
+    let args = data.user_text ? `?text=${data.user_text}` : '';
+    if (user) {
+      args = `?text=${user}`
+    }
+
     await this.bot.postMessage(
       data.channel,
       `http://${ip}:${config.getKey('port') || 3000}/${ROUTE_PATH}${args}`
