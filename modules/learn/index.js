@@ -43,7 +43,7 @@ module.exports = class Learn extends BaseStorageModule {
 
 
   async handleOverflowCmd(data) {
-    const user = await this.bot.getUserNameFromCommand(data);
+    const user = await this.bot.getUserNameFromText(data.cmd);
     let learns;
 
     if (user) {
