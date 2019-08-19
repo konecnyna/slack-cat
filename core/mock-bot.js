@@ -17,6 +17,14 @@ module.exports = class MockBot {
     }
   }
 
+  postMessageToUsers(userList, msg) {
+    if (this.callback) {
+      this.callback(msg)
+    } else {
+      console.log("Group message: ", userList, msg)
+    }
+  }
+
   postMessageToThread(id, text, ts, params) {
     if (this.callback) {
       this.callback(text)
