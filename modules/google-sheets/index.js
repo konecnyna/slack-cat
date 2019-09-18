@@ -2,7 +2,7 @@
 const GoogleSpreadsheet = require("google-spreadsheet");
 const GoogleSheetsUtil = require('./spread-sheet-util');
 const sheets = config.getKey('google_sheets');
-const DOC_URL = `https://docs.google.com/spreadsheets/d/${sheets.sheet_id}`
+const DOC_URL = `https://docs.google.com/spreadsheets/d/${sheets ? sheets.sheet_id : "" || ""}`
 const HELP_MSG = `
 Sorry couldn't find a sheet for this channel. Please visit: ${DOC_URL}
 and add a tab with the name being this channels id.
@@ -12,10 +12,16 @@ module.exports = class GoogleSheets extends BaseModule {
   constructor(bot) {
     super(bot)
     this.googleSheetsUtil = new GoogleSheetsUtil()
-    this.doc = new GoogleSpreadsheet(sheets.sheet_id);
+    if (sheets && sheets.sheet_id) {
+      this.doc = new GoogleSpreadsheet(sheets.sheet_id);
+    }
   }
 
   async handle(data) {
+    if (!this.doc) {
+      this.bot.postMessage(data.channel, HELP_MSG);
+      return;
+    }
     const sheet = await this.googleSheetsUtil.getSheetForChannel(this.doc, data.channel);
     if (!sheet) {
       this.bot.postMessageToThread(data.channel, HELP_MSG, data.ts);
