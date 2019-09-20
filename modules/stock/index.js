@@ -128,4 +128,8 @@ module.exports = class Stock extends BaseModule {
   help() {
     return 'Usage: `?stock <symbol>`';
   }
+
+  aliases() {
+    return ['stonk'];
+  }
 };
