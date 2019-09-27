@@ -14,20 +14,15 @@ module.exports = class TarotModule extends BaseModule {
   }
 
   async handle(data) {
-    if (data.user_text === undefined || data.user_text === "") {
-      this.bot.postMessage(data.channel, responsePrefix() + this.tarotCards.random());
-      return
-    }
-
     this.bot.postMessage(data.channel, responsePrefix() + this.tarotCards.describe(data.user_text));
   }
 
   help() {
-    return 'Usage: `?tarot` for a single random card, `?tarot <card name>` for a specific card. EX: `?tarot The Magician`, `?tarot fool`'
+    return 'Usage: `?tarot` for a single random card. You may also ask me for a specific spread, or to tell you more about a certain card, suit, or rank.'
   }
 
   aliases() {
-    return [':flower_playing_cards:']
+    return [':flower_playing_cards:', ' :flower_playing_cards:']
   }
 
   getType() {
