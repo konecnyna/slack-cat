@@ -19,21 +19,69 @@ const MaxSpreadItemDescLength = 50;
 
 const CrossSpread = new CardSpread("Cross", true,
 `
- a
-bcd
- e
+ d
+aeb
+ c
 `,
 {
-  a: "The meaning of the top card",
-  b: "The meaning of the left card",
-  c: "The meaning of the center card",
-  d: "The meaning of the right card",
-  e: "The meaning of the bottom card"
+  a: "Inner self",
+  b: "Outer self",
+  c: "Diminishing Influence",
+  d: "Rising Influence",
+  e: "True self"
+});
+
+const TimeSpread = new CardSpread("Time", true,
+`
+abc
+`,
+{
+  a: "Past",
+  b: "Present",
+  c: "Future"
+});
+
+const CrowleySpread = new CardSpread("Crowley", false,
+`
+mie dhl
+  bac
+njf gko
+`,
+{
+ a: "Querent",
+ b: "Main Influence",
+ c: "Main Influence",
+ d: "Future",
+ h: "Future",
+ l: "Future",
+ m: "Alternative Future",
+ i: "Alternative Future",
+ e: "Alternative Future",
+ n: "Lesson, Process",
+ j: "Lesson, Process",
+ f: "Lesson, Process",
+ g: "External Forces",
+ k: "External Forces",
+ o: "External Forces"
+});
+
+const TemperanceSpread = new CardSpread("Temperance", false,
+`
+abcd
+`,
+{
+ a: "Invitation",
+ b: "Feeling",
+ c: "Action",
+ d: "Release"
 });
 
 
 const allSpreads = {
-  "cross": CrossSpread
+  "cross": CrossSpread,
+  "time": TimeSpread,
+  "crowley": CrowleySpread,
+  "temperance": TemperanceSpread
 };
 
 function uniqueKeysInSpread(spreadString) {
