@@ -96,19 +96,19 @@ class SlackCat {
 
     if (process.argv.includes('member_joined_channel')) {
       router.handle(testMemberJoin)
-      return
-    }
-
-    if (process.argv[2].includes(':')) {
+    } else if (process.argv[2].includes(':')) {
       testReaction.reaction = process.argv[2].replace(new RegExp(':', 'g'), '')
       console.log('Executing reaction: ' + testReaction.reaction)
       router.handle(testReaction)
-      return
+    } else {
+      // Regular debug message
+      testMsg.text = process.argv.splice(2, process.argv.length - 1).join(' ')
+      router.handle(testMsg)
     }
 
-    // Regular debug message
-    testMsg.text = process.argv.splice(2, process.argv.length - 1).join(' ')
-    router.handle(testMsg)
+    if (!process.argv.includes('--with-server')) {
+      process.exit()
+    }
   }
 }
 
