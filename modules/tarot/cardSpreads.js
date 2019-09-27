@@ -81,7 +81,7 @@ const allSpreads = {
   "cross": CrossSpread,
   "time": TimeSpread,
   "crowley": CrowleySpread,
-  "temperance": TemperanceSpread
+  "temperance spread": TemperanceSpread
 };
 
 function uniqueKeysInSpread(spreadString) {
