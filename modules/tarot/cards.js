@@ -175,24 +175,42 @@ function formattedCardFullDescription(card) {
 }
 
 function formattedSpreadString(spread) {
-  let cards = [];
+  let cards = cardsForSpread(spread.numberOfCards);
+
+  let annotatedCards = [];
   let maxCardStringSize = 0;
   for (let cardIdx = 0; cardIdx < spread.numberOfCards; cardIdx++) {
-    const card = getRandomCard();
+    const card = cards[cardIdx];
     const isInverted = spread.allowsInversion ? randomInversion() : false;
     const cardString = spreadFormattedCard(card);
     const cardStringSize = cardString.length + (isInverted ? 3 : 0);
     const inversionString = isInverted ? " 🔄" : "";
     maxCardStringSize = Math.max(cardStringSize, maxCardStringSize);
-    cards.push({
+    annotatedCards.push({
       "card": card,
       "inverted": isInverted,
       "cardString": cardString + inversionString,
       "cardStringSize": cardStringSize
     });
   }
-  return buildSpreadString(cards, spread, maxCardStringSize);
+  return buildSpreadString(annotatedCards, spread, maxCardStringSize);
 }
+
+function cardsForSpread(count) {
+  let allCardsKeys = Object.keys(allCards);
+  shuffle(allCardsKeys);
+
+  let cards = [];
+  for (let idx = 0; idx < count; idx++) {
+    cards.push(allCards[allCardsKeys.shift()]);
+  }
+  return cards;
+}
+
+function shuffle(array) {
+  array.sort(() => Math.random() - 0.5);
+}
+
 
 function buildSpreadString(cards, spread, cardStringSize) {
 
