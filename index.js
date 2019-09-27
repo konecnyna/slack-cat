@@ -79,7 +79,10 @@ class SlackCat {
     // Reaction debug msg
     const MockBot = require(path.join(__dirname + '/core', 'mock-bot.js'))
     let server
-    if (process.argv.includes('--with-server')) {
+    
+    // Copy array.
+    const args = process.argv.slice(0) 
+    if (args.includes('--with-server')) {      
       server = new Server()
     }
 
@@ -94,18 +97,18 @@ class SlackCat {
       server.start()
     }
 
-    if (process.argv.includes('member_joined_channel')) {
+    if (args.includes('member_joined_channel')) {
       router.handle(testMemberJoin)
-    } else if (process.argv[2].includes(':')) {
-      testReaction.reaction = process.argv[2].replace(new RegExp(':', 'g'), '')
+    } else if (args[2].includes(':')) {
+      testReaction.reaction = args[2].replace(new RegExp(':', 'g'), '')
       console.log('Executing reaction: ' + testReaction.reaction)
       router.handle(testReaction)
     } else {
       // Regular debug message
-      testMsg.text = process.argv.splice(2, process.argv.length - 1).join(' ')
+      testMsg.text = args.splice(2, args.length - 1).join(' ')
       router.handle(testMsg)
     }
-
+    
     if (!process.argv.includes('--with-server')) {
       process.exit()
     }
