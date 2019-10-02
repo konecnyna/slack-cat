@@ -14,7 +14,7 @@ const overrides = [
   },
   {
     month: 10,
-    days: [27, 28, 29, 30, 31],
+    days: makeRange(1, 31),
     botParams: {
       username: 'SpookyCat',
       icon_emoji: ':jack_o_lantern:',
@@ -33,7 +33,7 @@ const overrides = [
 ]
 
 module.exports = class HolidayOverride {
-  getOverride () {
+  getOverride() {
     const override = overrides.filter(it => {
       return this.validateDate(it.month, it.days)
     })
@@ -45,7 +45,7 @@ module.exports = class HolidayOverride {
     return override[0].botParams
   }
 
-  validateDate (month, days) {
+  validateDate(month, days) {
     const now = new Date()
     return days.includes(now.getDate()) && now.getMonth() == month - 1
   }
