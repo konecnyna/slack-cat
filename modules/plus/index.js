@@ -132,6 +132,10 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
+    this.plusUserFromReaction(data);
+  }
+
+  plusUserFromReaction(data) {
     if (cache.get(this.getPlusKey(data)) != null) {
       // try to dup pluses
       return;
