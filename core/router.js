@@ -104,7 +104,6 @@ module.exports = class Router {
 
   handleCmdMessage(data) {
     const matches = this.addExtras(data)
-
     if (matches && matches[1].toLowerCase() in this.modules) {
       const module = this.modules[data.cmd]
       if (
