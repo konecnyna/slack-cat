@@ -142,12 +142,12 @@ module.exports = class Plus extends BaseStorageModule {
     }
 
     const userName = await this.bot.getUserNameFromId(data.item_user);
+    const user = userName.user.profile.display_name || userName.user.name;
     if (data.user === data.item_user) {
-      this.bot.postMessageToThread(data.item.channel, `Stop tryna hack ${userName}`);
+      this.bot.postMessageToThread(data.item.channel, `Stop tryna hack ${user}`, data.item.ts);
       return;
     }
 
-    const user = userName.user.profile.display_name || userName.user.name;
     const pluses = await this.plusHelper.plusUser(user);
     cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => { });
 
