@@ -143,7 +143,7 @@ module.exports = class Plus extends BaseStorageModule {
 
     const userName = await this.bot.getUserNameFromId(data.item_user);
     if (data.user === data.item_user) {
-      this.bot.postMessageToThread(data.channel, `Stop tryna hack ${userName}`);
+      this.bot.postMessageToThread(data.item.channel, `Stop tryna hack ${userName}`);
       return;
     }
 
