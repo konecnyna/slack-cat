@@ -136,6 +136,10 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async plusUserFromReaction(data) {
+    if (hacker(data)) {
+      return
+    }
+
     if (cache.get(this.getPlusKey(data)) != null) {
       // try to dup pluses
       return;
