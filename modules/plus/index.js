@@ -136,7 +136,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async plusUserFromReaction(data) {
-    if (hacker(data)) {
+    if (this.hacker(data)) {
       return
     }
 
