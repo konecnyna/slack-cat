@@ -26,6 +26,7 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
+
     const matches = data.user_text.match(userPattern);
     if (data.cmd === 'pluses') {
       this.getUserPluses(data, matches);
@@ -44,7 +45,8 @@ module.exports = class Plus extends BaseStorageModule {
     const pluses = await this.plusHelper.displayPlusesForUser(user);
     this.bot.postMessageToThread(
       data.channel,
-      `${data.user_text} has ${pluses} pluses!`
+      `${data.user_text} has ${pluses} pluses!`,
+      data.ts
     );
   }
 
@@ -64,7 +66,7 @@ module.exports = class Plus extends BaseStorageModule {
   async plusUser(data, matches) {
     if (this.hacker(data)) {
       // Person is being an ahole and trying to plus themselves!
-      this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!");
+      this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!", data.item.ts);
       return;
     }
 
@@ -75,7 +77,8 @@ module.exports = class Plus extends BaseStorageModule {
       );
       this.bot.postMessageToThread(
         data.channel,
-        `${data.user_text} now has ${pluses} pluses!`
+        `${data.user_text} now has ${pluses} pluses!`,
+        data.ts
       );
       return;
     }
@@ -181,6 +184,6 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   postErrorMessage(data) {
-    this.bot.postMessageToThread(data.channel, 'Something went wrong...');
+    this.bot.postMessageToThread(data.channel, 'Something went wrong...', data.ts || data.item.ts);
   }
 };
