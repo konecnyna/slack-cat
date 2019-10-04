@@ -147,7 +147,6 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
-    const userName = await this.bot.getUserNameFromId(data.item_user);
     const user = userName.user.profile.display_name || userName.user.name;
     const pluses = await this.plusHelper.plusUser(user);
     cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => { });
