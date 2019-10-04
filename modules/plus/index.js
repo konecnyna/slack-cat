@@ -42,7 +42,7 @@ module.exports = class Plus extends BaseStorageModule {
     }
 
     const pluses = await this.plusHelper.displayPlusesForUser(user);
-    this.bot.postMessage(
+    this.bot.postMessageToThread(
       data.channel,
       `${data.user_text} has ${pluses} pluses!`
     );
@@ -64,7 +64,7 @@ module.exports = class Plus extends BaseStorageModule {
   async plusUser(data, matches) {
     if (this.hacker(data)) {
       // Person is being an ahole and trying to plus themselves!
-      this.bot.postMessage(data.channel, "You'll go blind like that kid!");
+      this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!");
       return;
     }
 
@@ -73,7 +73,7 @@ module.exports = class Plus extends BaseStorageModule {
       const pluses = await this.plusHelper.plusUser(
         data.user_text.toLowerCase()
       );
-      this.bot.postMessage(
+      this.bot.postMessageToThread(
         data.channel,
         `${data.user_text} now has ${pluses} pluses!`
       );
@@ -136,12 +136,14 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async plusUserFromReaction(data) {
-    if (this.hacker(data)) {
-      return
-    }
-
     if (cache.get(this.getPlusKey(data)) != null) {
       // try to dup pluses
+      return;
+    }
+
+    const userName = await this.bot.getUserNameFromId(data.item_user);
+    if (data.user === data.item_user) {
+      this.bot.postMessageToThread(data.channel, `Stop tryna hack ${userName}`);
       return;
     }
 
@@ -180,6 +182,6 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   postErrorMessage(data) {
-    this.bot.postMessage(data.channel, 'Something went wrong...');
+    this.bot.postMessageToThread(data.channel, 'Something went wrong...');
   }
 };
