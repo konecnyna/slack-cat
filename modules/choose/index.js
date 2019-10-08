@@ -6,8 +6,7 @@ module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
       const randUser = await chooser.chooseRandomUser(this.bot, data.channel);
-      const name = await this.bot.resolveUserNameFromId(randUser);
-      this.bot.postMessage(data.channel, name);
+      this.bot.postMessage(data.channel, `<@${randUser}>`);
     } catch (e) {
       console.log(e, data);
       this.bot.postMessage(
