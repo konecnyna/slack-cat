@@ -5,7 +5,7 @@ module.exports = class Chooser {
    * This will throw if it's in a locked channel.
    */
   async chooseRandomUser(bot, channel) {
-    const channelData = await bot.getChannelById(data.channel);
+    const channelData = await bot.getChannelById(channel);
     if (!channelData.members) {
       return false;
     }
