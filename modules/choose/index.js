@@ -9,7 +9,7 @@ module.exports = class Choose extends BaseModule {
       const name = await this.bot.resolveUserNameFromId(randUser);
       this.bot.postMessage(data.channel, name);
     } catch (e) {
-      console.log(e);
+      console.log(e, data);
       this.bot.postMessage(
         data.channel,
         "Couldn't find anyone. Is this a private channel? If so I can't see the user list, ya bozo."
