@@ -5,7 +5,7 @@ const chooser = new Chooser();
 module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
-      const randUser = chooser.chooseRandomUser(this.bot, data.channel);
+      const randUser = await chooser.chooseRandomUser(this.bot, data.channel);
       const name = await this.bot.resolveUserNameFromId(randUser);
       this.bot.postMessage(data.channel, name);
     } catch (e) {
