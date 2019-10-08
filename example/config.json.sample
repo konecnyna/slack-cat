@@ -23,7 +23,7 @@
    },
    "node_env":"production",
    "port":80,
-   "slack_verification_token":"****",
+   //https://api.slack.com/apps/AA29DJCES/oauth?
    "slack_access_token":"xoxb-***",
    "google_sheets": {
     "private_key": "-----BEGIN PRIVATE KEY----------END PRIVATE KEY-----\n",
