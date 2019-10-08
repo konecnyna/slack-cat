@@ -108,10 +108,6 @@ class SlackCat {
       testMsg.text = args.splice(2, args.length - 1).join(' ')
       router.handle(testMsg)
     }
-
-    if (!process.argv.includes('--with-server')) {
-      process.exit()
-    }
   }
 }
 
