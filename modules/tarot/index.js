@@ -14,7 +14,10 @@ module.exports = class TarotModule extends BaseModule {
   }
 
   async handle(data) {
-    this.bot.postMessage(data.channel, responsePrefix() + this.tarotCards.describe(data.user_text));
+    this.bot.postMessageWithParams(data.channel, responsePrefix() + this.tarotCards.describe(data.user_text), {
+        icon_emoji: ':blackcat:',
+        username: 'BlackCat',
+    });
   }
 
   help() {

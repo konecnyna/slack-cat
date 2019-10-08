@@ -222,6 +222,10 @@ function buildSpreadString(cards, spread, cardStringSize) {
   const alignedStringWidth = Math.max(spread.longestItem, cardStringSize) + 2;
   const spacer = " ".repeat(alignedStringWidth);
 
+  let halfSpacerCount = 0;
+  const evenHalfSpacer = " ".repeat(Math.floor(alignedStringWidth / 2));
+  const oddHalfSpacer = " ".repeat(Math.ceil(alignedStringWidth / 2));
+
   for (let tileIdx = 0; tileIdx < spread.shape.length; tileIdx++) {
     const tile = spread.shape.charAt(tileIdx);
     if (tile === " ") {
@@ -229,11 +233,19 @@ function buildSpreadString(cards, spread, cardStringSize) {
       currentPositionLine += spacer;
       continue;
     }
+    if (tile === "_") {
+      const halfSpacer = (halfSpacerCount % 2 == 0) ? evenHalfSpacer : oddHalfSpacer;
+      currentNameLine += halfSpacer;
+      currentPositionLine += halfSpacer;
+      halfSpacerCount += 1;
+      continue;
+    }
     if (tile === "\n") {
       spreadString += currentNameLine + "\n";
       spreadString += currentPositionLine + "\n\n";
       currentNameLine = "";
       currentPositionLine = "";
+      halfSpacerCount = 0;
       continue;
     }
     const card = cards.shift();

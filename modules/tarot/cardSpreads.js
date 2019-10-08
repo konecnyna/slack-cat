@@ -76,19 +76,41 @@ abcd
  d: "Release"
 });
 
+const CelticCrossSpread = new CardSpread("Celtic Cross", false,
+`
+  e_  _j
+      i
+f_ab_c
+      h
+  d_  _g
+`,
+{
+ a: "Present",
+ b: "Immediate Challenge",
+ c: "Distant Past",
+ d: "Recent Past",
+ e: "Best Outcome",
+ f: "Immediate Future",
+ g: "Factors",
+ h: "External Influences",
+ i: "Hopes and Fears",
+ j: "Final Outcome"
+});
+
 
 const allSpreads = {
   "cross": CrossSpread,
   "time": TimeSpread,
   "crowley": CrowleySpread,
-  "temperance spread": TemperanceSpread
+  "charlyn": TemperanceSpread,
+  "celtic": CelticCrossSpread
 };
 
 function uniqueKeysInSpread(spreadString) {
   let foundItems = {};
   for (let shapeIdx = 0; shapeIdx < spreadString.length; shapeIdx++) {
     const char = spreadString.charAt(shapeIdx);
-    if (char === " " || char === "\n") {
+    if (char === " " || char === "\n" || char === "_") {
       continue;
     }
     if (foundItems[char] !== undefined) {
