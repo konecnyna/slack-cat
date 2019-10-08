@@ -7,7 +7,7 @@ module.exports = class Chooser {
   async chooseRandomUser(bot, channel) {
     const channelData = await bot.getChannelById(channel)
     const members = channelData.members.filter(it => {
-      return it !== this.bot.botInfo.id
+      return it !== bot.botInfo.id
     })
 
     if (!members) {
