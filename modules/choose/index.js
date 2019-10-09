@@ -6,7 +6,7 @@ module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
       const userGroup = new RegExp(/^(?<id>.*)|/);
-      const match = text.match(userGroup)
+      const match = data.user_text.match(userGroup)
       let randUser;
       if (match) {
         const groupInfo = await this.bot.web.usergroups.user.list(match.groups.id)
