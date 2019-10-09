@@ -22,10 +22,10 @@ module.exports = class EmojifontModule extends BaseModule {
   }
 
   aliases() {
-    return ['emojify']
+    return ['emojify', 'ef']
   }
 
   getType() {
-      return [BaseModule.TYPES.MODULE];
+    return [BaseModule.TYPES.MODULE];
   }
 }
