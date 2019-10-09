@@ -26,12 +26,12 @@
    //https://api.slack.com/apps/AA29DJCES/oauth?
    "slack_access_token":"xoxb-***",
    "google_sheets": {
-    "private_key": "-----BEGIN PRIVATE KEY----------END PRIVATE KEY-----\n",
-    "client_email": "",
-    "sheet_id": "YAMOM",
-    "emojifont": {
-      "sheet_id": "ItsTheIDInTheURL11111abcdefg123456",
-      "sheet_name": "TheNameOfTheSheetTab"
-    }
-  },
+     "private_key": "-----BEGIN PRIVATE KEY----------END PRIVATE KEY-----\n",
+     "client_email": "",
+     "sheet_id": "YAMOM",
+   },
+   "emojifont": {
+     "sheet_id": "ItsTheIDInTheURL11111abcdefg123456",
+     "sheet_name": "TheNameOfTheSheetTab"
+   }
 }
