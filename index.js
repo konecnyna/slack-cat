@@ -5,7 +5,7 @@ const Router = require('./core/router.js')
 const Server = require('./core/server')
 const MoudleLoader = require('./core/module-loader')
 const SlackCatBot = require('./core/slack-cat-bot.js')
-const { RTMClient } = require('@slack/client')
+const { RTMClient } = require('@slack/rtm-api');
 const Sequelize = require('sequelize');
 
 // Global Base Modules.

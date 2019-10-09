@@ -13,22 +13,22 @@ class Node {
 
 function walkTree(node, key, depth, callback) {
   callback(node, key, depth);
-  Object.keys(node.children).forEach(function(childKey){
-    walkTree(node.children[childKey], childKey, depth+1);
+  Object.keys(node.children).forEach(function (childKey) {
+    walkTree(node.children[childKey], childKey, depth + 1);
   });
 }
 
 function printNodeTree(root) {
   walkTree(root, "(ROOT)", 0, function (node, nodeKey, depth) {
     const spacer = "--".repeat(depth) + ">";
-    console.log(spacer + " " + key +", Values: " + node.values);
+    console.log(spacer + " " + key + ", Values: " + node.values);
   });
 }
 
 function theWorksString() {
   let outString = "";
-  Object.keys(rawLetterEmojiTable).forEach(function (key){
-    outString += "Key: `" + key +"`, emojis: " + rawLetterEmojiTable[key] + "\n";
+  Object.keys(rawLetterEmojiTable).forEach(function (key) {
+    outString += "Key: `" + key + "`, emojis: " + rawLetterEmojiTable[key] + "\n";
   });
   return outString;
 }
@@ -137,7 +137,7 @@ const rawLetterEmojiTable = {
 
 const letterEmojiTree = function buildEmojiTable(letterEmojiTable) {
   let rootNode = new Node(null, {}, null);
-  Object.keys(letterEmojiTable).forEach(function (tableKey){
+  Object.keys(letterEmojiTable).forEach(function (tableKey) {
     const valuesForKey = letterEmojiTable[tableKey];
     let bottomMostNode = getBottomMostNode(rootNode, tableKey);
     bottomMostNode.values = valuesForKey;
