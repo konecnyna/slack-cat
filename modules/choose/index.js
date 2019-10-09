@@ -1,15 +1,17 @@
 'use strict';
 const Chooser = require('./Chooser');
 const chooser = new Chooser();
+< !subteam ^ SD3D3KYLF |@webdevs>
 
-module.exports = class Choose extends BaseModule {
+  module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
-      const userArg = this.getUserArg(data);
+      const userGroup = new RegExp(/^(?<id>.*)|/);
+      const match = text.match(userGroup)
       let randUser;
-      if (userArg) {
-        const groupInfo = await this.web.usergroups.user.list(userArg[0])
-        randUser = chooser.getRandomUser(groupInfo.userss);
+      if (match) {
+        const groupInfo = await this.bot.web.usergroups.user.list(match.groups.id)
+        randUser = chooser.getRandomUser(groupInfo.users);
       } else {
         randUser = await chooser.chooseRandomUser(this.bot, data.channel);
       }
