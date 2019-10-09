@@ -215,8 +215,4 @@ module.exports = class EmojiFont {
 
     return outString;
   }
-
-  aliases() {
-    return ["ef"];
-  }
 }
