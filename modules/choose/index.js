@@ -1,9 +1,8 @@
 'use strict';
 const Chooser = require('./Chooser');
 const chooser = new Chooser();
-< !subteam ^ SD3D3KYLF |@webdevs>
 
-  module.exports = class Choose extends BaseModule {
+module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
       const userGroup = new RegExp(/^(?<id>.*)|/);
