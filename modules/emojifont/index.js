@@ -4,15 +4,15 @@ const EmojiFont = require('./emojifont.js');
 const GoogleSpreadsheet = require("google-spreadsheet");
 const GoogleSheetsUtil = require('../google-sheets/spread-sheet-util');
 const HELP_MSG = "Sorry couldn't find the EmojiFont sheet.";
-const SHEET_ID = "1PXPOWgYbONZv5PRc3yT8rZ2AG6iA2qy5cKtdWp2wbaE";
-const SHEET_TAB_ID = "EmojiFontLookupTable"
+const sheetParams = config.getKey("emojifont");
+const DOC_URL = `https://docs.google.com/spreadsheets/d/${sheetParams ? sheetParams.sheet_id : "" || ""}`
 
 module.exports = class EmojifontModule extends BaseModule {
 
   constructor(bot) {
     super(bot);
     this.googleSheetsUtil = new GoogleSheetsUtil();
-    this.doc = new GoogleSpreadsheet(SHEET_ID);
+    this.doc = new GoogleSpreadsheet(sheetParams.sheet_id);
   }
 
   async handle(data) {
@@ -21,7 +21,7 @@ module.exports = class EmojifontModule extends BaseModule {
       return;
     }
 
-    const sheet = await this.googleSheetsUtil.getSheetForChannel(this.doc, SHEET_TAB_ID);
+    const sheet = await this.googleSheetsUtil.getSheetForChannel(this.doc, sheetParams.sheet_name);
     if (!sheet) {
       this.bot.postMessageToThread(data.channel, HELP_MSG, data.ts);
       return;
@@ -45,7 +45,7 @@ module.exports = class EmojifontModule extends BaseModule {
   }
 
   help() {
-    return 'Usage: `?ef my phrase` to translate your phrase to emoji. Use ?ef --theworks for the works. Also aliased to ?emojify and ?emojifont. Add more emojis at https://docs.google.com/spreadsheets/d/1PXPOWgYbONZv5PRc3yT8rZ2AG6iA2qy5cKtdWp2wbaE/edit#gid=0'
+    return 'Usage: `?ef my phrase` to translate your phrase to emoji. Use ?ef --theworks for the works. Also aliased to ?emojify and ?emojifont. Add more emojis at ' + DOC_URL;
   }
 
   aliases() {

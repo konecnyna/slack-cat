@@ -1,21 +1,21 @@
-{     
+{
    "bot_name": "test",
    "bot_emoji": ":cat:",
    "bot_icon_url": "http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png",
    "darksky_api":"***",
    "google_geocode_api":"***",
    "pager_duty_api":"***",
-   "jira_api":{  
+   "jira_api":{
       "host":"***.atlassian.net",
       "username":"****",
       "password":"**"
    },
-   "github":{  
+   "github":{
       "username":"***",
       "password":"****"
    },
    "mta":"***",
-   "modules_blacklist":[  
+   "modules_blacklist":[
 
    ],
    "channels_blacklist":{
@@ -28,6 +28,10 @@
    "google_sheets": {
     "private_key": "-----BEGIN PRIVATE KEY----------END PRIVATE KEY-----\n",
     "client_email": "",
-    "sheet_id": "YAMOM"
+    "sheet_id": "YAMOM",
+    "emojifont": {
+      "sheet_id": "ItsTheIDInTheURL11111abcdefg123456",
+      "sheet_name": "TheNameOfTheSheetTab"
+    }
   },
 }
