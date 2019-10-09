@@ -6,7 +6,8 @@ const HolidayOverride = require('./HolidayOverride')
 module.exports = class SlackCatBot {
   constructor(data) {
     this.botInfo = data.self
-    this.web = new WebClient(config.getKey('slack_access_token'))
+    this.web = new WebClient(config.getKey('slack_access_token'));
+    this.workSpace = new WebClient(config.getKey('slack_access_token_oauth'))
     this.botParams = {}
     this.setupBotParams()
   }
