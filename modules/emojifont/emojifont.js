@@ -23,7 +23,7 @@ const lookupTableOverrides = {
 };
 
 function theWorksString(lookupTable) {
-  let outString = "*The Works*:";
+  let outString = "*The Works*:\n";
   Object.keys(lookupTable).forEach(function (key) {
     outString += "Key: `" + key + "`, emojis: " + lookupTable[key] + "\n";
   });
