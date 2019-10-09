@@ -5,11 +5,10 @@ const chooser = new Chooser();
 module.exports = class Choose extends BaseModule {
   async handle(data) {
     try {
-      const userGroup = new RegExp(/^(?<id>.*)|/);
-      const match = data.user_text.match(userGroup)
+      const match = data.user_text.match(new RegExp(/^(?<id>.*)|/))
       let randUser;
       if (match) {
-        const groupInfo = await this.bot.web.usergroups.user.list(match.groups.id)
+        const groupInfo = await this.workSpace.web.usergroups.users.list("SD3D3KYLF")
         randUser = chooser.getRandomUser(groupInfo.users);
       } else {
         randUser = await chooser.chooseRandomUser(this.bot, data.channel);
