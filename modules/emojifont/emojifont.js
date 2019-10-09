@@ -1,3 +1,4 @@
+
 class Node {
   constructor(values, children, parent) {
     this.values = values;
@@ -33,7 +34,6 @@ function theWorksString() {
 }
 
 function getBottomMostNode(root, key) {
-
   let currentNode = root;
   for (let keyIdx = 0; keyIdx < key.length; keyIdx++) {
     let currentKeyPiece = key.charAt(keyIdx);
@@ -93,6 +93,7 @@ const rawLetterEmojiTable = {
   "!?": [":interrobang:"],
   "$": [":coin:"],
   "+": [":heavy_plus_sign:"],
+  " ": [":transparent:"],
 
   "ab": [":ab:"],
   "abc": [":abc:"],
@@ -107,7 +108,7 @@ const rawLetterEmojiTable = {
   "id": [":id:"],
   "idk": [":idk:"],
   "js": [":js:"],
-  "la": [":la:"],
+  "la": [":losangeles:"],
   "lb": [":lb:"],
   "mood": [":mood:"],
   "mta": [":mta:"],
@@ -159,7 +160,7 @@ function validateLetterEmojiTree(tree) {
 module.exports = class EmojiFont {
 
   constructor() {
-    // pass
+    //pass
   }
 
   giveEmTheWorks() {
