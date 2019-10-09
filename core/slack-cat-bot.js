@@ -1,9 +1,7 @@
 'use strict'
 const extend = require('extend')
-const { WebClient } = require('@slack/client')
+const { WebClient } = require('@slack/web-api');
 const HolidayOverride = require('./HolidayOverride')
-
-
 
 module.exports = class SlackCatBot {
   constructor(data) {

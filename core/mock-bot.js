@@ -5,6 +5,9 @@ const { user } = require('./models/MockMessageData')
 module.exports = class MockBot {
   constructor() {
     this.name = 'defkon'
+    this.botInfo = {
+      id: 420
+    }
   }
 
   postMessage(channelId, msg) {
@@ -79,6 +82,13 @@ module.exports = class MockBot {
       this.callback(params)
     }
     console.log(JSON.stringify(params, null, 2))
+  }
+
+  getChannelById(channel) {
+    return {
+      id: "123",
+      members: ['1123', '123123123']
+    }
   }
 
   // Prob a better way of doing this? Handle all the request/async functions.
