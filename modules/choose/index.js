@@ -17,10 +17,9 @@ module.exports = class Choose extends BaseModule {
       }
       this.bot.postMessage(data.channel, `<@${randUser}>`);
     } catch (e) {
-      console.log(e, data);
       this.bot.postMessage(
         data.channel,
-        "Couldn't find anyone. Is this a private channel? If so I can't see the user list, ya bozo."
+        `${e.message}, ya bozo.`
       );
     }
   }
