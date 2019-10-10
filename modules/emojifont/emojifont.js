@@ -1,3 +1,5 @@
+'use strict';
+
 class Node {
   constructor(values, children, parent) {
     this.values = values;
@@ -10,30 +12,25 @@ class Node {
   }
 }
 
-function walkTree(node, key, depth, callback) {
-  callback(node, key, depth);
-  Object.keys(node.children).forEach(function (childKey) {
-    walkTree(node.children[childKey], childKey, depth + 1);
-  });
-}
+// stuff to provide to every emoji font
+const lookupTableDefaults = {
+  " ": ["  "] // double wide spaces
+};
 
-function printNodeTree(root) {
-  walkTree(root, "(ROOT)", 0, function (node, nodeKey, depth) {
-    const spacer = "--".repeat(depth) + ">";
-    console.log(spacer + " " + key + ", Values: " + node.values);
-  });
-}
+// stuff to force on to every emoji font;
+const lookupTableOverrides = {
+  "": undefined // avoid recurse to death scenario, undefine empty string
+};
 
-function theWorksString() {
-  let outString = "";
-  Object.keys(rawLetterEmojiTable).forEach(function (key) {
-    outString += "Key: `" + key + "`, emojis: " + rawLetterEmojiTable[key] + "\n";
+function theWorksString(lookupTable) {
+  let outString = "*The Works*:\n";
+  Object.keys(lookupTable).forEach(function (key) {
+    outString += "Key: `" + key + "`, emojis: " + lookupTable[key] + "\n";
   });
   return outString;
 }
 
 function getBottomMostNode(root, key) {
-
   let currentNode = root;
   for (let keyIdx = 0; keyIdx < key.length; keyIdx++) {
     let currentKeyPiece = key.charAt(keyIdx);
@@ -47,94 +44,7 @@ function getBottomMostNode(root, key) {
   return currentNode;
 }
 
-const rawLetterEmojiTable = {
-  "a": [":atrain:", ":a:"],
-  "b": [":btrain:", ":app-man:", ":bitcoin:", ":b:"],
-  "c": [":ctrain:", ":copyright:"],
-  "d": [":dtrain:"],
-  "e": [":etrain:", ":ie:", ":emacs:"],
-  "f": [":ftrain:"],
-  "g": [":gtrain:", ":grammar-nazi:", ":gryffindor:"],
-  "h": [":hufflepuff:"],
-  "i": [":information_source:"],
-  "j": [":jtrain:"],
-  "k": [":k:", ":potassium:"],
-  "l": [":ltrain:", ":ltc:"],
-  "m": [":mtrain:", ":part_alternation_mark:", ":m:"],
-  "n": [":ntrain:"],
-  "o": [":O:", ":o2:", ":donut-simpsons:"],
-  "p": [":parking:"],
-  "q": [":qtrain:"],
-  "r": [":rtrain:", ":registered:", ":ravenclaw:"],
-  "s": [":stash:", ":strek:", ":sophos:", ":wisdomb:", ":stach:"],
-  "t": [":ttrain:", ":shrek-tpose:", ":jimmy-tpose:", ":waluigi-tpose:", ":t:"],
-  "u": [":ophiuchus:"],
-  "v": [":vine:", ":vim:"],
-  "w": [":wtrain:", ":wordpress:", ":wutang:"],
-  "x": [":x:", ":heavy_multiplication_x:", ":negative_squared_cross_mark:"],
-  "z": [":ztrain:", ":teamzissous:"],
-
-  "1": [":one:", ":1train:"],
-  "2": [":two:", ":2train:"],
-  "3": [":three:", ":3train:"],
-  "4": [":four:", ":4train:"],
-  "5": [":five:", ":5train:", ":html:"],
-  "6": [":six:", ":6train:"],
-  "7": [":seven:", ":7train:"],
-  "8": [":eight:"],
-  "9": [":nine:"],
-  "10": [":keycap_ten:"],
-  "100": [":100:"],
-  "0": [":000:", ":zero:"],
-
-  "?": [":question:", ":grey_question:", ":uup:", ":question_block:"],
-  "!": [":warning:", ":exclamation:", ":grey_exclamation:"],
-  "!!": [":bangbang:"],
-  "!?": [":interrobang:"],
-  "$": [":coin:"],
-  "+": [":heavy_plus_sign:"],
-
-  "ab": [":ab:"],
-  "abc": [":abc:"],
-  "atm": [":atm:"],
-  "back": [":back:"],
-  "brb": [":brb-sign:"],
-  "cl": [":cl:"],
-  "cta": [":cta:"],
-  "deep": [":deep:"],
-  "dope": [":dope:", ":dope-txt:", ":dope_marquee:"],
-  "end": [":end:"],
-  "id": [":id:"],
-  "idk": [":idk:"],
-  "js": [":js:"],
-  "la": [":la:"],
-  "lb": [":lb:"],
-  "mood": [":mood:"],
-  "mta": [":mta:"],
-  "nay": [":nay:"],
-  "new": [":new:"],
-  "nice": [":nice:"],
-  "ng": [":ng:"],
-  "ny": [":giants:"],
-  "ok": [":ok:"],
-  "on": [":on:"],
-  "oof": [":oof:"],
-  "rip": [":grave:"],
-  "soon": [":soon:"],
-  "sos": [":sos:"],
-  "tm": [":tm:"],
-  "top": [":top:"],
-  "up": [":up:"],
-  "ups": [":ups:"],
-  "vs": [":vs:"],
-  "wc": [":wc:"],
-  "we": [":wework:"],
-  "win": [":win:"],
-  "woke": [":woke:"],
-  "yay": [":yay:"]
-};
-
-const letterEmojiTree = function buildEmojiTable(letterEmojiTable) {
+function buildEmojiTree(letterEmojiTable) {
   let rootNode = new Node(null, {}, null);
   Object.keys(letterEmojiTable).forEach(function (tableKey) {
     const valuesForKey = letterEmojiTable[tableKey];
@@ -142,7 +52,7 @@ const letterEmojiTree = function buildEmojiTable(letterEmojiTable) {
     bottomMostNode.values = valuesForKey;
   });
   return rootNode;
-}(rawLetterEmojiTable);
+};
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -152,18 +62,47 @@ function randomEmojiFrom(list) {
   return list[getRandomInt(list.length)];
 }
 
-function validateLetterEmojiTree(tree) {
-  printNodeTree(tree, "(ROOT)", 0);
-}
-
 module.exports = class EmojiFont {
 
-  constructor() {
-    // pass
+  constructor(sheetCells) {
+    let lookupTable = {};
+    let gylphOptionMap = {};
+    let toRepeatList = [];
+
+    const processCell = (cell) => {
+      if (cell.value === "" || cell.value === null) {
+        return;
+      }
+
+      if (cell.y <= 1) {
+        // header cell, pass
+        return;
+      }
+      if (cell.x === 1 && lookupTable[cell.value] === undefined) {
+        // gylph cell, add to list
+        lookupTable[cell.value] = [];
+        gylphOptionMap[cell.y] = cell.value;
+      } else {
+        // its an option for a glyph
+        let gylphName = gylphOptionMap[cell.y];
+        if (gylphName === undefined) {
+          toRepeatList.push(cell);
+        }
+
+        lookupTable[gylphName].push(cell.value);
+      }
+    };
+    sheetCells.forEach(processCell);
+    toRepeatList.forEach(processCell); // if input is sorted this is redundant
+
+    lookupTable = {...lookupTableDefaults, ...lookupTable, ...lookupTableOverrides };
+
+    this.letterEmojiTree = buildEmojiTree(lookupTable);
+    this.lookupTable = lookupTable;
   }
 
   giveEmTheWorks() {
-    return theWorksString();
+    return theWorksString(this.lookupTable);
   }
 
   emojify(userInput) {
@@ -171,7 +110,7 @@ module.exports = class EmojiFont {
     let outString = "";
     let idx = 0;
 
-    let currentNode = letterEmojiTree;
+    let currentNode = this.letterEmojiTree;
     let isBacktracking = false;
     while (idx < userInput.length || !currentNode.isRoot()) {
       let currentLetter = "?????"
@@ -191,7 +130,7 @@ module.exports = class EmojiFont {
       // there are values for this terminal, capture one and reset the tree, don't backtrack idx to get current letter which failed the glyph compose above to run on its own
       if (currentNode.values !== null) {
         outString += randomEmojiFrom(currentNode.values);
-        currentNode = letterEmojiTree;
+        currentNode = this.letterEmojiTree;
         isBacktracking = false;
         continue;
       }
@@ -200,7 +139,7 @@ module.exports = class EmojiFont {
       if (currentNode.isRoot()) {
         outString += currentLetter;
         idx += 1;
-        currentNode = letterEmojiTree;
+        currentNode = this.letterEmojiTree;
         isBacktracking = false;
         continue;
       }
@@ -212,7 +151,6 @@ module.exports = class EmojiFont {
         currentNode = currentNode.parent;
       }
     }
-
     return outString;
   }
 }
