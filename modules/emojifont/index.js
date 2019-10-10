@@ -36,11 +36,11 @@ module.exports = class EmojifontModule extends BaseModule {
       };
     });
     const emojiFont = new EmojiFont(cleanedCells);
-
+    
     if (data.args.map(x => x.toLowerCase()).includes("--theworks")) {
       this.bot.postMessage(data.channel, emojiFont.giveEmTheWorks());
     } else {
-      this.bot.postMessageToThread(data.channel, emojiFont.emojify(data.user_text), data.ts);
+      this.bot.postMessage(data.channel, emojiFont.emojify(data.user_text));
     }
   }
 
