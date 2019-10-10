@@ -10,6 +10,10 @@ class Node {
   isRoot() {
     return this.parent === null;
   }
+
+  hasValues() {
+    return this.values !== undefined && this.values !== null && this.values.length > 0;
+  }
 }
 
 // stuff to provide to every emoji font
@@ -128,7 +132,7 @@ module.exports = class EmojiFont {
       // we're at a terminal node
 
       // there are values for this terminal, capture one and reset the tree, don't backtrack idx to get current letter which failed the glyph compose above to run on its own
-      if (currentNode.values !== null) {
+      if (currentNode.hasValues()) {
         outString += randomEmojiFrom(currentNode.values);
         currentNode = this.letterEmojiTree;
         isBacktracking = false;
@@ -145,11 +149,9 @@ module.exports = class EmojiFont {
       }
 
       // we dug into a compound glyph but didn't complete it, lets backtrack
-      if (currentNode.values === null) {
-        idx -= 1;
-        isBacktracking = true;
-        currentNode = currentNode.parent;
-      }
+      idx -= 1;
+      isBacktracking = true;
+      currentNode = currentNode.parent;
     }
     return outString;
   }
