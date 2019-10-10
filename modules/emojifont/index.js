@@ -36,11 +36,18 @@ module.exports = class EmojifontModule extends BaseModule {
       };
     });
     const emojiFont = new EmojiFont(cleanedCells);
-    
+
     if (data.args.map(x => x.toLowerCase()).includes("--theworks")) {
       this.bot.postMessage(data.channel, emojiFont.giveEmTheWorks());
     } else {
-      this.bot.postMessage(data.channel, emojiFont.emojify(data.user_text));
+      try {
+        const resp = emojiFont.emojify(data.user_text);
+        this.bot.postMessage(data.channel, resp);
+      }
+      catch (error) {
+        console.error(`EmojiFont error: ${error}`);
+        this.bot.postMessageToThread(data.channel, `Something went wrong with EmojiFont: (${error}).`, data.ts);
+      }
     }
   }
 
