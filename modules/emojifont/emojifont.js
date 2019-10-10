@@ -99,7 +99,7 @@ module.exports = class EmojiFont {
     sheetCells.forEach(processCell);
     toRepeatList.forEach(processCell); // if input is sorted this is redundant
 
-    lookupTable = {...lookupTableDefaults, ...lookupTable, ...lookupTableOverrides };
+    lookupTable = {...lookupTableDefaults, ...lookupTable, ...lookupTableOverrides};
 
     this.letterEmojiTree = buildEmojiTree(lookupTable);
     this.lookupTable = lookupTable;
