@@ -41,7 +41,7 @@ module.exports = class EmojifontModule extends BaseModule {
       this.bot.postMessage(data.channel, emojiFont.giveEmTheWorks());
     } else {
       try {
-        const resp = emojiFont.emojify(data.user_text);
+        const resp = data.user_text.split(' ').map(emojiFont.emojify).join(' ');
         this.bot.postMessage(data.channel, resp);
       }
       catch (error) {
