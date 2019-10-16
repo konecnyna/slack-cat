@@ -2,7 +2,7 @@ const formattedMemberName = (member) => {
   return `${member.get('name')}, ${member.get('title')}`
 }
 
-module.exports = class RoyaltyHelper {
+module.exports = class RoyaltyUtil {
   constructor(context) {
     this.context = context;
   }

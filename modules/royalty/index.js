@@ -1,12 +1,12 @@
 'use strict';
 
 const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
-const RoyaltyHelper = require('./royalty-util.js');
+const RoyaltyUtil = require('./royalty-util.js');
 
 module.exports = class Royalty extends BaseStorageModule {
   constructor(bot) {
     super(bot);
-    this.royaltyHelper = new RoyaltyHelper(this);
+    this.royaltyHelper = new RoyaltyUtil(this);
   }
 
   async handle(data) {
