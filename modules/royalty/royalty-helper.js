@@ -13,15 +13,15 @@ module.exports = class RoyaltyHelper {
         name: user
       }
     });
+    if (courtMember === null) {
+      return `I know of no one named ${user} yet.`
+    }
 
     return formattedMemberName(courtMember);
   }
 
   async displayFullCourtBoard(data) {
-    const courtMembers = await this.getRoyaltyModel().findAll({
-      // order: [['pluses', 'DESC']],
-      // limit: 10,
-    });
+    const courtMembers = await this.getRoyaltyModel().findAll({});
 
     const fields = [];
     courtMembers.forEach((member, index) => {
@@ -32,7 +32,7 @@ module.exports = class RoyaltyHelper {
     });
 
     this.context.bot.postRawMessage(data.channel, {
-      icon_emoji: ':crown:',
+      icon_emoji: ':royalcat:',
       username: 'RoyaltyCat',
       attachments: [
         {
@@ -51,6 +51,7 @@ module.exports = class RoyaltyHelper {
         name: userName,
         title: title,
       }, {
+        name: userName,
         title: title
       }
     );

@@ -10,14 +10,10 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handle(data) {
-    if (data.cmd === 'royalty') {
-      if (!data.user_text) {
-        this.royaltyHelper.displayFullCourtBoard(data);
-        return
-      }
-      const matches = data.user_text.match(userPattern);
-      this.displayTitleForUser(data, matches);
-      return;
+    if (data.cmd === 'royalty' && !data.user_text) {
+
+      this.royaltyHelper.displayFullCourtBoard(data);
+      return
     }
 
     if (!data.user_text) {
@@ -26,19 +22,27 @@ module.exports = class Plus extends BaseStorageModule {
     }
 
     const matches = data.user_text.match(userPattern);
+    if (data.cmd === 'royalty') {
+      this.displayTitleForUser(data, matches);
+      return;
+    }
+
     if (data.cmd === 'anoint') {
       this.anointUser(data, matches);
     }
   }
 
-  async displayTitleForUser(data, matches) {
-    let user = data.user_text;
-    if (matches && matches.length > 1) {
-      user = await this.getUserNameFromId(matches[1]);
-    }
+  async annotatedPostToChannel(channel, message) {
+    this.bot.postMessageWithParams(channel, message, {
+      icon_emoji: ':royalcat:',
+      username: 'RoyalCat'
+    })
+  }
 
-    const memberNameAndTitle = await this.royaltyHelper.displayTitleForUser(user);
-    this.bot.postMessage(data.channel, `${memberNameAndTitle}`);
+  async displayTitleForUser(data, matches) {
+    const userName = await this.getUserNameFromId(matches[0]);
+    const memberNameAndTitle = await this.royaltyHelper.displayTitleForUser(userName);
+    this.annotatedPostToChannel(data.channel, `${memberNameAndTitle}`)
   }
 
   hacker(data) {
@@ -55,7 +59,6 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async anointUser(data, matches) {
-    console.log("anoint " + data + ", " + matches);
     if (this.hacker(data)) {
       // Person is being an ahole and trying to anoint themselves!
       this.bot.postMessageToThread(data.channel, "You can not choose your destiny, only make the best of it", data.item.ts);
@@ -68,32 +71,10 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
-    try {
-      let group;
-      const map = {};
-
-      while (group = userPattern.exec(data.user_text)) {
-        if (!map[group[1]]) {
-          map[group[1]] = 1;
-        } else {
-          map[group[1]] = map[group[1]] + 1;
-        }
-
-
-        // prevent spam.
-        if (map[group[1]] > 3) {
-          return;
-        }
-
-        const userName = await this.getUserNameFromId(group[1]);
-        const title = data.user_text.replace(group[0], "").trim();
-        const newCourtMember = await this.royaltyHelper.anointUser(userName, title);
-        await this.bot.postMessage(data.channel, `Hear Ye Hear Ye, ${group[0]} is now *${newCourtMember}*!`);
-      }
-    } catch (e) {
-      console.error(e);
-      this.postErrorMessage(data);
-    }
+    const userName = await this.getUserNameFromId(matches[0]);
+    const title = data.user_text.replace(matches[0], "").trim();
+    const newCourtMember = await this.royaltyHelper.anointUser(userName, title);
+    await this.annotatedPostToChannel(data.channel, `Hear Ye Hear Ye, ${matches[0]} is now *${newCourtMember}*!`);
   }
 
   async getUserNameFromId(userPatternResult) {
