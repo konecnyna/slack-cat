@@ -1,9 +1,9 @@
 'use strict';
 
 const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
-const RoyaltyHelper = require('./royalty-helper.js');
+const RoyaltyHelper = require('./royalty-util.js');
 
-module.exports = class Plus extends BaseStorageModule {
+module.exports = class Royalty extends BaseStorageModule {
   constructor(bot) {
     super(bot);
     this.royaltyHelper = new RoyaltyHelper(this);
@@ -40,7 +40,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async displayTitleForUser(data, matches) {
-    const userName = await this.getUserNameFromId(matches[0]);
+    const userName = await this.bot.resolveUserNameFromId(matches[0]);
     const memberNameAndTitle = await this.royaltyHelper.displayTitleForUser(userName);
     this.annotatedPostToChannel(data.channel, `${memberNameAndTitle}`)
   }
@@ -71,15 +71,10 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
-    const userName = await this.getUserNameFromId(matches[0]);
+    const userName = await this.bot.resolveUserNameFromId(matches[0]);
     const title = data.user_text.replace(matches[0], "").trim();
     const newCourtMember = await this.royaltyHelper.anointUser(userName, title);
     await this.annotatedPostToChannel(data.channel, `Hear Ye Hear Ye, ${matches[0]} is now *${newCourtMember}*!`);
-  }
-
-  async getUserNameFromId(userPatternResult) {
-    const userData = await this.bot.getUserNameFromId(userPatternResult);
-    return userData.user.profile.display_name || userData.user.name;
   }
 
   help() {

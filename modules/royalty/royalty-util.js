@@ -1,4 +1,4 @@
-function formattedMemberName(member) {
+const formattedMemberName = (member) => {
   return `${member.get('name')}, ${member.get('title')}`
 }
 
