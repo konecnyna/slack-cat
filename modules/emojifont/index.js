@@ -12,7 +12,9 @@ module.exports = class EmojifontModule extends BaseModule {
   constructor(bot) {
     super(bot);
     this.googleSheetsUtil = new GoogleSheetsUtil();
-    this.doc = new GoogleSpreadsheet(sheetParams.sheet_id);
+    if (sheetParams && sheetParams.sheet_id) {
+      this.doc = new GoogleSpreadsheet(sheetParams.sheet_id);
+    }    
   }
 
   async handle(data) {
