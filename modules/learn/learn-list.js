@@ -32,7 +32,7 @@ module.exports = class LearnsList {
 
   async createPage(res, learnData) {
     const { emoji } = await this.getEmojisList();
-    this.emojiMap = emoji
+    this.emojiMap = emoji || {}
 
     res.set({ 'content-type': 'text/html; charset=utf-8' });
 
@@ -154,7 +154,7 @@ ${await this.createBody(learnData)}
     const matches = learn.matchAll(regexp);
     for (const match of matches) {
       if (this.emojiMap[match[1]]) {
-        body += `<img src=${this.emojiMap[match[1]]}/>`
+        body += `<img src=${this.emojiMap[match[1]]} width="32"/>`
       } else {
         body += match[0];
       }
