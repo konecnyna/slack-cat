@@ -7,7 +7,7 @@ module.exports = class Channel extends BaseModule {
     super(bot);
     this.anniversaries = new ChannelAnniversaries(bot.web);
     new CronJob(
-      "00 45 9 * * *",
+      "00 45 7 * * *",
       () => {
         this.checkChannelAnniversaries(false, {})
       },
