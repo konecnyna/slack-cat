@@ -32,18 +32,26 @@ module.exports = class Channel extends BaseModule {
   async checkChannelAnniversaries(isDebug, data) {
     const channels = await this.anniversaries.getAnniversaries()
     channels.map(channel => {
-      this.sendAnniversaryMsg(isDebug ? data.channel : channel.id)
+      const diff = moment().diff(channel.created * 1000, 'years')
+      this.sendAnniversaryMsg(isDebug ? data.channel : channel.id, diff)
     })
   }
 
-  async sendAnniversaryMsg(channelId) {
+  async sendAnniversaryMsg(channelId, diff) {
+    let msg = ""
+    if (diff > 1) {
+      msg = `Congratulations. This channel is ${diff} years old today. \n\nHappy Birthday Y'all!\n:birthday: :confetti_ball: :gift: :confetti_ball: :birthday:`
+    } else {
+      msg = "Congratulations. This channel is 1 year older today. \n\nHappy Birthday Y'all!\n:birthday: :confetti_ball: :gift: :confetti_ball: :birthday:";
+    }
+
     this.bot.postRawMessage(channelId, {
       icon_emoji: ':birthday:',
       username: 'AnniversaryCat',
       attachments: [
         {
           color: '#FEB3DD',
-          author_name: "Congratulations. This channel is 1 year older today. \n\nHappy Birthday Y'all!\n:birthday: :confetti_ball: :gift: :confetti_ball: :birthday:",
+          author_name: msg,
         }
       ]
     })
