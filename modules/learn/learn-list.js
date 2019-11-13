@@ -1,5 +1,7 @@
 'use strict';
 const publicIp = require('public-ip');
+const request = require('request-promise');
+const token = config.getKey('oauth_token')
 
 const ROUTE_PATH = 'learns';
 
@@ -29,6 +31,9 @@ module.exports = class LearnsList {
   }
 
   async createPage(res, learnData) {
+    const { emoji } = await this.getEmojisList();
+    this.emojiMap = emoji
+
     res.set({ 'content-type': 'text/html; charset=utf-8' });
 
     const page = `<!DOCTYPE html>
@@ -96,16 +101,29 @@ ${await this.createBody(learnData)}
     return cards.join('');
   }
 
+
+  async getEmojisList() {
+    const response = await request(`https://slack.com/api/emoji.list?token=${token}`);
+    return JSON.parse(response);
+  }
+
   createCard(title, learns) {
     return `
     <div class="card p-3 mt-3">
-      <h5 class="card-title">${title}</h5>
+      <h5 class="card-title">${this.makeTitle(title)}</h5>
       <hr/ class="m-0 p-0">
       <div class="card-body">
         ${learns.join('')}
       </div>
     </div>
     `;
+  }
+
+  makeTitle(title) {
+    if (/:([\w-_]+):/g.test(title)) {
+      return `${this.parseEmojiRegex(title)} (${title})`
+    }
+    return title;
   }
 
   createListItem(learn) {
@@ -120,10 +138,28 @@ ${await this.createBody(learnData)}
       return `<a href="${learn}" target="_blank">${learn}</a>`;
     }
 
+    if (/:([\w-_]+):/g.test(learn)) {
+      return this.parseEmojiRegex(learn)
+    }
+
     if (learn.length === 0) {
       learn = 'NO TEXT - THIS IS A BAD ENTRY.';
     }
     return learn;
+  }
+
+  parseEmojiRegex(learn) {
+    let body = "";
+    const regexp = /:([\w-_]+):/g;
+    const matches = learn.matchAll(regexp);
+    for (const match of matches) {
+      if (this.emojiMap[match[1]]) {
+        body += `<img src=${this.emojiMap[match[1]]}/>`
+      } else {
+        body += match[0];
+      }
+    }
+    return body;
   }
 
   async getLearns(data) {

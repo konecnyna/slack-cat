@@ -4,26 +4,26 @@ const jiraSecrets = config.getKey('jira_api')
 let jira = false
 
 if (jiraSecrets.host) {
-  jira = new JiraApi({
-    protocol: 'https',
-    host: jiraSecrets.host,
-    username: jiraSecrets.username,
-    password: jiraSecrets.password,
-    apiVersion: '2',
-    strictSSL: true
-  })
+  // jira = new JiraApi({
+  //   protocol: 'https',
+  //   host: jiraSecrets.host,
+  //   username: jiraSecrets.username,
+  //   password: jiraSecrets.password,
+  //   apiVersion: '2',
+  //   strictSSL: true
+  // })
 }
 const QUOTES_REGEX = new RegExp('("([^"]|"")*")', 'g')
 const JiraCreate = require('./jira-create')
 const CALLBACK_ID = 'submit-jira-ticket'
 
 module.exports = class Jira extends BaseModule {
-  constructor (bot) {
+  constructor(bot) {
     super(bot)
-    this.jiraCreate = new JiraCreate(this)
+    // this.jiraCreate = new JiraCreate(this)
   }
 
-  async handle (data) {
+  async handle(data) {
     // Initialize
     if (!jiraSecrets) {
       this.bot.postMessage(
@@ -61,15 +61,15 @@ module.exports = class Jira extends BaseModule {
     }
   }
 
-  displayHelp (data) {
+  displayHelp(data) {
     this.bot.postMessage(data.channel, this.help())
   }
 
-  getProjectList () {
+  getProjectList() {
     return jira.listProjects()
   }
 
-  postUserTix (data, searchResults) {
+  postUserTix(data, searchResults) {
     const tix = searchResults.issues.map(issue => {
       return `${issue.key} - https://${jiraSecrets.host}/browse/${issue.key}`
     })
@@ -92,7 +92,7 @@ module.exports = class Jira extends BaseModule {
     })
   }
 
-  sendJiraStatus (data, issue) {
+  sendJiraStatus(data, issue) {
     const fields = [
       {
         title: 'Assignee:',
@@ -125,16 +125,16 @@ module.exports = class Jira extends BaseModule {
     })
   }
 
-  async onDialogSubmit (body) {
+  async onDialogSubmit(body) {
     const newIssue = await this.jiraCreate.createJiraTicket(body, jira)
     this.postIssue(body.user.id, newIssue)
   }
 
-  dialogCallbackId () {
+  dialogCallbackId() {
     return CALLBACK_ID
   }
 
-  async createRoutes (app) {
+  async createRoutes(app) {
     if (!jiraSecrets.host) {
       return
     }
@@ -143,7 +143,7 @@ module.exports = class Jira extends BaseModule {
     this.jiraCreate.createRoutes(app, CALLBACK_ID, projects)
   }
 
-  async postIssue (channel, issue) {
+  async postIssue(channel, issue) {
     const userData = await this.bot.userDataPromise(channel)
     if (!issue) {
       return this.bot.postMessageToUser(
@@ -155,13 +155,13 @@ module.exports = class Jira extends BaseModule {
     this.bot.postMessageToUser(
       userData.user.id,
       `Created: ${issue.key}. See: https://${jiraSecrets.host}/browse/${
-        issue.key
+      issue.key
       }`,
       {}
     )
   }
 
-  async logIssueName (issueNumber) {
+  async logIssueName(issueNumber) {
     try {
       return await jira.findIssue(issueNumber)
     } catch (err) {
@@ -169,7 +169,7 @@ module.exports = class Jira extends BaseModule {
     }
   }
 
-  getType () {
+  getType() {
     return [
       BaseModule.TYPES.MODULE,
       BaseModule.TYPES.DIALOG,
@@ -177,11 +177,11 @@ module.exports = class Jira extends BaseModule {
     ]
   }
 
-  help () {
+  help() {
     return 'Usage:\n`?jira <ticket-number>`.\n`\\jira-create`'
   }
 
-  aliases () {
+  aliases() {
     return ['jira-tix']
   }
 }
