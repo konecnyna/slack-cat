@@ -1,7 +1,7 @@
 'use strict';
 const publicIp = require('public-ip');
 const request = require('request-promise');
-const token = config.getKey('oauth_token')
+const token = config.getKey('slack_access_token_oauth')
 
 const ROUTE_PATH = 'learns';
 
