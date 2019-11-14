@@ -17,4 +17,9 @@ module.exports = class ChannelAnniversaries {
     channel['year_old'] = years;
     return years === 1;
   }
+
+  async getChannelAnniversary(channelId) {
+    const { channel } = await this.web.channels.info({ channel: channelId })
+    return moment(channel.created * 1000).format("MMMM DD");
+  }
 }
