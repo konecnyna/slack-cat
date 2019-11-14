@@ -18,6 +18,10 @@ module.exports = class Channel extends BaseModule {
   }
 
   async handle(data) {
+    if (data.cmd.includes('anniversary')) {
+      return this.getChannelAnniversary(data.channel);
+    }
+
     this.bot.postMessage(
       data.channel,
       `This channel's id is: \`${data.channel}\``
