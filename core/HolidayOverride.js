@@ -22,7 +22,7 @@ const overrides = [
     }
   },
   {
-    month: 12,
+    month: 11,
     days: makeRange(15, 28),
     botParams: {
       username: 'TurkeyCat',
