@@ -30,21 +30,25 @@ module.exports = class Router {
       return
     }
 
-    if (data.type === 'member_joined_channel') {
-      this.handleMemberJoin(data)
-    }
+    try {
+      if (data.type === 'member_joined_channel') {
+        this.handleMemberJoin(data)
+      }
 
-    // Handle reactions
-    if (data.type === 'reaction_added') {
-      this.handleReaction(data)
-    }
+      // Handle reactions
+      if (data.type === 'reaction_added') {
+        this.handleReaction(data)
+      }
 
-    // Handle message edits
-    if (data.type === 'message' && data.message && data.message.edited) {
-      this.handleMessageEdited(data)
-    }
+      // Handle message edits
+      if (data.type === 'message' && data.message && data.message.edited) {
+        this.handleMessageEdited(data)
+      }
 
-    this.handleMsg(data)
+      this.handleMsg(data)
+    } catch (e) {
+      console.error(`Command ${data.cmd} threw an error!`, e.message);
+    }
   }
 
   handleReaction(data) {
