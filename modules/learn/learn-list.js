@@ -149,14 +149,14 @@ ${await this.createBody(learnData)}
   }
 
   parseEmojiRegex(learn) {
-    let body = "";
+    let body = learn;
+
     const regexp = /:([\w-_]+):/g;
     const matches = learn.matchAll(regexp);
+
     for (const match of matches) {
       if (this.emojiMap[match[1]]) {
-        body += `<img src=${this.emojiMap[match[1]]} width="32"/>`
-      } else {
-        body += match[0];
+        body = body.replace(match[0], `<img src=${this.emojiMap[match[1]]} width="32"/>`);
       }
     }
     return body;
