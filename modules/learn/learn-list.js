@@ -149,7 +149,7 @@ ${await this.createBody(learnData)}
   }
 
   parseEmojiRegex(learn) {
-    let body = learn;
+    let body = `<br>${learn.replace(/(?:\r\n|\r|\n)/g, '<br>')}`;
 
     const regexp = /:([\w-_]+):/g;
     const matches = learn.matchAll(regexp);
