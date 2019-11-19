@@ -4,23 +4,22 @@ const jiraSecrets = config.getKey('jira_api')
 let jira = false
 
 if (jiraSecrets.host) {
-  // jira = new JiraApi({
-  //   protocol: 'https',
-  //   host: jiraSecrets.host,
-  //   username: jiraSecrets.username,
-  //   password: jiraSecrets.password,
-  //   apiVersion: '2',
-  //   strictSSL: true
-  // })
+  jira = new JiraApi({
+    protocol: 'https',
+    host: jiraSecrets.host,
+    username: jiraSecrets.username,
+    password: jiraSecrets.password,
+    apiVersion: '2',
+    strictSSL: true
+  })
 }
-const QUOTES_REGEX = new RegExp('("([^"]|"")*")', 'g')
 const JiraCreate = require('./jira-create')
 const CALLBACK_ID = 'submit-jira-ticket'
 
 module.exports = class Jira extends BaseModule {
   constructor(bot) {
     super(bot)
-    // this.jiraCreate = new JiraCreate(this)
+    this.jiraCreate = new JiraCreate(this)
   }
 
   async handle(data) {
