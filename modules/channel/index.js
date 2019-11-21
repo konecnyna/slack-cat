@@ -31,22 +31,21 @@ module.exports = class Channel extends BaseModule {
   async checkChannelAnniversaries() {
     const channels = await this.anniversaries.getAnniversaries()
     channels.map(channel => {
-      const diff = moment().diff(channel.created * 1000, 'years')
-      this.sendAnniversaryMsg(channel.id, diff)
+      this.sendAnniversaryMsg(channel.id, channel.years_old)
     })
   }
 
   async getChannelAnniversary(channelId) {
-    const msg = await this.anniversaries.getChannelAnniversary(channelId);
-    this.postMessage(channelId, msg);
+    const data = await this.anniversaries.getChannelAnniversary(channelId);
+    this.postMessage(channelId, `This channel was created on ${data.date}.\n\nIt's anniversary is ${data.days_til_anniversary} days away!`);
   }
 
   async sendAnniversaryMsg(channelId, diff) {
     let msg = ""
     if (diff > 1) {
-      msg = `Congratulations. This channel is ${diff} years old today. \n\nHappy anniversary y'all!\n:birthday: :confetti_ball: :gift: :confetti_ball: :birthday:`
+      msg = `This channel is ${diff} years old today. \n\nHappy anniversary y'all!\n:birthday: :confetti_ball: :gift: :confetti_ball: :birthday:`
     } else {
-      msg = "Congratulations. This channel is 1 year older today. \n\nHappy anniversary y'all!\n:birthday: :confetti_ball: :gift: :confetti_ball: :birthday:";
+      msg = "This channel is 1 year older today. \n\nHappy anniversary y'all!\n:birthday: :confetti_ball: :gift: :confetti_ball: :birthday:";
     }
 
     this.postMessage(channelId, msg);

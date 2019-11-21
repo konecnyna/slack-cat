@@ -8,18 +8,22 @@ module.exports = class ChannelAnniversaries {
   async getAnniversaries() {
     const { channels } = await this.web.channels.list();
     return channels.filter(channel => {
-      return channel.created
+      return this.isDateAYearToday(channel)
     });
   }
 
   isDateAYearToday(channel) {
-    const years = moment().diff(channel.created * 1000, 'years');
-    channel['year_old'] = years;
-    return years === 1;
+    const days = moment().diff(channel.created * 1000, 'day');
+    channel['years_old'] = parseInt(days / 365);
+    return days % 365 === 0;
   }
 
   async getChannelAnniversary(channelId) {
     const { channel } = await this.web.channels.info({ channel: channelId })
-    return moment(channel.created * 1000).format("MMMM DD");
+    const days = moment().diff(channel.created * 1000, 'day');
+    return {
+      date: moment(channel.created * 1000).format("MMMM DD YYYY"),
+      days_til_anniversary: days % 365
+    };
   }
 }
