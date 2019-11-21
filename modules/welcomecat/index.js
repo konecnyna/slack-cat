@@ -95,13 +95,9 @@ module.exports = class WelcomeCat extends BaseStorageModule {
   cmds() {
     return ['--test'];
   }
-  help() {
-    return `*Here is how to use WelcomeCat:*\n
-> 1. \`?welcomecat --message <The message you want to DM to users when they join the channel>\` | The message will be DMd to any new user joining the channel when the bot is enabled.
-> 2. \`?welcomecat --enabled <true|false>\` | This will enable or disable the feature.
 
-That's it! Additional Arguments:
-\`${this.cmds().join(', ')}\``;
+  help() {
+    return `Welcome a person to the channel!`;
   }
 
   aliases() {
