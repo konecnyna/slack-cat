@@ -23,7 +23,7 @@ module.exports = class ChannelAnniversaries {
     const days = moment().diff(channel.created * 1000, 'day');
     return {
       date: moment(channel.created * 1000).format("MMMM DD YYYY"),
-      days_til_anniversary: 365 - (600 % 365)
+      days_til_anniversary: 365 - (days % 365)
     };
   }
 }
