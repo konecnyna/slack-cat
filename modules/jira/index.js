@@ -65,7 +65,7 @@ module.exports = class Jira extends BaseModule {
   }
 
   getProjectList() {
-    // return jira.listProjects()
+    return jira.listProjects()
   }
 
   postUserTix(data, searchResults) {
