@@ -4,14 +4,14 @@ const jiraSecrets = config.getKey('jira_api')
 let jira = false
 
 if (jiraSecrets.host) {
-  jira = new JiraApi({
-    protocol: 'https',
-    host: jiraSecrets.host,
-    username: jiraSecrets.username,
-    password: jiraSecrets.password,
-    apiVersion: '2',
-    strictSSL: true
-  })
+  // jira = new JiraApi({
+  //   protocol: 'https',
+  //   host: jiraSecrets.host,
+  //   username: jiraSecrets.username,
+  //   password: jiraSecrets.password,
+  //   apiVersion: '2',
+  //   strictSSL: true
+  // })
 }
 const JiraCreate = require('./jira-create')
 const CALLBACK_ID = 'submit-jira-ticket'
@@ -65,7 +65,7 @@ module.exports = class Jira extends BaseModule {
   }
 
   getProjectList() {
-    return jira.listProjects()
+    // return jira.listProjects()
   }
 
   postUserTix(data, searchResults) {
