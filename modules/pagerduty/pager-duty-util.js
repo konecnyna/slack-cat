@@ -1,3 +1,5 @@
+const request = require("request");
+
 const ICON = 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png';
 const USER_NAME = 'PagerDutyCat';
 const ERRORS = {
@@ -41,7 +43,6 @@ module.exports = class PagerDutyUtil {
             }
           }
         });
-
 
         resolve(policyGroups);
       });
