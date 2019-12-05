@@ -16,11 +16,12 @@ module.exports = class Router {
     this.rawInputModules = modules.rawInputModules
     this.dialogModules = modules.dialogModules
     this.serviceModules = modules.serviceModules
+    this.messageActionModules = modules.messageActionModules
 
     this.server = server
 
     if (this.server) {
-      this.setupDialogCallback()
+      this.setupCallback()
     }
   }
 
@@ -136,8 +137,15 @@ module.exports = class Router {
     })
   }
 
-  setupDialogCallback() {
+  setupCallback() {
     this.server.initHandleCallback(body => {
+      Object.keys(this.messageActionModules).forEach(key => {
+        const moduleObj = this.messageActionModules[key]
+        if (body.callback_id === moduleObj.actionCallbackId()) {
+          moduleObj.onActionSubmit(body)
+        }
+      })
+
       Object.keys(this.dialogModules).forEach(key => {
         const moduleObj = this.dialogModules[key]
         if (body.callback_id === moduleObj.dialogCallbackId()) {
