@@ -67,6 +67,18 @@ module.exports = class BaseModule {
     );
 
     this.checkForOverriddenMethod(
+      BaseModule.TYPES.MESSAGE_ACTION,
+      this.onActionSubmit,
+      'onActionSubmit'
+    );
+
+    this.checkForOverriddenMethod(
+      BaseModule.TYPES.MESSAGE_ACTION,
+      this.actionCallbackId,
+      'actionCallbackId (Please make sure you add action to slack api with the same callback id)'
+    );
+
+    this.checkForOverriddenMethod(
       BaseModule.TYPES.ENDPOINT,
       this.createRoutes,
       'createRoutes'
@@ -154,6 +166,7 @@ module.exports = class BaseModule {
       DIALOG: 'dialog',
       ENDPOINT: 'endpoint',
       SERVICE: 'service',
+      MESSAGE_ACTION: 'message_action',
     };
   }
 };

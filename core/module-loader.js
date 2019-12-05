@@ -15,6 +15,7 @@ module.exports = class ModuleLoader {
     this.rawInputModules = {}
     this.dialogModules = {}
     this.serviceModules = {}
+    this.messageActionModules = {}
 
     this.registerModules()
   }
@@ -47,6 +48,15 @@ module.exports = class ModuleLoader {
         )
       } else if (moduleObj.getType().includes(BaseModule.TYPES.ENDPOINT)) {
         this.createRoutes(moduleObj)
+      }
+
+      if (moduleObj.getType().includes(BaseModule.TYPES.MESSAGE_ACTION)) {
+        this.addModules(
+          key,
+          moduleObj,
+          BaseModule.TYPES.MESSAGE_ACTION,
+          this.messageActionModules
+        )
       }
 
       // Add all modules types to cmd array.
@@ -113,7 +123,8 @@ module.exports = class ModuleLoader {
       memberJoinedModules: this.memberJoinedModules,
       rawInputModules: this.rawInputModules,
       dialogModules: this.dialogModules,
-      serviceModules: this.serviceModules
+      serviceModules: this.serviceModules,
+      messageActionModules: this.messageActionModules
     }
   }
 
