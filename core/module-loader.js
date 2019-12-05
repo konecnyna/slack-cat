@@ -123,7 +123,8 @@ module.exports = class ModuleLoader {
       memberJoinedModules: this.memberJoinedModules,
       rawInputModules: this.rawInputModules,
       dialogModules: this.dialogModules,
-      serviceModules: this.serviceModules
+      serviceModules: this.serviceModules,
+      messageActionModules: this.messageActionModules
     }
   }
 
