@@ -116,7 +116,7 @@ module.exports = class Plus extends BaseStorageModule {
 
       Object.keys(plusMap).forEach(it => {
         total = plusMap[it];
-        await this.bot.postMessageToThread(data.channel, `${it} now has ${total} pluses!`, data.ts);
+        this.bot.postMessageToThread(data.channel, `${it} now has ${total} pluses!`, data.ts);
       })
 
       cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
