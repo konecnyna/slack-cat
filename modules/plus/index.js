@@ -95,8 +95,7 @@ module.exports = class Plus extends BaseStorageModule {
       let group;
       const map = {};
 
-      let count = 0;
-      let total = 0;
+      let plusMap = {}
       while (group = userPattern.exec(data.user_text)) {
         if (!map[group[1]]) {
           map[group[1]] = 1;
@@ -112,14 +111,15 @@ module.exports = class Plus extends BaseStorageModule {
 
         const userName = await this.getUserNameFromId(group[1]);
         total = await this.plusHelper.plusUser(userName);
+        plusMap[userName] = total;
       }
 
-      if (count === 1) {
-        await this.bot.postMessageToThread(data.channel, `${userName} now has ${total} pluses!`, data.ts);
-      } else {
-        await this.bot.postMessageToThread(data.channel, `${userName} now has ${total} pluses! (+${count})`, data.ts);
-      }
-      cache.put(this.getReactionKey(data), '', 3 * 60 * 1000, () => { });
+      Object.keys(plusMap).forEach(it => {
+        total = plusMap[it];
+        await this.bot.postMessageToThread(data.channel, `${it} now has ${total} pluses!`, data.ts);
+      })
+
+      cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);
