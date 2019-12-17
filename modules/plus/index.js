@@ -110,7 +110,7 @@ module.exports = class Plus extends BaseStorageModule {
         }
 
         const userName = await this.getUserNameFromId(group[1]);
-        total = await this.plusHelper.plusUser(userName);
+        const total = await this.plusHelper.plusUser(userName);
         plusMap[userName] = total;
       }
 
