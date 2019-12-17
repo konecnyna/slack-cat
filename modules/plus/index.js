@@ -68,7 +68,7 @@ module.exports = class Plus extends BaseStorageModule {
   async plusUser(data, matches) {
     if (this.hacker(data)) {
       // Person is being an ahole and trying to plus themselves!
-      this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!", data.item.ts);
+      this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!", data.ts);
       return;
     }
 
