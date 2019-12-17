@@ -1,9 +1,11 @@
 'use strict';
 
-const util = require('util');
 const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
 const PlusHelper = require('./plus-helper.js');
 const cache = require('memory-cache');
+
+
+const SPAM_KEY = "spamalot";
 
 module.exports = class Plus extends BaseStorageModule {
   constructor(bot) {
@@ -57,7 +59,7 @@ module.exports = class Plus extends BaseStorageModule {
 
     let group;
     while (group = userPattern.exec(data.user_text)) {
-      if (group && data.user === group[1]) {
+      if (group && data.user === group[1] || data.user_text === group[1]) {
         return true;
       }
     }
@@ -83,11 +85,17 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
+    if (cache.get(this.getPlusKey(data)) != null) {
+      await this.bot.postMessageToThread(data.channel, `Quit trying to spam.`, data.ts);
+      return;
+    }
 
     try {
       let group;
       const map = {};
 
+      let count = 0;
+      let total = 0;
       while (group = userPattern.exec(data.user_text)) {
         if (!map[group[1]]) {
           map[group[1]] = 1;
@@ -102,9 +110,15 @@ module.exports = class Plus extends BaseStorageModule {
         }
 
         const userName = await this.getUserNameFromId(group[1]);
-        const pluses = await this.plusHelper.plusUser(userName);
-        await this.bot.postMessageToThread(data.channel, `${userName} now has ${pluses} pluses!`, data.ts);
+        total = await this.plusHelper.plusUser(userName);
       }
+
+      if (count === 1) {
+        await this.bot.postMessageToThread(data.channel, `${userName} now has ${total} pluses!`, data.ts);
+      } else {
+        await this.bot.postMessageToThread(data.channel, `${userName} now has ${total} pluses! (+${count})`, data.ts);
+      }
+      cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);
