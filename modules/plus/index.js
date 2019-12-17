@@ -57,6 +57,7 @@ module.exports = class Plus extends BaseStorageModule {
       return true;
     }
 
+
     let group;
     while (group = userPattern.exec(data.user_text)) {
       if (group && data.user === group[1] || data.user_text === group[1]) {
@@ -118,7 +119,7 @@ module.exports = class Plus extends BaseStorageModule {
       } else {
         await this.bot.postMessageToThread(data.channel, `${userName} now has ${total} pluses! (+${count})`, data.ts);
       }
-      cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
+      cache.put(this.getReactionKey(data), '', 3 * 60 * 1000, () => { });
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);
@@ -133,9 +134,9 @@ module.exports = class Plus extends BaseStorageModule {
   async handleReaction(data) {
     if (
       data.reaction === 'eggplant' &&
-      cache.get(this.getPlusKey(data)) === null
+      cache.get(this.getReactionKey(data)) === null
     ) {
-      cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => { });
+      cache.put(this.getReactionKey(data), '', 5 * 60 * 1000, () => { });
       this.bot.postMessageToThread(
         data.item.channel,
         '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)',
@@ -153,7 +154,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async plusUserFromReaction(data) {
-    if (cache.get(this.getPlusKey(data)) != null) {
+    if (cache.get(this.getReactionKey(data)) != null) {
       // try to dup pluses
       return;
     }
@@ -166,16 +167,21 @@ module.exports = class Plus extends BaseStorageModule {
     }
 
     const pluses = await this.plusHelper.plusUser(user);
-    cache.put(this.getPlusKey(data), '', 5 * 60 * 1000, () => { });
+    cache.put(this.getReactionKey(data), '', 5 * 60 * 1000, () => { });
 
     const msg = `${user} now has ${pluses} pluses!`;
     this.bot.postMessageToThread(data.item.channel, msg, data.item.ts);
   }
 
-  getPlusKey(data) {
+
+  getReactionKey(data) {
     return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${
       data.item.reaction
       }`;
+  }
+
+  getPlusKey(data) {
+    return `${data.user_text}${data.user}${data.channel}`;
   }
 
   help() {
