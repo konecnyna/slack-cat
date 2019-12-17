@@ -73,6 +73,12 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
+
+    if (cache.get(this.getPlusKey(data)) != null) {
+      await this.bot.postMessageToThread(data.channel, `Quit trying to spam.`, data.ts);
+      return;
+    }
+
     if (!matches) {
       // No user was refs so plus the raw text.]
       const pluses = await this.plusHelper.plusUser(
@@ -86,10 +92,6 @@ module.exports = class Plus extends BaseStorageModule {
       return;
     }
 
-    if (cache.get(this.getPlusKey(data)) != null) {
-      await this.bot.postMessageToThread(data.channel, `Quit trying to spam.`, data.ts);
-      return;
-    }
 
     try {
       let group;
@@ -111,7 +113,14 @@ module.exports = class Plus extends BaseStorageModule {
 
         const userName = await this.getUserNameFromId(group[1]);
         const total = await this.plusHelper.plusUser(userName);
-        plusMap[userName] = total;
+        if (!plusMap[userName]) {
+          plusMap[userName] = {
+            occurrences: 0
+          }
+        }
+        plusMap[userName]['total'] = total;
+        plusMap[userName].occurrences += 1;
+        cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
       }
 
       Object.keys(plusMap).forEach(it => {
@@ -119,7 +128,7 @@ module.exports = class Plus extends BaseStorageModule {
         this.bot.postMessageToThread(data.channel, `${it} now has ${total} pluses!`, data.ts);
       })
 
-      cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
+
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);
@@ -181,7 +190,9 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   getPlusKey(data) {
-    return `${data.user_text}${data.user}${data.channel}`;
+    const text = new Set(data.user_text.split(" "));
+    const key = [...text].join("");
+    return `${key}${data.user}${data.channel}`;
   }
 
   help() {
