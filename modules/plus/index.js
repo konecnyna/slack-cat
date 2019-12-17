@@ -124,8 +124,13 @@ module.exports = class Plus extends BaseStorageModule {
       }
 
       Object.keys(plusMap).forEach(it => {
-        const total = plusMap[it];
-        this.bot.postMessageToThread(data.channel, `${it} now has ${total} pluses!`, data.ts);
+        const user = plusMap[it];
+        let occurrences = "";
+        if (user.occurrences > 1) {
+          occurrences = `(+${user.occurrences})`;
+        }
+
+        this.bot.postMessageToThread(data.channel, `${it} now has ${user.total} pluses! ${occurrences}`, data.ts);
       })
 
 
