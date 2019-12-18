@@ -5,7 +5,7 @@ module.exports.handleEggplantReaction = () => {
 }
 
 module.exports.handlePlus = async (data) => {
-  if (cache.get(this.getReactionKey(data)) != null) {
+  if (cache.get(getReactionKey(data)) != null) {
     // try to dup pluses
     return;
   }
