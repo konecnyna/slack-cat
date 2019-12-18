@@ -1,4 +1,5 @@
 const cache = require('memory-cache');
+const plusHelper = new (require('./plus-helper'))();
 
 module.exports.handleEggplantReaction = () => {
   return '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)'
@@ -12,15 +13,13 @@ module.exports.handlePlus = async (data, userName) => {
 
   const user = userName.user.profile.display_name || userName.user.name;
   if (data.user === data.item_user) {
-    this.bot.postMessageToThread(data.item.channel, `Stop tryna hack ${user}`, data.item.ts);
-    return;
+    return `Stop tryna hack ${user}`;
   }
 
-  const pluses = await this.plusHelper.plusUser(user);
+  const pluses = await plusHelper.plusUser(user);
   cache.put(this.getReactionKey(data), '', 5 * 60 * 1000, () => { });
 
-  const msg = `${user} now has ${pluses} pluses!`;
-  this.bot.postMessageToThread(data.item.channel, msg, data.item.ts);
+  return `${user} now has ${pluses} pluses!`;
 }
 
 const getReactionKey = (data) => {
