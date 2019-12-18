@@ -1,11 +1,10 @@
 const cache = require('memory-cache');
-const plusHelper = new (require('./plus-helper'))();
 
 module.exports.handleEggplantReaction = () => {
   return '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)'
 }
 
-module.exports.handlePlus = async (data, userName) => {
+module.exports.handlePlus = async (data, userName, plusHelper) => {
   if (cache.get(getReactionKey(data)) != null) {
     // try to dup pluses
     return;
