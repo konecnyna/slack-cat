@@ -4,13 +4,12 @@ module.exports.handleEggplantReaction = () => {
   return '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)'
 }
 
-module.exports.handlePlus = async (data) => {
+module.exports.handlePlus = async (data, userName) => {
   if (cache.get(getReactionKey(data)) != null) {
     // try to dup pluses
     return;
   }
 
-  const userName = await this.bot.getUserNameFromId(data.item_user);
   const user = userName.user.profile.display_name || userName.user.name;
   if (data.user === data.item_user) {
     this.bot.postMessageToThread(data.item.channel, `Stop tryna hack ${user}`, data.item.ts);
