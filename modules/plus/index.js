@@ -1,11 +1,12 @@
 'use strict';
+const reactionHandler = require("./reaction-handler");
+const plusHandler = require("./plus-handler");
 
 const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
 const PlusHelper = require('./plus-helper.js');
 const cache = require('memory-cache');
 
 
-const SPAM_KEY = "spamalot";
 
 module.exports = class Plus extends BaseStorageModule {
   constructor(bot) {
@@ -52,22 +53,8 @@ module.exports = class Plus extends BaseStorageModule {
     );
   }
 
-  hacker(data) {
-    if (data.user === data.user_text) {
-      return true;
-    }
-
-
-    let group;
-    while (group = userPattern.exec(data.user_text)) {
-      if (group && data.user === group[1] || data.user_text === group[1]) {
-        return true;
-      }
-    }
-  }
-
   async plusUser(data, matches) {
-    if (this.hacker(data)) {
+    if (plusHandler.hacker(data)) {
       // Person is being an ahole and trying to plus themselves!
       this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!", data.ts);
       return;
@@ -146,46 +133,26 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handleReaction(data) {
-    if (
-      data.reaction === 'eggplant' &&
-      cache.get(this.getReactionKey(data)) === null
-    ) {
+    if (data.reaction === 'eggplant' && cache.get(this.getReactionKey(data)) === null) {
+      const msg = reactionHandler.eggplantReaction(data);
       cache.put(this.getReactionKey(data), '', 5 * 60 * 1000, () => { });
       this.bot.postMessageToThread(
         data.item.channel,
-        '( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)',
+        msg,
         data.item.ts,
         {}
       );
-      return;
     }
 
-    if (data.reaction !== 'heavy_plus_sign' || !data.item_user) {
-      return;
+    if (data.reaction === 'heavy_plus_sign') {
+      const msg = reactionHandler.handlePlus(data);
+      if (!msg) { return }
+      await this.plusUserFromReaction(data);
+      this.bot.postMessageToThread(data.item.channel, msg, data.item.ts);
     }
-
-    this.plusUserFromReaction(data);
   }
 
-  async plusUserFromReaction(data) {
-    if (cache.get(this.getReactionKey(data)) != null) {
-      // try to dup pluses
-      return;
-    }
 
-    const userName = await this.bot.getUserNameFromId(data.item_user);
-    const user = userName.user.profile.display_name || userName.user.name;
-    if (data.user === data.item_user) {
-      this.bot.postMessageToThread(data.item.channel, `Stop tryna hack ${user}`, data.item.ts);
-      return;
-    }
-
-    const pluses = await this.plusHelper.plusUser(user);
-    cache.put(this.getReactionKey(data), '', 5 * 60 * 1000, () => { });
-
-    const msg = `${user} now has ${pluses} pluses!`;
-    this.bot.postMessageToThread(data.item.channel, msg, data.item.ts);
-  }
 
 
   getReactionKey(data) {
