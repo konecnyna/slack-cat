@@ -16,7 +16,7 @@ module.exports.handlePlus = async (data, userName, plusHelper) => {
   }
 
   const pluses = await plusHelper.plusUser(user);
-  cache.put(this.getReactionKey(data), '', 5 * 60 * 1000, () => { });
+  cache.put(getReactionKey(data), '', 5 * 60 * 1000, () => { });
 
   return `${user} now has ${pluses} pluses!`;
 }
