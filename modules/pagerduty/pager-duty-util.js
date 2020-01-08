@@ -1,6 +1,6 @@
 const request = require('request-promise');
 const moment = require('moment');
-const qs = require('query-string');
+const queryString = require('query-string');
 
 const ICON = 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png';
 const USER_NAME = 'PagerDutyCat';
@@ -14,84 +14,86 @@ const ERRORS = {
 
 module.exports = class PagerDutyUtil {
 
-  async getData(policies) {
-    // var options = {
-    //   url: 'https://api.pagerduty.com/oncalls',
-    //   headers: {
-    //     Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
-    //     'Content-Type': 'application/json',
-    //     Accept: 'application/vnd.pagerduty+json;version=2',
-    //   },
-    //   useQuerystring: true,
-    //   query: qs.stringify({ schedule_ids: ['PODKGV5'] }),
-    //   json: true
-    // };
+  async getData(schedules) {
+    const scheduleIds = schedules.map(it => {
+      return it.schedule_id
+    });
 
-    // var options2 = {
-    //   url: 'https://api.pagerduty.com/schedules/PODKGV5/overrides',
-    //   headers: {
-    //     Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
-    //     'Content-Type': 'application/json',
-    //     Accept: 'application/vnd.pagerduty+json;version=2',
-    //   },
-    //   qs: {
-    //     since: moment().toISOString(),
-    //     until: moment().add(8, 'hours').toISOString(),
-    //   },
-    //   json: true
-    // };
+    const scheduleGroups = await this.getScheduleGroups(schedules, scheduleIds);
+    // await this.addOverrides(scheduleGroups, scheduleIds)
+    return scheduleGroups;
+  }
 
-    //https://api-reference.pagerduty.com/#!/Schedules/get_schedules
+  async getScheduleGroups(schedules, scheduleIds) {
     const options = {
-      url: 'https://api.pagerduty.com/schedules',
+      url: `https://api.pagerduty.com/oncalls?schedule_ids[]=${scheduleIds.join(",")}`,
       headers: {
         Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
         'Content-Type': 'application/json',
         Accept: 'application/vnd.pagerduty+json;version=2',
       },
-      useQuerystring: true,
-      query: qs.stringify({ schedule_ids: ['PODKGV5'] }),
       json: true
     };
 
-    const kew = await request(options)
-    //const kew2 = await request(options2)
+    const { oncalls } = await request(options);
+    const scheduleGroups = {};
+    oncalls.forEach(item => {
+      for (var i = 0; i < schedules.length; i++) {
+        if (schedules[i].schedule_id === item.schedule.id) {
+          if (!scheduleGroups[schedules[i].schedule_id]) {
+            scheduleGroups[schedules[i].schedule_id] = [];
+          }
 
-    console.log(kew);
-    // console.log(JSON.stringify(d, null, 2))
-    // // console.log(moment().toISOString())
-
-    // const { oncalls } = await request(options);
-    // const policyGroups = {};
-    // oncalls.map(item => {
-    //   for (var i = 0; i < policies.length; i++) {
-    //     if (policies[i].policy_id === item.escalation_policy.id) {
-    //       if (!policyGroups[policies[i].policy_id]) {
-    //         policyGroups[policies[i].policy_id] = [];
-    //       }
-
-    //       policyGroups[policies[i].policy_id].push(item);
-    //     }
-    //   }
-    // });
-    // return policyGroups;
+          scheduleGroups[schedules[i].schedule_id].push(item);
+        }
+      }
+    });
+    return scheduleGroups;
   }
 
-  makeFields(policy) {
-    console.log(policy)
+  async addOverrides(scheduleGroups, scheduleIds) {
+    const overridePromises = scheduleIds.map(it => {
+      return request({
+        url: `https://api.pagerduty.com/schedules/${it}/overrides`,
+        headers: {
+          Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
+          'Content-Type': 'application/json',
+          Accept: 'application/vnd.pagerduty+json;version=2',
+        },
+        qs: {
+          since: moment().toISOString(),
+          until: moment().add(8, 'hours').toISOString(),
+        },
+        json: true
+      });
+    })
+
+    const scheduleOverrides = await Promise.all(overridePromises)
+    scheduleOverrides.forEach(scheduleOverride => {
+      scheduleOverride.overrides.map((it, index) => {
+        const id = scheduleIds[index];
+        const schedule = scheduleGroups[id];
+        it["escalation_level"] = `1 (override)`;
+        schedule.push(it);
+      });
+    })
+  }
+
+  makeFields(schedule) {
     const map = {};
-    policy.map(item => {
-      const key = `Level: ${item.escalation_level}`;
-      if (key in map) {
-        map[key].value += ', ' + item.user.summary;
-      } else {
-        map[key] = {
-          level: item.escalation_level,
-          title: 'Level ' + item.escalation_level,
-          value: item.user.summary,
-          short: false,
-        };
-      }
+    schedule.map(({ escalation_policy }) => {
+      const key = `Level: ${escalation_policy.escalation_level}`;
+      console.log(key);
+      // if (key in map) {
+      //   map[key].value += ', ' + item.user.summary;
+      // } else {
+      //   map[key] = {
+      //     level: item.escalation_level,
+      //     title: 'Level ' + item.escalation_level,
+      //     value: item.user.summary,
+      //     short: false,
+      //   };
+      // }
     });
 
     return map;
