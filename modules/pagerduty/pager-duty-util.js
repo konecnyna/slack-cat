@@ -1,4 +1,6 @@
-const request = require("request");
+const request = require('request-promise');
+const moment = require('moment');
+const qs = require('query-string');
 
 const ICON = 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png';
 const USER_NAME = 'PagerDutyCat';
@@ -12,44 +14,71 @@ const ERRORS = {
 
 module.exports = class PagerDutyUtil {
 
-  getData(policies) {
-    var options = {
-      url: 'https://api.pagerduty.com/oncalls',
+  async getData(policies) {
+    // var options = {
+    //   url: 'https://api.pagerduty.com/oncalls',
+    //   headers: {
+    //     Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
+    //     'Content-Type': 'application/json',
+    //     Accept: 'application/vnd.pagerduty+json;version=2',
+    //   },
+    //   useQuerystring: true,
+    //   query: qs.stringify({ schedule_ids: ['PODKGV5'] }),
+    //   json: true
+    // };
+
+    // var options2 = {
+    //   url: 'https://api.pagerduty.com/schedules/PODKGV5/overrides',
+    //   headers: {
+    //     Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
+    //     'Content-Type': 'application/json',
+    //     Accept: 'application/vnd.pagerduty+json;version=2',
+    //   },
+    //   qs: {
+    //     since: moment().toISOString(),
+    //     until: moment().add(8, 'hours').toISOString(),
+    //   },
+    //   json: true
+    // };
+
+    //https://api-reference.pagerduty.com/#!/Schedules/get_schedules
+    const options = {
+      url: 'https://api.pagerduty.com/schedules',
       headers: {
         Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
         'Content-Type': 'application/json',
         Accept: 'application/vnd.pagerduty+json;version=2',
       },
+      useQuerystring: true,
+      query: qs.stringify({ schedule_ids: ['PODKGV5'] }),
+      json: true
     };
 
-    return new Promise((resolve, reject) => {
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-          console.error(error);
-          return;
-        }
+    const kew = await request(options)
+    //const kew2 = await request(options2)
 
-        const json = JSON.parse(body);
-        const policyGroups = {};
-        json.oncalls.map(item => {
-          for (var i = 0; i < policies.length; i++) {
-            if (policies[i].policy_id === item.escalation_policy.id) {
-              if (!policyGroups[policies[i].policy_id]) {
-                policyGroups[policies[i].policy_id] = [];
-              }
+    console.log(kew);
+    // console.log(JSON.stringify(d, null, 2))
+    // // console.log(moment().toISOString())
 
-              policyGroups[policies[i].policy_id].push(item);
-            }
-          }
-        });
+    // const { oncalls } = await request(options);
+    // const policyGroups = {};
+    // oncalls.map(item => {
+    //   for (var i = 0; i < policies.length; i++) {
+    //     if (policies[i].policy_id === item.escalation_policy.id) {
+    //       if (!policyGroups[policies[i].policy_id]) {
+    //         policyGroups[policies[i].policy_id] = [];
+    //       }
 
-        resolve(policyGroups);
-      });
-    });
+    //       policyGroups[policies[i].policy_id].push(item);
+    //     }
+    //   }
+    // });
+    // return policyGroups;
   }
 
   makeFields(policy) {
+    console.log(policy)
     const map = {};
     policy.map(item => {
       const key = `Level: ${item.escalation_level}`;
