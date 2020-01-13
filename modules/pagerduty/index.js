@@ -8,7 +8,7 @@ module.exports = class PagerDuty extends BaseModule {
     new CronJob(
       "00 00 10 * * 1,2,3,4,5",
       () => {
-        this.postToChannel("", "");
+        this.handleCron();
       },
       null,
       true,
@@ -37,11 +37,18 @@ module.exports = class PagerDuty extends BaseModule {
       return;
     }
 
-    this.postToChannel(result, data.channel);
+    this.postToChannel(result.policy_id, data.channel);
   }
 
-  async postToChannel(team, channel) {
-    const scheduleGroups = await pdUtil.getData(team.escalationPolicyId);
+  async handleCron() {
+    const { teams } = config.getKey('pager_duty_api')
+    teams.forEach(it => {
+      this.postToChannel(it.policy_id, it.channel_id)
+    });
+  }
+
+  async postToChannel(policy_id, channel) {
+    const scheduleGroups = await pdUtil.getData(policy_id);
 
     const title = scheduleGroups[0].escalation_policy.summary
     const fields = scheduleGroups.map(escalation => {
