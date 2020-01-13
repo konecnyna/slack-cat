@@ -15,7 +15,7 @@ module.exports = class ChannelAnniversaries {
   isDateAYearToday(channel) {
     const days = moment().diff(channel.created * 1000, 'day');
     channel['years_old'] = parseInt(days / 365);
-    return days % 365 === 0;
+    return days && (days % 365 === 0);
   }
 
   async getChannelAnniversary(channelId) {
