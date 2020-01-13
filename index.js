@@ -34,6 +34,7 @@ class SlackCat {
       idle: 10000,
     };
     const dbConfig = config.getKey('db');
+    console.log("!!!!!!", dbConfig)
     if (!dbConfig) {
       global.database = new Sequelize(null, null, null, {
         dialect: 'sqlite',
