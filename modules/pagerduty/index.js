@@ -42,7 +42,7 @@ module.exports = class PagerDuty extends BaseModule {
 
   async handleCron() {
     const { teams } = config.getKey('pager_duty_api')
-    teams.forEach(it => {
+    teams.filter(team => team.channel_id).forEach(it => {
       this.postToChannel(it.policy_id, it.channel_id)
     });
   }
