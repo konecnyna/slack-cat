@@ -14,19 +14,14 @@ const ERRORS = {
 
 module.exports = class PagerDutyUtil {
 
-  async getData(schedules) {
-    const scheduleIds = schedules.map(it => {
-      return it.schedule_id
-    });
-
-    const scheduleGroups = await this.getScheduleGroups(schedules, scheduleIds);
-    // await this.addOverrides(scheduleGroups, scheduleIds)
+  async getData(escalationPolicyId) {
+    const scheduleGroups = await this.getScheduleGroups(escalationPolicyId);
     return scheduleGroups;
   }
 
-  async getScheduleGroups(schedules, scheduleIds) {
+  async getScheduleGroups(escalationPolicyId) {
     const options = {
-      url: `https://api.pagerduty.com/oncalls?schedule_ids[]=${scheduleIds.join(",")}`,
+      url: `https://api.pagerduty.com/oncalls?include[]=escalation_policies&escalation_policy_ids[]=${escalationPolicyId}`,
       headers: {
         Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
         'Content-Type': 'application/json',
@@ -36,67 +31,7 @@ module.exports = class PagerDutyUtil {
     };
 
     const { oncalls } = await request(options);
-    const scheduleGroups = {};
-    oncalls.forEach(item => {
-      for (var i = 0; i < schedules.length; i++) {
-        if (schedules[i].schedule_id === item.schedule.id) {
-          if (!scheduleGroups[schedules[i].schedule_id]) {
-            scheduleGroups[schedules[i].schedule_id] = [];
-          }
-
-          scheduleGroups[schedules[i].schedule_id].push(item);
-        }
-      }
-    });
-    return scheduleGroups;
-  }
-
-  async addOverrides(scheduleGroups, scheduleIds) {
-    const overridePromises = scheduleIds.map(it => {
-      return request({
-        url: `https://api.pagerduty.com/schedules/${it}/overrides`,
-        headers: {
-          Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
-          'Content-Type': 'application/json',
-          Accept: 'application/vnd.pagerduty+json;version=2',
-        },
-        qs: {
-          since: moment().toISOString(),
-          until: moment().add(8, 'hours').toISOString(),
-        },
-        json: true
-      });
-    })
-
-    const scheduleOverrides = await Promise.all(overridePromises)
-    scheduleOverrides.forEach(scheduleOverride => {
-      scheduleOverride.overrides.map((it, index) => {
-        const id = scheduleIds[index];
-        const schedule = scheduleGroups[id];
-        it["escalation_level"] = `1 (override)`;
-        schedule.push(it);
-      });
-    })
-  }
-
-  makeFields(schedule) {
-    const map = {};
-    schedule.map(({ escalation_policy }) => {
-      const key = `Level: ${escalation_policy.escalation_level}`;
-      console.log(key);
-      // if (key in map) {
-      //   map[key].value += ', ' + item.user.summary;
-      // } else {
-      //   map[key] = {
-      //     level: item.escalation_level,
-      //     title: 'Level ' + item.escalation_level,
-      //     value: item.user.summary,
-      //     short: false,
-      //   };
-      // }
-    });
-
-    return map;
+    return oncalls;
   }
 
   postFieldsToChannel(bot, channel, title, fields) {

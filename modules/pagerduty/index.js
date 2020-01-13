@@ -30,38 +30,29 @@ module.exports = class PagerDuty extends BaseModule {
       return;
     }
 
-    this.postToChannel(data.user_text, data.channel);
+    const { teams } = config.getKey('pager_duty_api')
+    const result = teams.find(it => it.team_name === data.user_text.trim())
+    if (!result) {
+      this.bot.postMessage(data.channel, "Couldn't find that team!");
+      return;
+    }
+
+    this.postToChannel(result, data.channel);
   }
 
-  async postToChannel(dataTeamName, channel) {
-    const { teams } = config.getKey('pager_duty_api')
-    const scheduleGroups = await pdUtil.getData(teams);
-    console.log(JSON.stringify(scheduleGroups, null, 2));
-    Object.keys(scheduleGroups).forEach(scheduleKey => {
-      const channelId = teams.find(team => team.schedule_id === scheduleKey)
-      const fields = pdUtil.makeFields(scheduleGroups[scheduleKey]);
-      // console.log(fields)
-      // const title = oncall[0].escalation_policy.summary;
-      // pdUtil.postFieldsToChannel(this.bot, channelId, title, fields);
-    })
-    // pager_duty_api_json_obj["teams"].map(async it => {
-    //   // team_name and channel_name will be blank for cron job.
-    //   // Hence post the list to the channel_id, configured in config.json
-    //   var channelName = channel
-    //   if (channel === "") {
-    //     channelName = it.channel_id
-    //   }
+  async postToChannel(team, channel) {
+    const scheduleGroups = await pdUtil.getData(team.escalationPolicyId);
 
-    //   // Either team_name should be blank i.e. cron job is executing OR
-    //   // team_name matches with the argument passed with the command, to print oncall for that team only.
-    //   if (dataTeamName === "" || dataTeamName === it.team_name) {
-    //     const body = await pdUtil.getData([it]);
-    //     const oncall = body[it.policy_id];
-    //     const fields = pdUtil.makeFields(oncall);
-    //     const title = oncall[0].escalation_policy.summary;
-    //     pdUtil.postFieldsToChannel(this.bot, channelName, title, fields);
-    //   }
-    // });
+    const title = scheduleGroups[0].escalation_policy.summary
+    const fields = scheduleGroups.map(escalation => {
+      return {
+        level: escalation.escalation_level,
+        title: 'Level ' + escalation.escalation_level,
+        value: escalation.user.summary,
+        short: false,
+      };
+    })
+    pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
   }
 
   isValidConfig() {
