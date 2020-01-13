@@ -1,4 +1,6 @@
-const request = require("request");
+const request = require('request-promise');
+const moment = require('moment');
+const queryString = require('query-string');
 
 const ICON = 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png';
 const USER_NAME = 'PagerDutyCat';
@@ -12,60 +14,24 @@ const ERRORS = {
 
 module.exports = class PagerDutyUtil {
 
-  getData(policies) {
-    var options = {
-      url: 'https://api.pagerduty.com/oncalls',
+  async getData(escalationPolicyId) {
+    const scheduleGroups = await this.getScheduleGroups(escalationPolicyId);
+    return scheduleGroups;
+  }
+
+  async getScheduleGroups(escalationPolicyId) {
+    const options = {
+      url: `https://api.pagerduty.com/oncalls?include[]=escalation_policies&escalation_policy_ids[]=${escalationPolicyId}`,
       headers: {
         Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
         'Content-Type': 'application/json',
         Accept: 'application/vnd.pagerduty+json;version=2',
       },
+      json: true
     };
 
-    return new Promise((resolve, reject) => {
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-          console.error(error);
-          return;
-        }
-
-        const json = JSON.parse(body);
-        const policyGroups = {};
-        json.oncalls.map(item => {
-          for (var i = 0; i < policies.length; i++) {
-            if (policies[i].policy_id === item.escalation_policy.id) {
-              if (!policyGroups[policies[i].policy_id]) {
-                policyGroups[policies[i].policy_id] = [];
-              }
-
-              policyGroups[policies[i].policy_id].push(item);
-            }
-          }
-        });
-
-        resolve(policyGroups);
-      });
-    });
-  }
-
-  makeFields(policy) {
-    const map = {};
-    policy.map(item => {
-      const key = `Level: ${item.escalation_level}`;
-      if (key in map) {
-        map[key].value += ', ' + item.user.summary;
-      } else {
-        map[key] = {
-          level: item.escalation_level,
-          title: 'Level ' + item.escalation_level,
-          value: item.user.summary,
-          short: false,
-        };
-      }
-    });
-
-    return map;
+    const { oncalls } = await request(options);
+    return oncalls;
   }
 
   postFieldsToChannel(bot, channel, title, fields) {

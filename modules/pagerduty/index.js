@@ -8,7 +8,7 @@ module.exports = class PagerDuty extends BaseModule {
     new CronJob(
       "00 00 10 * * 1,2,3,4,5",
       () => {
-        this.postToChannel("", "");
+        this.handleCron();
       },
       null,
       true,
@@ -30,29 +30,36 @@ module.exports = class PagerDuty extends BaseModule {
       return;
     }
 
-    this.postToChannel(data.user_text, data.channel);
+    const { teams } = config.getKey('pager_duty_api')
+    const result = teams.find(it => it.team_name === data.user_text.trim())
+    if (!result) {
+      this.bot.postMessage(data.channel, "Couldn't find that team!");
+      return;
+    }
+
+    this.postToChannel(result.policy_id, data.channel);
   }
 
-  async postToChannel(dataTeamName, channel) {
-    var pager_duty_api_json_obj = config.getKey('pager_duty_api')
-    pager_duty_api_json_obj["teams"].map(async it => {
-      // team_name and channel_name will be blank for cron job.
-      // Hence post the list to the channel_id, configured in config.json
-      var channelName = channel
-      if (channel === "") {
-        channelName = it.channel_id
-      }
-
-      // Either team_name should be blank i.e. cron job is executing OR
-      // team_name matches with the argument passed with the command, to print oncall for that team only.
-      if (dataTeamName === "" || dataTeamName === it.team_name) {
-        const body = await pdUtil.getData([it]);
-        const oncall = body[it.policy_id];
-        const fields = pdUtil.makeFields(oncall);
-        const title = oncall[0].escalation_policy.summary;
-        pdUtil.postFieldsToChannel(this.bot, channelName, title, fields);
-      }
+  async handleCron() {
+    const { teams } = config.getKey('pager_duty_api')
+    teams.forEach(it => {
+      this.postToChannel(it.policy_id, it.channel_id)
     });
+  }
+
+  async postToChannel(policy_id, channel) {
+    const scheduleGroups = await pdUtil.getData(policy_id);
+
+    const title = scheduleGroups[0].escalation_policy.summary
+    const fields = scheduleGroups.map(escalation => {
+      return {
+        level: escalation.escalation_level,
+        title: 'Level ' + escalation.escalation_level,
+        value: escalation.user.summary,
+        short: false,
+      };
+    })
+    pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
   }
 
   isValidConfig() {
