@@ -46,7 +46,7 @@ class SlackCat {
     }
 
     const { dialect, username, password, host, port } = dbConfig;
-    global.database = new Sequelize(url, username, password, {
+    global.database = new Sequelize(host, username, password, {
       dialect: dialect,
       host: host,
       port: port,
