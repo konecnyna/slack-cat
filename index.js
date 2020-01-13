@@ -21,21 +21,45 @@ const {
 
 class SlackCat {
   constructor(pathToModules, configPath, dbPath) {
-    global.database = new Sequelize(null, null, null, {
-      dialect: 'sqlite',
-      storage: dbPath, // global.
-      logging: false,
-      operatorsAliases: false,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-      },
-    });
-
     this.pathToModules = pathToModules
     global.config = new Config(configPath)
+    this.initDatabase(dbPath);
+  }
+
+  initDatabase(dbPath) {
+    const poolConfig = {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    };
+    const dbConfig = config.getKey('db');
+    console.log("!!!!!!", dbConfig)
+    if (!dbConfig) {
+      global.database = new Sequelize(null, null, null, {
+        dialect: 'sqlite',
+        storage: dbPath, // global.
+        logging: false,
+        operatorsAliases: false,
+        pool: poolConfig,
+      });
+      return;
+    }
+
+    const { dialect, username, password, port, host, dbName } = dbConfig;
+    const sequelizeConfig = {
+      dialect: dialect,
+      port: port,
+      logging: false,
+      operatorsAliases: false,
+      pool: poolConfig,
+    }
+
+    if (host) {
+      sequelizeConfig['host'] = host;
+    }
+
+    global.database = new Sequelize(dbName, username, password, sequelizeConfig);
   }
 
   start() {
