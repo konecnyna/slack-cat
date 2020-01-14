@@ -110,17 +110,17 @@ module.exports = class Plus extends BaseStorageModule {
         cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
       }
 
-      Object.keys(plusMap).forEach(it => {
+      const msgs = Object.keys(plusMap).map(it => {
         const user = plusMap[it];
         let occurrences = "";
         if (user.occurrences > 1) {
           occurrences = `(+${user.occurrences})`;
         }
 
-        this.bot.postMessageToThread(data.channel, `${it} now has ${user.total} pluses! ${occurrences}`, data.ts);
-      })
+        return `${it} now has ${user.total} pluses! ${occurrences}`
+      });
 
-
+      this.bot.postMessageToThread(data.channel, msgs.join("\n"), data.ts);
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);
