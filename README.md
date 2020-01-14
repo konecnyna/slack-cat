@@ -121,6 +121,19 @@ module.exports = class HelloWorld extends BaseModule {
 | ENDPOINT | This module handling server side  | `createRoutes(data)` |
 | DIALOG | This creates a dialog for a user to interact with  | `createRoutes(app)` `onDialogSubmit(data)` |
 
+# Database
+
+Slackcat has the ability to use many types of databases. By default it will use a light weight sqlite3 database however you can define your own:
+```json
+"db": {
+  "host": "postgres-db",
+  "port": "5432",
+  "dbName": "slackcat",
+  "username": "**************",
+  "password": "*************",
+  "dialect": "postgres"
+}
+```
 # Dialogs
 
 There is some more complexities with setting up dialogs in slack [detailed here](https://github.com/konecnyna/slack-cat/wiki/Dialog)
