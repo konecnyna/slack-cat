@@ -363,7 +363,7 @@ module.exports = class Asciimoji extends BaseModule {
       return;
     }
     const messageArray = [];
-    const noWrap = data.args.includes('--nowrap');
+    const noWrap = data.args.includes('--nowrap') || data.args.includes('--no-wrap');
     while (input.letterArray.length > 0) {
       let chunk = input.letterArray.splice(0, noWrap ? 1000 : 5); // deal with it 😎
       let line = '';
