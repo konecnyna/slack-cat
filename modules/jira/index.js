@@ -64,8 +64,8 @@ module.exports = class Jira extends BaseModule {
     this.bot.postMessage(data.channel, this.help())
   }
 
-  getProjectList() {
-    return jira.listProjects()
+  async getProjectList() {
+    return await jira.listProjects()
   }
 
   postUserTix(data, searchResults) {
