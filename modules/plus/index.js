@@ -41,11 +41,10 @@ module.exports = class Plus extends BaseStorageModule {
 
   async getUserPluses(data, matches) {
     let user = data.user_text;
+    const pluses = await this.plusHelper.displayPlusesForUser(data.user);
     if (matches && matches.length > 1) {
       user = await this.getUserNameFromId(matches[1]);
     }
-
-    const pluses = await this.plusHelper.displayPlusesForUser(user);
     this.bot.postMessageToThread(
       data.channel,
       `${data.user_text} has ${pluses} pluses!`,
@@ -92,14 +91,12 @@ module.exports = class Plus extends BaseStorageModule {
           map[group[1]] = map[group[1]] + 1;
         }
 
-
         // prevent spam.
         if (map[group[1]] > 3) {
           return;
         }
-
         const userName = await this.getUserNameFromId(group[1]);
-        const total = await this.plusHelper.plusUser(userName);
+        const total = await this.plusHelper.plusUser(group[1]);
         if (!plusMap[userName]) {
           plusMap[userName] = {
             occurrences: 0
@@ -172,8 +169,8 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async registerSqliteModel() {
-    this.PlusModel = this.db.define('pluses', {
-      name: { type: this.Sequelize.STRING, primaryKey: true },
+    this.PlusModel = this.db.define('pluses_table', {
+      slackId: { type: this.Sequelize.STRING, primaryKey: true },
       pluses: this.Sequelize.INTEGER,
     });
   }
