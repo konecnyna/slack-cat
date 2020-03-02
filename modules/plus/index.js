@@ -15,6 +15,9 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handle(data) {
+    this.plusHelper.migrate()
+    return;
+
     if (data.cmd === '--') {
       this.plusHelper.displayBeingMeanMsg(data);
       return;
@@ -53,6 +56,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async plusUser(data, matches) {
+
     if (plusHandler.hacker(data)) {
       // Person is being an ahole and trying to plus themselves!
       this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!", data.ts);
@@ -149,9 +153,6 @@ module.exports = class Plus extends BaseStorageModule {
     }
   }
 
-
-
-
   getReactionKey(data) {
     return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${
       data.item.reaction
@@ -169,7 +170,12 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async registerSqliteModel() {
-    this.PlusModel = this.db.define('pluses_table', {
+    this.PlusModel = this.db.define('pluses', {
+      name: { type: this.Sequelize.STRING, primaryKey: true },
+      pluses: this.Sequelize.INTEGER,
+    });
+
+    this.PlusModelNew = this.db.define('pluses_table', {
       slackId: { type: this.Sequelize.STRING, primaryKey: true },
       pluses: this.Sequelize.INTEGER,
     });

@@ -72,6 +72,21 @@ module.exports = class PlusHelper {
     return await pluses.get('pluses');
   }
 
+
+  async migrate() {
+    const web = new WebClient(config.getKey('slack_access_token'));
+    const newTable = database.modelManager.getModel("pluses_table")
+    const oldTable = database.modelManager.getModel("pluses")
+    const test = await web.users.list()
+    console.log(test)
+    // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    // console.log(oldTable)
+    // const rows = await oldTable.findAll();
+    // rows.forEach(val => {
+    //   console.log(val.get('name'))
+    // })
+  }
+
   getPlusModel() {
     return database.modelManager.getModel("pluses_table")
   }

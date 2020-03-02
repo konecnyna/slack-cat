@@ -9,6 +9,7 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   async handle(data) {
+    console.log("hi")
     if (data.cmd.includes('endorsements')) {
       const msg = await this.handleEndorsements(data);
       this.bot.postMessageToThread(
