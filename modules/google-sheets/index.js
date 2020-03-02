@@ -1,5 +1,5 @@
 "use strict";
-const GoogleSpreadsheet = require("google-spreadsheet");
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 const GoogleSheetsUtil = require('./spread-sheet-util');
 const sheets = config.getKey('google_sheets');
 const DOC_URL = `https://docs.google.com/spreadsheets/d/${sheets ? sheets.sheet_id : "" || ""}`
