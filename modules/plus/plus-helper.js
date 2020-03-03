@@ -24,8 +24,9 @@ module.exports = class PlusHelper {
 
     const fields = [];
     pluses.forEach((plus, index) => {
+      const name = await this.context.bot.getUserNameFromId(plus.get('slackId'))
       fields.push({
-        title: `${index + 1}. ${plus.get('slackId')} (${plus.get(
+        title: `${index + 1}. ${name} (${plus.get(
           'pluses'
         )} pluses)`,
         short: false,
