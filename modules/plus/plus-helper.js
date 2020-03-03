@@ -26,7 +26,7 @@ module.exports = class PlusHelper {
     for (var i = 0; i < pluses.length; i++) {
       const name = await this.getDisplayName(pluses[i].get('slackId'))
       fields.push({
-        title: `${index + 1}. ${name} (${pluses[i].get(
+        title: `${i + 1}. ${name} (${pluses[i].get(
           'pluses'
         )} pluses)`,
         short: false,
