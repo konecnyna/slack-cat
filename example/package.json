@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "slack-cat": "git+https://github.com/konecnyna/slack-cat.git",
+    "slack-cat": "../index.js",
     "sqlite3": "^3.1.13"
   }
 }
