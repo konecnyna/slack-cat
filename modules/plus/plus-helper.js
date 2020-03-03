@@ -24,7 +24,7 @@ module.exports = class PlusHelper {
 
     const fields = [];
     pluses.forEach(async (plus, index) => {
-      const name = await this.context.bot.getUserNameFromId(plus.get('slackId'))
+      const name = await this.getDisplayName(plus.get('slackId'))
       fields.push({
         title: `${index + 1}. ${name} (${plus.get(
           'pluses'
@@ -56,6 +56,13 @@ module.exports = class PlusHelper {
       }`,
       data.ts
     );
+  }
+
+  async getDisplayName(slackId) {
+    const userData = await this.context.bot.getUserNameFromId(data.user);
+    return userData.user.display_name
+      ? userData.user.display_name
+      : userData.user.name
   }
 
   async plusUser(userSlackId) {
