@@ -23,15 +23,15 @@ module.exports = class PlusHelper {
     });
 
     const fields = [];
-    pluses.forEach(async (plus, index) => {
-      const name = await this.getDisplayName(plus.get('slackId'))
+    for (var i = 0; i < pluses.length; i++) {
+      const name = await this.getDisplayName(pluses[i].get('slackId'))
       fields.push({
-        title: `${index + 1}. ${name} (${plus.get(
+        title: `${index + 1}. ${name} (${pluses[i].get(
           'pluses'
         )} pluses)`,
         short: false,
       });
-    });
+    }
 
     this.context.bot.postRawMessage(data.channel, {
       icon_emoji: ':chart_with_upwards_trend:',
