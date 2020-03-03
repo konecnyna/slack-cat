@@ -1,3 +1,6 @@
+
+const data = require('./memebers')
+
 module.exports = class PlusHelper {
   constructor(context) {
     this.context = context;
@@ -74,20 +77,43 @@ module.exports = class PlusHelper {
 
 
   async migrate() {
-    const web = new WebClient(config.getKey('slack_access_token'));
     const newTable = database.modelManager.getModel("pluses_table")
     const oldTable = database.modelManager.getModel("pluses")
-    const test = await web.users.list()
-    console.log(test)
-    // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    // console.log(oldTable)
-    // const rows = await oldTable.findAll();
-    // rows.forEach(val => {
-    //   console.log(val.get('name'))
-    // })
+    const { members } = data
+    const rows = await oldTable.findAll();
+    for (var i = 0; i < members.length; i++) {
+      await this.findInRow(rows, newTable, members[i].profile.display_name, members[i].id)
+    }
+  }
+
+  async findInRow(rows, newTable, name, id) {
+    const test = rows.find(it => {
+      const dbName = it.get('name');
+      return name === dbName;
+    })
+
+    if (test) {
+      console.log(name, id)
+      const plusesAmount = await test.get('pluses')
+      const pluses = await this.context.upsert(
+        newTable,
+        { where: { slackId: id } },
+        {
+          slackId: id,
+          pluses: plusesAmount || 1,
+        },
+        {
+          pluses: plusesAmount,
+        }
+      );
+
+    }
   }
 
   getPlusModel() {
     return database.modelManager.getModel("pluses_table")
   }
 };
+
+
+
