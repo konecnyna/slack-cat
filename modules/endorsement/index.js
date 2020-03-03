@@ -9,6 +9,7 @@ module.exports = class Endorsements extends BaseStorageModule {
   }
 
   async handle(data) {
+    console.log("hi")
     if (data.cmd.includes('endorsements')) {
       const msg = await this.handleEndorsements(data);
       this.bot.postMessageToThread(
@@ -43,7 +44,7 @@ module.exports = class Endorsements extends BaseStorageModule {
 
   async plusUser(userId) {
     const name = await this.bot.getUserNameDisplayNameFromId(userId)
-    const pluses = await this.plusHelper.plusUser(name);
+    const pluses = await this.plusHelper.plusUser(userId);
     return `*${name}* has been endorsed and now has *${pluses} pluses*`;
   }
 
