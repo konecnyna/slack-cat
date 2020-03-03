@@ -59,7 +59,7 @@ module.exports = class PlusHelper {
   }
 
   async getDisplayName(slackId) {
-    const userData = await this.context.bot.getUserNameFromId(data.user);
+    const userData = await this.context.bot.getUserNameFromId(slackId);
     return userData.user.display_name
       ? userData.user.display_name
       : userData.user.name
