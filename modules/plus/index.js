@@ -15,9 +15,6 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async handle(data) {
-    this.plusHelper.migrate()
-    return;
-
     if (data.cmd === '--') {
       this.plusHelper.displayBeingMeanMsg(data);
       return;
