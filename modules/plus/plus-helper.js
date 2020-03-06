@@ -77,6 +77,19 @@ module.exports = class PlusHelper {
         pluses: this.context.db.literal('pluses + 1'),
       }
     );
+    
+    async triplePlusUser(userSlackId) {
+    const pluses = await this.context.upsert(
+      this.getPlusModel(),
+      { where: { slackId: userSlackId } },
+      {
+        slackId: userSlackId,
+        pluses: 3,
+      },
+      {
+        pluses: this.context.db.literal('pluses + 3'),
+      }
+    );
 
 
 
