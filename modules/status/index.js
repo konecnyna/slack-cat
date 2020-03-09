@@ -39,7 +39,7 @@ module.exports = class Stock extends BaseModule {
     await this.bot.setStatus(data.user, icon, text);
     this.bot.postMessageToThread(
       data.channel,
-      `I've updated your status to: "${status.text}"`,
+      `I've updated your status to: \`${status.text}\``,
       data.ts
     );
   }
@@ -47,7 +47,7 @@ module.exports = class Stock extends BaseModule {
 
 
   help() {
-    return 'Update your status!\nExample:\n`?status wfh` or `?s wfh`\nStatuses you can use:\n' + Object.keys(statusMap).join("\n");
+    return 'Update your status!\nExample:\n`?status wfh` or short-hand `?s wfh`\n------------------\nStatuses you can use:\n```' + Object.keys(statusMap).join("\n") + '```';
   }
 
 
