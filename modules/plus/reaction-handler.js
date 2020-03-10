@@ -15,7 +15,7 @@ module.exports.handlePlus = async (data, userName, plusHelper) => {
     return `Stop tryna hack ${user}`;
   }
 
-  const pluses = await plusHelper.plusUser(user);
+  const pluses = await plusHelper.plusUser(data.item_user);
   cache.put(getReactionKey(data), '', 5 * 60 * 1000, () => { });
 
   return `${user} now has ${pluses} pluses!`;

@@ -1,7 +1,7 @@
 'use strict';
 
 const EmojiFont = require('./emojifont.js');
-const GoogleSpreadsheet = require("google-spreadsheet");
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 const GoogleSheetsUtil = require('../google-sheets/spread-sheet-util');
 const HELP_MSG = "Sorry couldn't find the EmojiFont sheet.";
 const sheetParams = config.getKey("emojifont");
@@ -14,7 +14,7 @@ module.exports = class EmojifontModule extends BaseModule {
     this.googleSheetsUtil = new GoogleSheetsUtil();
     if (sheetParams && sheetParams.sheet_id) {
       this.doc = new GoogleSpreadsheet(sheetParams.sheet_id);
-    }    
+    }
   }
 
   async handle(data) {

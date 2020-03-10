@@ -217,4 +217,15 @@ module.exports = class SlackCatBot {
     const slackUser = await this.getUserNameFromId(matches[1].toUpperCase())
     return slackUser.user.name;
   }
+
+  async setStatus(userId, icon, text) {
+    return await this.workSpace.users.profile.set({
+      user: userId,
+      profile: {
+        "status_text": text,
+        "status_emoji": icon,
+        "status_expiration": 0
+      }
+    })
+  }
 }

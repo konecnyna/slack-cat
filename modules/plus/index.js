@@ -41,11 +41,10 @@ module.exports = class Plus extends BaseStorageModule {
 
   async getUserPluses(data, matches) {
     let user = data.user_text;
+    const pluses = await this.plusHelper.displayPlusesForUser(data.user);
     if (matches && matches.length > 1) {
       user = await this.getUserNameFromId(matches[1]);
     }
-
-    const pluses = await this.plusHelper.displayPlusesForUser(user);
     this.bot.postMessageToThread(
       data.channel,
       `${data.user_text} has ${pluses} pluses!`,
@@ -54,6 +53,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   async plusUser(data, matches) {
+
     if (plusHandler.hacker(data)) {
       // Person is being an ahole and trying to plus themselves!
       this.bot.postMessageToThread(data.channel, "You'll go blind like that kid!", data.ts);
@@ -92,14 +92,12 @@ module.exports = class Plus extends BaseStorageModule {
           map[group[1]] = map[group[1]] + 1;
         }
 
-
         // prevent spam.
         if (map[group[1]] > 3) {
           return;
         }
-
         const userName = await this.getUserNameFromId(group[1]);
-        const total = await this.plusHelper.plusUser(userName);
+        const total = await this.plusHelper.plusUser(group[1]);
         if (!plusMap[userName]) {
           plusMap[userName] = {
             occurrences: 0
@@ -110,17 +108,17 @@ module.exports = class Plus extends BaseStorageModule {
         cache.put(this.getPlusKey(data), '', 3 * 60 * 1000, () => { });
       }
 
-      Object.keys(plusMap).forEach(it => {
+      const msgs = Object.keys(plusMap).map(it => {
         const user = plusMap[it];
         let occurrences = "";
         if (user.occurrences > 1) {
           occurrences = `(+${user.occurrences})`;
         }
 
-        this.bot.postMessageToThread(data.channel, `${it} now has ${user.total} pluses! ${occurrences}`, data.ts);
-      })
+        return `${it} now has ${user.total} pluses! ${occurrences}`
+      });
 
-
+      this.bot.postMessageToThread(data.channel, msgs.join("\n"), data.ts);
     } catch (e) {
       console.error(e);
       this.postErrorMessage(data);
@@ -152,9 +150,6 @@ module.exports = class Plus extends BaseStorageModule {
     }
   }
 
-
-
-
   getReactionKey(data) {
     return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${
       data.item.reaction
@@ -174,6 +169,11 @@ module.exports = class Plus extends BaseStorageModule {
   async registerSqliteModel() {
     this.PlusModel = this.db.define('pluses', {
       name: { type: this.Sequelize.STRING, primaryKey: true },
+      pluses: this.Sequelize.INTEGER,
+    });
+
+    this.PlusModelNew = this.db.define('pluses_table', {
+      slackId: { type: this.Sequelize.STRING, primaryKey: true },
       pluses: this.Sequelize.INTEGER,
     });
   }
