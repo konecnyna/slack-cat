@@ -53,13 +53,16 @@ module.exports = class EmojiFeed extends BaseStorageModule {
   }
 
   postNewEmojis(list) {
-
+    const messages = list.map(key => {
+      return `${key} - :${key}:`
+    })
+    await this.bot.postMessage("CV689JSKF", messages.join("\n"))
   }
 
   registerSqliteModel() {
     this.EmojiFeed = this.db.define('emoji_feed', {
       key: { type: this.Sequelize.STRING, primaryKey: true },
-      value: this.Sequelize.STRING
+      value: this.Sequelize.STRING,
     });
   }
 
