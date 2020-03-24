@@ -5,6 +5,19 @@ const CronJob = require('cron').CronJob
 module.exports = class PagerDuty extends BaseModule {
   constructor(bot) {
     super(bot);
+    const { teams } = config.getKey('pager_duty_api')
+    teams.filter(it => it.cron).map(team => {
+      new CronJob(
+        team.cron,
+        () => {
+          this.postToChannel(team.policy_id, team.channel_id);
+        },
+        null,
+        true,
+        "America/New_York"
+      );
+    });
+
     new CronJob(
       "00 00 10 * * 1,2,3,4,5",
       () => {
@@ -42,7 +55,7 @@ module.exports = class PagerDuty extends BaseModule {
 
   async handleCron() {
     const { teams } = config.getKey('pager_duty_api')
-    teams.filter(team => team.channel_id).forEach(it => {
+    teams.filter(team => { return team.channel_id && !team.cron }).forEach(it => {
       this.postToChannel(it.policy_id, it.channel_id)
     });
   }
