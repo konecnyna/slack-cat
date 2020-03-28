@@ -1,0 +1,37 @@
+{
+   "bot_name": "test",
+   "bot_emoji": ":cat:",
+   "bot_icon_url": "http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png",
+   "darksky_api":"***",
+   "google_geocode_api":"***",
+   "pager_duty_api":"***",
+   "jira_api":{
+      "host":"***.atlassian.net",
+      "username":"****",
+      "password":"**"
+   },
+   "github":{
+      "username":"***",
+      "password":"****"
+   },
+   "mta":"***",
+   "modules_blacklist":[
+
+   ],
+   "channels_blacklist":{
+       "poop":["announcements"]
+   },
+   "node_env":"production",
+   "port":80,
+   //https://api.slack.com/apps/AA29DJCES/oauth?
+   "slack_access_token":"xoxb-***",
+   "google_sheets": {
+     "private_key": "-----BEGIN PRIVATE KEY----------END PRIVATE KEY-----\n",
+     "client_email": "",
+     "sheet_id": "YAMOM",
+   },
+   "emojifont": {
+     "sheet_id": "ItsTheIDInTheURL11111abcdefg123456",
+     "sheet_name": "TheNameOfTheSheetTab"
+   }
+}
