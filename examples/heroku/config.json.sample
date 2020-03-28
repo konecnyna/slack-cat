@@ -33,5 +33,14 @@
    "emojifont": {
      "sheet_id": "ItsTheIDInTheURL11111abcdefg123456",
      "sheet_name": "TheNameOfTheSheetTab"
-   }
+   },
+   "db": {
+    "host": "****.amazonaws.com",
+    "port": "5432",
+    "dbName": "*******************",
+    "username": "*******************",
+    "password": "*******************",
+    "dialect": "postgres",
+    "ssl": true
+  }
 }
