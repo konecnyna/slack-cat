@@ -21,3 +21,7 @@ Adding to the config:
   }
 }
 ```
+
+These are the database credentials from your newly crated heroku db
+
+https://data.heroku.com/datastores/XXX-XXX-XXXX#administration
