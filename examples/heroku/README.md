@@ -17,7 +17,9 @@ Adding to the config:
     "username": "*******************",
     "password": "*******************",
     "dialect": "postgres",
-    "ssl": true
+    "dialectOptions": {
+      ssl: true
+    }
   }
 }
 ```
