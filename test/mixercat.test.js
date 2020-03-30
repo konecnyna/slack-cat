@@ -24,7 +24,6 @@ const db = new Sequelize(null, null, null, {
   dialect: 'sqlite',
   storage: filePath,
   logging: false,
-  operatorsAliases: false,
   pool: {
     max: 5,
     min: 0,
@@ -126,12 +125,12 @@ const testMembers60 = [
   'blue',
 ];
 
-Array.prototype.flatten = function() {
+Array.prototype.flatten = function () {
   return [].concat.apply([], this);
 };
 
 describe('Mixercat Test', () => {
-  beforeEach(function() {
+  beforeEach(function () {
     // Drop all entries before test
     MixerCatModel.destroy({ where: {} });
   });
