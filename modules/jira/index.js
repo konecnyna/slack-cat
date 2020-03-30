@@ -1,8 +1,8 @@
 'use strict'
 const JiraApi = require('jira-client')
 const jiraSecrets = config.getKey('jira_api')
-let jira = false
 
+let jira = false
 if (jiraSecrets.host) {
   jira = new JiraApi({
     protocol: 'https',
@@ -65,6 +65,9 @@ module.exports = class Jira extends BaseModule {
   }
 
   async getProjectList() {
+    if (!jira) {
+      return console.error("No jira creds given so can't be used.")
+    }
     return await jira.listProjects()
   }
 
