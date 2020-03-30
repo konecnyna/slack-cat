@@ -40,7 +40,6 @@ class SlackCat {
         dialect: "sqlite",
         storage: dbPath, // global.
         logging: false,
-        operatorsAliases: false,
         pool: poolConfig
       });
       return;
@@ -51,7 +50,6 @@ class SlackCat {
       dialect: dialect,
       port: port,
       logging: false,
-      operatorsAliases: false,
       pool: poolConfig,
       dialectOptions: {
         ssl: ssl
