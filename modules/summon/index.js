@@ -8,6 +8,10 @@ const botParams = {
 
 module.exports = class GoogleImages extends BaseModule {
   async handle(data) {
+    let searchText = data.user_text;
+    if (data.cmd.includes("reaction")) {
+      searchText = `${searchText} reaction`
+    }
     const gif = await this.getData(data.user_text);
     this.bot.postMessageWithParams(data.channel, gif, botParams);
   }
@@ -31,7 +35,7 @@ module.exports = class GoogleImages extends BaseModule {
       qs: {
         api_key: key,
         rating: "pg",
-        tag: searchTerm.split(" ").join(",")
+        tag: searchTerm
       },
       json: true
     };
