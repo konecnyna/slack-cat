@@ -1,4 +1,4 @@
-const SlackCat = require('../index.js');
+const SlackCat = require('../../index.js');
 const Path = require('path');
 
 const configPath = Path.join(__dirname, 'config.json');
