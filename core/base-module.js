@@ -81,7 +81,13 @@ module.exports = class BaseModule {
     this.checkForOverriddenMethod(
       BaseModule.TYPES.ENDPOINT,
       this.createRoutes,
-      'createRoutes'
+      'createRoutes()'
+    );
+
+    this.checkForOverriddenMethod(
+      BaseModule.TYPES.ENDPOINT,
+      this.secretHash,
+      'secretHash()'
     );
 
     this.bot = bot;

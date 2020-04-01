@@ -96,6 +96,10 @@ module.exports = class About extends BaseModule {
     });
   }
 
+  secretHash() {
+    return null;
+  }
+
   aliases() {
     return ['source', 'help', 'commands', 'cmds'];
   }
