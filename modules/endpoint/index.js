@@ -3,11 +3,9 @@
 
 module.exports = class HelloWorldEndpoint extends BaseModule {
   createRoutes(app) {
-    app.get(`/teams/android/firefighter/details`, async (req, res) => {
+    app.get(`/hello-world`, async (req, res) => {
       res.json({
-        "details": {
-          "slackId": "ASDAf#@4"
-        }
+        "hello": "world!!!!!!!!!!"
       });
     });
   }
