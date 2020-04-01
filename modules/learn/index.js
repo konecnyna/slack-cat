@@ -232,6 +232,10 @@ module.exports = class Learn extends BaseStorageModule {
     return [BaseModule.TYPES.ENDPOINT, BaseModule.TYPES.MODULE, BaseModule.TYPES.OVERFLOW_CMD];
   }
 
+  secretHash() {
+    return null;
+  }
+
   help() {
     return "Usage: `?learn <@username|keyword> | <url|img|quote|text|etc>`'";
   }
