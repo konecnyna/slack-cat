@@ -1,7 +1,4 @@
 const request = require('request-promise');
-const moment = require('moment');
-const queryString = require('query-string');
-
 const ICON = 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png';
 const USER_NAME = 'PagerDutyCat';
 const ERRORS = {
@@ -17,6 +14,20 @@ module.exports = class PagerDutyUtil {
   async getData(escalationPolicyId) {
     const scheduleGroups = await this.getScheduleGroups(escalationPolicyId);
     return scheduleGroups;
+  }
+
+  async getPdUser(id) {
+    const options = {
+      url: `https://api.pagerduty.com/users/${id}`,
+      headers: {
+        Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
+        'Content-Type': 'application/json',
+        Accept: 'application/vnd.pagerduty+json;version=2',
+      },
+      json: true
+    };
+
+    return await request(options);
   }
 
   async getScheduleGroups(escalationPolicyId) {
