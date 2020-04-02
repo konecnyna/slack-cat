@@ -4,7 +4,7 @@ const makeRange = (startDay, numberOfDays) => {
 
 const overrides = [
   {
-    month: 4,
+    month: 7,
     days: [2, 3, 4],
     botParams: {
       username: 'AmericaCat',
