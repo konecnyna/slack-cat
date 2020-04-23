@@ -14,21 +14,23 @@ module.exports = class PagerDialog {
   }
 
   async onDialogSubmit(body) {
-    await this.util.createIncident()
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    // const userData = await this.bot.userDataPromise(body.user.id);
-    // const fields = this.createFields(body);
-    // this.postStandupToChannel(
-    //   body.channel.id,
-    //   fields,
-    //   userData.user.profile.real_name,
-    //   userData.user.profile.image_48
-    // );
+    const { incident_description } = body.submission;
+    const userData = await this.bot.userDataPromise(body.user.id);
+    const result = await this.util.createIncident()
+    if (!result) {
+      return this.bot.postMessageToUser(
+        userData.user.id,
+        'Failed to create incident! ' + incident_description
+      )
+    }
+
+    this.bot.postMessageToUser(
+      userData.user.id,
+      'Success!'
+    )
   }
 
   async pageRoutes(request, response) {
-    await this.util.createIncident()
-
     const teams = await this.util.listTeams()
     const options = teams.map(team => {
       const { name, id } = team;
@@ -44,11 +46,18 @@ module.exports = class PagerDialog {
         submit_label: "Page",
         elements: [
           {
-            label: 'Choose team to page',
+            label: 'Choose team to page:',
             type: 'select',
             name: 'type',
             value: 'Story',
-            options: options
+            options: options,
+            optional: false
+          },
+          {
+            label: "Incident Description:",
+            type: "textarea",
+            name: "incident_description",
+            optional: false
           }
         ]
       },

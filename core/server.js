@@ -29,9 +29,6 @@ module.exports = class Server {
     this.app.post('/interactive-component', (req, res) => {
       const body = JSON.parse(req.body.payload)
       // check that the verification token matches expected value
-      console.log("!!!!!!!!!!!!!!!!!!!!!!")
-      console.log("!!!!!!!!!!!!!!!!!!!!!!", body.token)
-      console.log("!!!!!!!!!!!!!!!!!!!!!!")
       if (body.token === config.getKey('slack_verification_token')) {
         // immediately respond with a empty 200 response to let
         // Slack know the command was received

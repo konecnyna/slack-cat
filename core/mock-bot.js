@@ -20,6 +20,14 @@ module.exports = class MockBot {
     }
   }
 
+  postMessageToUser(userId, msg) {
+    if (this.callback) {
+      this.callback(msg)
+    } else {
+      console.log(msg)
+    }
+  }
+
   postMessageToUsers(userList, msg) {
     if (this.callback) {
       this.callback(msg)

@@ -109,7 +109,10 @@ module.exports = class PagerDutyUtil {
       json: true
     };
 
-    const response = await request(options);
-    console.log(response);
+    try {
+      return await request(options);
+    } catch (e) {
+      return null
+    }
   }
 }

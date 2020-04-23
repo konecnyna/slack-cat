@@ -98,8 +98,7 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   async onDialogSubmit(body) {
-    console.log("!!!!!!!!!!!")
-    this.pdDialog.onDialogSubmit(body);
+    await this.pdDialog.onDialogSubmit(body);
   }
 
   dialogCallbackId() {
