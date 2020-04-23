@@ -1,5 +1,6 @@
 "use strict";
 const pdUtil = new (require("./pager-duty-util"))();
+const PdDialog = require("./pager-duty-dialog");
 const CronJob = require("cron").CronJob;
 
 module.exports = class PagerDuty extends BaseModule {
@@ -8,6 +9,7 @@ module.exports = class PagerDuty extends BaseModule {
     const { teams } = config.getKey("pager_duty_api");
     if (teams) {
       this.setupCron(teams);
+      this.pdDialog = new PdDialog(bot, pdUtil);
     }
   }
 
@@ -91,8 +93,28 @@ module.exports = class PagerDuty extends BaseModule {
     );
   }
 
+  createRoutes(app) {
+    this.pdDialog.createRoutes(app, this.showDialog);
+  }
+
+  async onDialogSubmit(body) {
+    console.log("!!!!!!!!!!!")
+    this.pdDialog.onDialogSubmit(body);
+  }
+
+  dialogCallbackId() {
+    return this.pdDialog.DIALOG_ID;
+  }
+
   aliases() {
     return ["oncall"];
+  }
+
+  getType() {
+    return [
+      BaseModule.TYPES.MODULE,
+      BaseModule.TYPES.DIALOG
+    ];
   }
 
   help() {
