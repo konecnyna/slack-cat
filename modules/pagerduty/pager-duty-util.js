@@ -73,7 +73,7 @@ module.exports = class PagerDutyUtil {
 
   async listServices() {
     const options = {
-      url: `https://api.pagerduty.com/services?include[]=teams`,
+      url: `https://api.pagerduty.com/services?include[]=teams&limit=100`,
       headers: HEADER,
       json: true
     };
