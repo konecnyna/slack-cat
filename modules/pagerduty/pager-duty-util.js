@@ -12,7 +12,6 @@ const HEADER = {
   Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
   'Content-Type': 'application/json',
   Accept: 'application/vnd.pagerduty+json;version=2',
-  From: "nkonecny@stashinvest.com"
 }
 
 
@@ -85,7 +84,7 @@ module.exports = class PagerDutyUtil {
 
   async createIncident(service_id, email, incident_description) {
     let emailHeader = HEADER
-    emailHeader['email'] = email
+    emailHeader['From'] = email
     const incident = {
       "incident": {
         "type": "incident",
@@ -97,7 +96,7 @@ module.exports = class PagerDutyUtil {
         "urgency": "high",
         "body": {
           "type": "incident_body",
-          "details": incident_description
+          "details": `${incident_description}\n\nReporter: ${email}`
         }
       }
     }
