@@ -34,14 +34,24 @@ module.exports = class PagerDialog {
   }
 
   async pageRoutes(request, response) {
-    const teams = await this.util.listServices()
-    const options = teams.map(team => {
-      const { name, id } = team;
+    const services = await this.util.listServices()
+    const options = services.map(service => {
+      const { name, id, teams } = service;
+      const teamName = teams[0] ? `${teams[0].name} - ${name}` : name;
       return {
-        label: name,
+        label: teamName,
         value: id
       }
-    })
+    }).sort(function (a, b) {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
+
     this.showDialog(
       {
         title: "PagerDuty Trigger",
