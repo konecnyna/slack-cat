@@ -19,25 +19,22 @@ module.exports = class PagerDialog {
     //const email = user.profile.email
     const email = "nkonecny@stashinvest.com"
     const result = await this.util.createIncident(service_id, email, incident_description)
-    console.log(result);
+
     if (!result) {
       return this.bot.postMessageToUser(
         user.id,
         'Failed to create incident! '
       )
     }
-
+    const { html_url } = result.incident.service;
     this.bot.postMessageToUser(
       user.id,
-      'Success!'
+      `Team has been notified! Track the status of the incident here: ${html_url}`
     )
   }
 
   async pageRoutes(request, response) {
-    const teams = (await this.util.listServices()).filter(it => {
-      return !it.name.toLowerCase().includes("test")
-    })
-
+    const teams = await this.util.listServices()
     const options = teams.map(team => {
       const { name, id } = team;
       return {
