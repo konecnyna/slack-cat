@@ -7,7 +7,7 @@ const qs = require('querystring')
 const app = express()
 
 module.exports = class Server {
-  constructor () {
+  constructor() {
     /*
      * Parse application/x-www-form-urlencoded && application/json
      */
@@ -21,7 +21,7 @@ module.exports = class Server {
     this.app = app
   }
 
-  initHandleCallback (callback) {
+  initHandleCallback(callback) {
     /*
      * Endpoint to receive the dialog submission. Checks the verification token
      * and creates a Helpdesk ticket
@@ -49,7 +49,7 @@ module.exports = class Server {
     })
   }
 
-  start () {
+  start() {
     const port = config.getKey('port') || 3000
     this.app.listen(port, () => {
       console.log(`App listening on http://localhost:${port}!`)
