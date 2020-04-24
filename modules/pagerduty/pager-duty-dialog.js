@@ -14,9 +14,10 @@ module.exports = class PagerDialog {
   }
 
   async onDialogSubmit(body) {
-    const { incident_description } = body.submission;
-    const userData = await this.bot.userDataPromise(body.user.id);
-    const result = await this.util.createIncident()
+    const { incident_description, service_id } = body.submission;
+    const { user } = await this.bot.userDataPromise(body.user.id);
+    const email = user.profile.email
+    const result = await this.util.createIncident(service_id, email, incident_description)
     if (!result) {
       return this.bot.postMessageToUser(
         userData.user.id,
@@ -31,7 +32,10 @@ module.exports = class PagerDialog {
   }
 
   async pageRoutes(request, response) {
-    const teams = await this.util.listTeams()
+    const teams = (await this.util.listTeams()).filter(it => {
+      return it.name.toLowerCase().includes("test")
+    })
+
     const options = teams.map(team => {
       const { name, id } = team;
       return {
@@ -48,8 +52,7 @@ module.exports = class PagerDialog {
           {
             label: 'Choose team to page:',
             type: 'select',
-            name: 'type',
-            value: 'Story',
+            name: 'service_id',
             options: options,
             optional: false
           },

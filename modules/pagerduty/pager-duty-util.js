@@ -12,6 +12,7 @@ const HEADER = {
   Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
   'Content-Type': 'application/json',
   Accept: 'application/vnd.pagerduty+json;version=2',
+  From: "nkonecny@stashinvest.com"
 }
 
 
@@ -71,40 +72,40 @@ module.exports = class PagerDutyUtil {
   }
 
 
-  async listTeams() {
+  async listServices() {
     const options = {
-      url: `https://api.pagerduty.com/teams`,
+      url: `https://api.pagerduty.com/services?include[]=teams`,
       headers: HEADER,
       json: true
     };
 
-    const { teams } = await request(options);
-    return teams;
+    const { services } = await request(options);
+    return services;
   }
 
-  async createIncident() {
+  async createIncident(service_id, email, incident_description) {
+    let emailHeader = HEADER
+    emailHeader['email'] = email
     const incident = {
       "incident": {
         "type": "incident",
         "title": "Slackcat Invoked Incident",
         "service": {
-          "type": "service_reference"
+          "type": "service_reference",
+          "id": service_id
         },
         "urgency": "high",
         "body": {
           "type": "incident_body",
-          "details": "A disk is getting full on this machine. You should investigate what is causing the disk to fill, and ensure that there is an automated process in place for ensuring data is rotated (eg. logs should have logrotate around them). If data is expected to stay on this disk forever, you should start planning to scale up to a larger disk."
-        },
-        "escalation_policy": {
-          "id": "PZROBGA",
-          "type": "escalation_policy_reference"
+          "details": incident_description
         }
       }
     }
 
     const options = {
-      url: `https://api.pagerduty.com/incidents`,
-      headers: HEADER,
+      url: "https://api.pagerduty.com/incidents",
+      headers: emailHeader,
+      body: incident,
       method: "POST",
       json: true
     };
@@ -112,6 +113,7 @@ module.exports = class PagerDutyUtil {
     try {
       return await request(options);
     } catch (e) {
+      console.error(e);
       return null
     }
   }
