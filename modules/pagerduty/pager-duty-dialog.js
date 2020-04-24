@@ -14,11 +14,16 @@ module.exports = class PagerDialog {
   }
 
   async onDialogSubmit(body) {
-    const { incident_description, service_id } = body.submission;
+    const { title, incident_description, service_id } = body.submission;
     const { user } = await this.bot.userDataPromise(body.user.id);
     //const email = user.profile.email
     const email = "nkonecny@stashinvest.com"
-    const result = await this.util.createIncident(service_id, email, incident_description)
+    const result = await this.util.createIncident(
+      service_id,
+      email,
+      title,
+      incident_description
+    )
 
     if (!result) {
       return this.bot.postMessageToUser(
@@ -63,6 +68,12 @@ module.exports = class PagerDialog {
             type: 'select',
             name: 'service_id',
             options: options,
+            optional: false
+          },
+          {
+            label: "Incident Title:",
+            type: "text",
+            name: "title",
             optional: false
           },
           {

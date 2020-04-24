@@ -70,7 +70,6 @@ module.exports = class PagerDutyUtil {
     });
   }
 
-
   async listServices() {
     const options = {
       url: `https://api.pagerduty.com/services?include[]=teams&limit=100`,
@@ -82,13 +81,13 @@ module.exports = class PagerDutyUtil {
     return services;
   }
 
-  async createIncident(service_id, email, incident_description) {
+  async createIncident(service_id, email, title, incident_description) {
     let emailHeader = HEADER
     emailHeader['From'] = email
     const incident = {
       "incident": {
         "type": "incident",
-        "title": "Slackcat Invoked Incident",
+        "title": title,
         "service": {
           "type": "service_reference",
           "id": service_id
