@@ -60,8 +60,8 @@ module.exports = class WelcomeCat extends BaseStorageModule {
     }
   }
 
-  onDialogSubmit(body) {
-    this.welcomeDialog.onDialogSubmit(body);
+  async onDialogSubmit(body) {
+    await this.welcomeDialog.onDialogSubmit(body);
   }
 
   createRoutes(app) {
