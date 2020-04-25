@@ -16,8 +16,7 @@ module.exports = class PagerDialog {
   async onDialogSubmit(body) {
     const { title, incident_description, service_id } = body.submission;
     const { user } = await this.bot.userDataPromise(body.user.id);
-    //const email = user.profile.email
-    const email = "nkonecny@stashinvest.com"
+    const email = user.profile.email
     const result = await this.util.createIncident(
       service_id,
       email,
