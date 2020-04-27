@@ -85,7 +85,7 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       color: this.Sequelize.STRING,
       generic_welcome: this.Sequelize.BOOLEAN,
       enabled: this.Sequelize.BOOLEAN,
-    });
+    }, { timestamps: false });
   }
 
   getChannelId() {

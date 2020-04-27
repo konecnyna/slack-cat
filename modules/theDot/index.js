@@ -67,7 +67,7 @@ module.exports = class Dot extends BaseStorageModule {
         type: this.Sequelize.INTEGER,
         defaultValue: 0,
       },
-    });
+    }, { timestamps: false });
   }
 
   async updateDot(data) {

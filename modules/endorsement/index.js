@@ -135,7 +135,7 @@ module.exports = class Endorsements extends BaseStorageModule {
       userId: { type: this.Sequelize.STRING, primaryKey: true },
       endorsement: { type: this.Sequelize.STRING, primaryKey: true }, // Don't dupe endorsements.
       endorserId: this.Sequelize.STRING
-    });
+    }, { timestamps: false });
   }
 
   aliases() {
