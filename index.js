@@ -40,11 +40,11 @@ class SlackCat {
         dialect: "sqlite",
         storage: dbPath, // global.
         logging: false,
-        pool: poolConfig
+        pool: poolConfig,
       });
       return;
     }
-
+    console.log("Using remote db...");
     const { dialect, username, password, port, host, dbName, ssl } = dbConfig;
     const sequelizeConfig = {
       dialect: dialect,
@@ -64,7 +64,7 @@ class SlackCat {
       dbName,
       username,
       password,
-      sequelizeConfig
+      sequelizeConfig,
     );
   }
 
