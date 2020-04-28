@@ -1,61 +1,62 @@
 module.exports = class SpreadSheetUtil {
+  constructor(doc) {
+    this.doc = doc;
+  }
 
-  async authDoc(doc) {
-    return new Promise((resolve, reject) => {
-      const { private_key, client_email } = config.getKey("google_sheets")
-      doc.useServiceAccountAuth({ private_key, client_email }, () => {
-        resolve();
-      });
+  async init() {
+    await this.authDoc()
+    await this.doc.loadInfo();
+  }
+
+  async authDoc() {
+    const { client_email, private_key } = config.getKey("google_sheets")
+    return await this.doc.useServiceAccountAuth({
+      client_email: client_email,
+      private_key: private_key
     });
   }
 
-  async getDoc(doc) {
-    return new Promise((resolve, reject) => {
-      try {
-        doc.getInfo((err, info) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          }          
-          resolve(info.worksheets);
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
+
+  async getDoc() {
+    await this.doc.loadInfo();
+    return this.doc._rawSheets;
   }
 
   async getCells(sheet) {
-    return new Promise((resolve, reject) => {
-      sheet.getCells({}, function (err, rows) {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        resolve(rows);
-      });
-    });
+    return await sheet.loadCells();
   }
 
   async getRows(sheet) {
-    return new Promise((resolve, reject) => {
-      sheet.getRows({}, function (err, rows) {
-        if (err) {
-          reject(err);
-          return;
-        }
+    return await sheet.getRows();
+  }
 
-        resolve(rows);
-      });
+  async addRow(sheet, row) {
+    return await sheet.addRow(row);
+  }
+
+  async addSheet(title, row, col) {
+    return await this.doc.addWorksheet({
+      'title': title,
+      'rowCount': row,
+      'colCount': col
     });
   }
 
-  async getSheetForChannel(doc, channel) {
-    await this.authDoc(doc);
-    const sheets = await this.getDoc(doc);
-    return sheets.find(it => {
-      return it.title === channel
-    });
+  async getSheetRows(key) {
+    await this.authDoc();
+    const sheets = await this.getDoc();
+    const rows = await this.getRows(sheets[key]);
+    return rows;
+  }
+
+  async getSheetForChannel(channel) {
+    await this.authDoc();
+    const sheets = await this.getDoc();
+    const id = Object.keys(sheets).find(it => {
+      const { title } = this.doc.sheetsById[it]
+      return title === channel;
+    })
+
+    return this.doc.sheetsById[id];
   }
 }
