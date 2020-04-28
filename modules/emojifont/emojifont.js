@@ -78,11 +78,7 @@ module.exports = class EmojiFont {
         return;
       }
 
-      if (cell.y <= 1) {
-        // header cell, pass
-        return;
-      }
-      if (cell.x === 1 && lookupTable[cell.value] === undefined) {
+      if (cell.x === 0 && lookupTable[cell.value] === undefined) {
         // gylph cell, add to list
         lookupTable[cell.value] = [];
         gylphOptionMap[cell.y] = cell.value;
@@ -93,7 +89,6 @@ module.exports = class EmojiFont {
           toRepeatList.push(cell);
         }
 
-        // Crashes here...
         lookupTable[gylphName].push(cell.value);
       }
     };
