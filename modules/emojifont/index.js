@@ -11,9 +11,10 @@ module.exports = class EmojifontModule extends BaseModule {
 
   constructor(bot) {
     super(bot);
-    this.googleSheetsUtil = new GoogleSheetsUtil();
     if (sheetParams && sheetParams.sheet_id) {
-      this.doc = new GoogleSpreadsheet(sheetParams.sheet_id);
+      const doc = new GoogleSpreadsheet(sheetParams.sheet_id);
+      this.doc = doc;
+      this.googleSheetsUtil = new GoogleSheetsUtil(doc);
     }
   }
 
@@ -23,22 +24,36 @@ module.exports = class EmojifontModule extends BaseModule {
       return;
     }
 
-    const sheet = await this.googleSheetsUtil.getSheetForChannel(this.doc, sheetParams.sheet_name);
+    const sheet = await this.googleSheetsUtil.getSheetForChannel(sheetParams.sheet_name);
+
     if (!sheet) {
       this.bot.postMessageToThread(data.channel, HELP_MSG, data.ts);
       return;
     }
 
-    const cells = await this.googleSheetsUtil.getCells(sheet);
-    const cleanedCells = cells.map((cell) => {
-      return {
-        x: cell.col,
-        y: cell.row,
-        value: cell.value
-      };
-    });
-    const emojiFont = new EmojiFont(cleanedCells);
+    //const rows = await this.googleSheetsUtil.getRows(sheet);
+    const { lastColumnLetter, rowCount } = sheet;
+    const rows = await sheet.getRows();
+    //[`A1:${lastColumnLetter}${rowCount}`]
+    await sheet.loadCells()
 
+    const cleanedCells = [];
+    rows.forEach(row => {
+      const rowNumber = row.rowNumber;
+      // TODO: make dynamic
+      [...Array(24).keys()].map(i => {
+        let value = sheet.getCell(rowNumber, i).value
+        if (value) {
+          cleanedCells.push({
+            x: i,
+            y: rowNumber,
+            value: value.toString()
+          });
+        }
+      })
+    });
+
+    const emojiFont = new EmojiFont(cleanedCells);
     if (data.args.map(x => x.toLowerCase()).includes("--theworks")) {
       this.bot.postMessage(data.channel, emojiFont.giveEmTheWorks());
     } else {
