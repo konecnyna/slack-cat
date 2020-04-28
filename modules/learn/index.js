@@ -19,7 +19,7 @@ module.exports = class Learn extends BaseStorageModule {
       learn: this.Sequelize.STRING,
       learn_type: this.Sequelize.STRING,
       learned_by: this.Sequelize.STRING,
-    });
+    }, { timestamps: false });
   }
 
   async handle(data) {

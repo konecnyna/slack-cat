@@ -60,8 +60,8 @@ module.exports = class WelcomeCat extends BaseStorageModule {
     }
   }
 
-  onDialogSubmit(body) {
-    this.welcomeDialog.onDialogSubmit(body);
+  async onDialogSubmit(body) {
+    await this.welcomeDialog.onDialogSubmit(body);
   }
 
   createRoutes(app) {
@@ -85,7 +85,7 @@ module.exports = class WelcomeCat extends BaseStorageModule {
       color: this.Sequelize.STRING,
       generic_welcome: this.Sequelize.BOOLEAN,
       enabled: this.Sequelize.BOOLEAN,
-    });
+    }, { timestamps: false });
   }
 
   getChannelId() {

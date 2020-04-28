@@ -87,7 +87,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     this.MixerCatModel = this.db.define('mixer-meetings', {
       memberOne: { type: this.Sequelize.STRING, primaryKey: true },
       memberTwo: { type: this.Sequelize.STRING, primaryKey: true }
-    })
+    }, { timestamps: false });
   }
 
   getType() {

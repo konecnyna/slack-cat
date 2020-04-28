@@ -26,7 +26,7 @@ module.exports = class HrViolations extends BaseStorageModule {
       name: this.Sequelize.STRING,
       reported_reason: this.Sequelize.STRING,
       reported_by: this.Sequelize.STRING,
-    });
+    }, { timestamps: false });
   }
 
   aliases() {

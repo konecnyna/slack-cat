@@ -36,6 +36,7 @@
     "memory-cache": "^0.2.0",
     "moment": "^2.21.0",
     "mta-gtfs": "^1.1.0",
+    "ngrok": "^3.2.7",
     "nodemon": "^1.18.7",
     "pg": "^6.1.2",
     "public-ip": "^2.4.0",
