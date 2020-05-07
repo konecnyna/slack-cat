@@ -1,11 +1,11 @@
 'use strict';
 const fs = require('fs');
-const path = require('path');
+
 
 module.exports = class Config {
   constructor(configPath) {
     try {
-      const contents = fs.readFileSync(configPath);
+      const contents = process.env.SECRETS;
       this.config = JSON.parse(contents);
     } catch (e) {
       this.config = {};
