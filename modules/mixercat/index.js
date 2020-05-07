@@ -64,29 +64,29 @@ module.exports = class MixerCat extends BaseStorageModule {
   }
 
   async getExtraInfo(it) {
-    let memberOne = await this.bot.web.users.info({
+    let member_one = await this.bot.web.users.info({
       user: it[0]
     })
-    memberOne = memberOne.user.profile
+    member_one = member_one.user.profile
 
-    let memberTwo = await this.bot.web.users.info({
+    let member_two = await this.bot.web.users.info({
       user: it[1]
     })
-    memberTwo = memberTwo.user.profile
+    member_two = member_two.user.profile
 
-    if (memberOne.title && memberTwo.title) {
-      return `${memberOne.real_name} has the title of ${memberOne.title}\n${
-        memberTwo.real_name
-        } has the title of ${memberTwo.title}`
+    if (member_one.title && member_two.title) {
+      return `${member_one.real_name} has the title of ${member_one.title}\n${
+        member_two.real_name
+        } has the title of ${member_two.title}`
     }
 
     return ''
   }
 
   registerSqliteModel() {
-    this.MixerCatModel = this.db.define('mixer-meetings', {
-      memberOne: { type: this.Sequelize.STRING, primaryKey: true },
-      memberTwo: { type: this.Sequelize.STRING, primaryKey: true }
+    this.MixerCatModel = this.db.define('mixer_meetings', {
+      member_one: { type: this.Sequelize.STRING, primaryKey: true },
+      member_two: { type: this.Sequelize.STRING, primaryKey: true }
     }, { timestamps: false });
   }
 
