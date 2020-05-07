@@ -89,7 +89,7 @@ module.exports = class Royalty extends BaseStorageModule {
     this.RoyaltyModel = this.db.define('royalties', {
       name: { type: this.Sequelize.STRING, primaryKey: true },
       title: this.Sequelize.STRING
-    });
+    }, { timestamps: false });
   }
 
   getType() {

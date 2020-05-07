@@ -1,13 +1,6 @@
 'use strict';
-const request = require('request');
-
-const imgRegex = new RegExp(
-  /"ou":"([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))"/,
-  'g'
-);
-
-const userAgent =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36';
+const request = require('request-promise');
+const { key } = config.getKey('giphy')
 const botParams = {
   icon_emoji: ':frame_with_picture:',
   username: 'ImageCat',
@@ -15,27 +8,12 @@ const botParams = {
 
 module.exports = class GoogleImages extends BaseModule {
   async handle(data) {
-    const body = await this.getData(data);
-
-    if (data.args && data.args.includes('--random')) {
-      const randomUrl = this.getRandomUrl(body, data);
-      if (randomUrl) {
-        this.bot.postMessageWithParams(data.channel, randomUrl, botParams);
-        return;
-      }
+    let searchText = data.user_text;
+    if (data.cmd.includes("reaction")) {
+      searchText = `${searchText} reaction`
     }
-
-    const urls = this.getUrls(body, data);
-    if (urls.length) {
-      this.bot.postMessageWithParams(data.channel, urls[0], botParams);
-      return;
-    }
-
-    this.bot.postMessageWithParams(
-      data.channel,
-      'No results. :slightly_frowning_face:',
-      botParams
-    );
+    const gif = await this.getData(data.user_text);
+    this.bot.postMessageWithParams(data.channel, gif, botParams);
   }
 
   aliases() {
@@ -51,66 +29,17 @@ module.exports = class GoogleImages extends BaseModule {
     return urls[Math.floor(Math.random() * urls.length - 1)];
   }
 
-  getUrls(body, data) {
-    var match = imgRegex.exec(body);
-
-    if (match == null) {
-      return false;
-    }
-
-    const urls = [];
-    while (match != null) {
-      // matched text: match[0]
-      // match start: match.index
-      // capturing group n: match[n]
-      urls.push(match[1]);
-
-      match = imgRegex.exec(body);
-    }
-
-    return urls;
-  }
-
-  getData(data) {
-    var options = {
-      url: 'https://www.google.com/search',
-      headers: {
-        'User-Agent': userAgent,
+  async getData(searchTerm) {
+    const giphy = {
+      url: "https://api.giphy.com/v1/gifs/random",
+      qs: {
+        api_key: key,
+        rating: "pg",
+        tag: searchTerm
       },
-      qs: this.buildParams(data),
+      json: true
     };
-
-    return new Promise((resolve, reject) => {
-      request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-          console.error(error);
-          return;
-        }
-
-        resolve(body);
-      });
-    });
-  }
-
-  buildParams(data) {
-    let params = {};
-
-    params['tbm'] = 'isch';
-    if (data.cmd === 'gif' || data.cmd === 'reaction') {
-      params['tbs'] = 'itp:animated';
-    }
-
-    params['safe'] = 'strict';
-    if (data.args && data.args.includes('--nsfw')) {
-      // Proceed with caution...
-      params['safe'] = 'off';
-    }
-
-    params['q'] =
-      data.cmd === 'reaction'
-        ? `reaction gif ${data.user_text}`
-        : data.user_text;
-    return params;
+    const { data } = await request(giphy);
+    return data.image_url;
   }
 };

@@ -170,12 +170,12 @@ module.exports = class Plus extends BaseStorageModule {
     this.PlusModel = this.db.define('pluses', {
       name: { type: this.Sequelize.STRING, primaryKey: true },
       pluses: this.Sequelize.INTEGER,
-    });
+    }, { timestamps: false });
 
     this.PlusModelNew = this.db.define('pluses_table', {
-      slackId: { type: this.Sequelize.STRING, primaryKey: true },
+      slackid: { type: this.Sequelize.STRING, primaryKey: true },
       pluses: this.Sequelize.INTEGER,
-    });
+    }, { timestamps: false });
   }
 
   aliases() {

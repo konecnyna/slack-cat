@@ -9,7 +9,7 @@ module.exports = class PlusHelper {
   async displayPlusesForUser(slackUserId) {
     const pluses = await this.getPlusModel().findOne({
       where: {
-        slackId: slackUserId,
+        slackid: slackUserId,
       },
     });
 
@@ -24,7 +24,7 @@ module.exports = class PlusHelper {
 
     const fields = [];
     for (var i = 0; i < pluses.length; i++) {
-      const name = await this.getDisplayName(pluses[i].get('slackId'))
+      const name = await this.getDisplayName(pluses[i].get('slackid'))
       fields.push({
         title: `${i + 1}. ${name} (${pluses[i].get(
           'pluses'
@@ -68,9 +68,9 @@ module.exports = class PlusHelper {
   async plusUser(userSlackId) {
     const pluses = await this.context.upsert(
       this.getPlusModel(),
-      { where: { slackId: userSlackId } },
+      { where: { slackid: userSlackId } },
       {
-        slackId: userSlackId,
+        slackid: userSlackId,
         pluses: 1,
       },
       {
@@ -105,9 +105,9 @@ module.exports = class PlusHelper {
       const plusesAmount = await test.get('pluses')
       const pluses = await this.context.upsert(
         newTable,
-        { where: { slackId: id } },
+        { where: { slackid: id } },
         {
-          slackId: id,
+          slackid: id,
           pluses: plusesAmount || 1,
         },
         {

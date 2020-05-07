@@ -78,11 +78,7 @@ module.exports = class EmojiFont {
         return;
       }
 
-      if (cell.y <= 1) {
-        // header cell, pass
-        return;
-      }
-      if (cell.x === 1 && lookupTable[cell.value] === undefined) {
+      if (cell.x === 0 && lookupTable[cell.value] === undefined) {
         // gylph cell, add to list
         lookupTable[cell.value] = [];
         gylphOptionMap[cell.y] = cell.value;
@@ -99,7 +95,7 @@ module.exports = class EmojiFont {
     sheetCells.forEach(processCell);
     toRepeatList.forEach(processCell); // if input is sorted this is redundant
 
-    lookupTable = {...lookupTableDefaults, ...lookupTable, ...lookupTableOverrides};
+    lookupTable = { ...lookupTableDefaults, ...lookupTable, ...lookupTableOverrides };
 
     this.letterEmojiTree = buildEmojiTree(lookupTable);
     this.lookupTable = lookupTable;

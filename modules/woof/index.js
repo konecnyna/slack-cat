@@ -85,7 +85,7 @@ module.exports = class Woof extends BaseStorageModule {
         this.WoofModel = this.db.define('woof', {
             userid: { type: this.Sequelize.STRING, primaryKey: true },
             url: this.Sequelize.STRING,
-        })
+        }, { timestamps: false });
     }
 
     async saveWoofUrl(userid, url) {
