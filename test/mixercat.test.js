@@ -35,8 +35,8 @@ global.BaseModule = require('../core/base-module.js');
 global.BaseStorageModule = require('../core/base-storage-module.js');
 
 const MixerCatModel = db.define('mixer-meetings', {
-  memberOne: { type: Sequelize.STRING, primaryKey: true },
-  memberTwo: { type: Sequelize.STRING, primaryKey: true },
+  member_one: { type: Sequelize.STRING, primaryKey: true },
+  member_two: { type: Sequelize.STRING, primaryKey: true },
 });
 
 db.sync();
