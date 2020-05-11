@@ -49,17 +49,17 @@ module.exports = class Pair {
     const previousPairs = await this.mixerCatModel
       .findAll({
         where: {
-          [Op.or]: [{ memberOne: userId }, { memberTwo: userId }],
+          [Op.or]: [{ member_one: userId }, { member_two: userId }],
         },
       })
       .map(it => {
-        const memberOne = it.get('memberOne');
-        const memberTwo = it.get('memberTwo');
-        if (memberOne === userId) {
-          return memberTwo;
+        const member_one = it.get('member_one');
+        const member_two = it.get('member_two');
+        if (member_one === userId) {
+          return member_two;
         }
 
-        return memberOne;
+        return member_one;
       });
 
     return users.filter(it => {
@@ -74,8 +74,8 @@ module.exports = class Pair {
   async savePair(user, pairedUser) {
     try {
       await this.mixerCatModel.create({
-        memberOne: user,
-        memberTwo: pairedUser,
+        member_one: user,
+        member_two: pairedUser,
       });
     } catch (e) {
       console.error(e);
