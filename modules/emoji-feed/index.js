@@ -24,7 +24,7 @@ module.exports = class EmojiFeed extends BaseStorageModule {
 
   async handle(data) {
     if (data.cmd === 'new-emojis') {
-      this.handleNewEmojis();
+      this.handleNewEmojis(data);
       return;
     }
 
@@ -34,14 +34,14 @@ module.exports = class EmojiFeed extends BaseStorageModule {
     }
   }
 
-  async handleNewEmojis() {
+  async handleNewEmojis(data) {
     const newEmojis = await emojiFeedUtil.newEmojis(this.db, this.table)
     if (newEmojis.length) {
       this.postNewEmojis(newEmojis)
       return;
     }
 
-    this.bot.postRawMessage(CHANNEL, {
+    this.bot.postRawMessage(data.channel, {
       attachments: [
         {
           title: 'No new emojis. :disappointed:',
