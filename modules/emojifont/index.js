@@ -34,7 +34,7 @@ module.exports = class EmojifontModule extends BaseModule {
     }
 
     let rows = cache.get(CACHE_ROWS_KEY);
-    if (CACHE_ROWS_KEY == null || data.args.includes('--update')) {
+    if (rows == null || data.args.includes('--update')) {
       rows = await sheet.getRows();
       cache.put(CACHE_ROWS_KEY, rows, 6 * 60 * 1000, () => { });
     }
