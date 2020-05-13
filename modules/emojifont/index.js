@@ -1,11 +1,13 @@
 'use strict';
-
 const EmojiFont = require('./emojifont.js');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const GoogleSheetsUtil = require('../google-sheets/spread-sheet-util');
-const HELP_MSG = "Sorry couldn't find the EmojiFont sheet.";
 const sheetParams = config.getKey("emojifont");
+const cache = require('memory-cache');
+
 const DOC_URL = `https://docs.google.com/spreadsheets/d/${sheetParams ? sheetParams.sheet_id : "" || ""}`
+const HELP_MSG = "Sorry couldn't find the EmojiFont sheet.";
+const CACHE_ROWS_KEY = "EmojifontModuleRows"
 
 module.exports = class EmojifontModule extends BaseModule {
 
@@ -31,12 +33,13 @@ module.exports = class EmojifontModule extends BaseModule {
       return;
     }
 
-    //const rows = await this.googleSheetsUtil.getRows(sheet);
-    const { lastColumnLetter, rowCount } = sheet;
-    const rows = await sheet.getRows();
-    //[`A1:${lastColumnLetter}${rowCount}`]
-    await sheet.loadCells()
+    let rows = cache.get(CACHE_ROWS_KEY);
+    if (CACHE_ROWS_KEY == null || data.args.includes('--update')) {
+      rows = await sheet.getRows();
+      cache.put(CACHE_ROWS_KEY, rows, 6 * 60 * 1000, () => { });
+    }
 
+    await sheet.loadCells()
     const cleanedCells = [];
     rows.forEach(row => {
       const rowNumber = row.rowNumber;
@@ -69,7 +72,7 @@ module.exports = class EmojifontModule extends BaseModule {
   }
 
   help() {
-    return 'Usage: `?ef my phrase` to translate your phrase to emoji. Use ?ef --theworks for the works. Also aliased to ?emojify and ?emojifont. Add more emojis at ' + DOC_URL;
+    return 'Usage: `?ef my phrase` to translate your phrase to emoji. Use ?ef --theworks for the works. Also aliased to ?emojify and ?emojifont. The sheet is cached but can be manually updated with --update. Add more emojis at ' + DOC_URL;
   }
 
   aliases() {
