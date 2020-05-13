@@ -2,6 +2,8 @@
 'use strict';
 const request = require('request-promise');
 const token = config.getKey('slack_access_token_oauth')
+
+const { emojiFeedUtil } = require('./emoji-feed-util');
 const CronJob = require('cron').CronJob
 
 const CHANNEL = "CV689JSKF";
@@ -19,39 +21,35 @@ module.exports = class EmojiFeed extends BaseStorageModule {
     )
   }
 
+
   async handle(data) {
-    this.checkNewEmojis()
+    if (data.cmd === 'new-emojis') {
+      this.handleNewEmojis();
+      return;
+    }
+
+    const list = await emojiFeedUtil.checkNewEmojis()
+    if (newList.length) {
+      this.postNewEmojis(list)
+    }
   }
 
-  async checkNewEmojis() {
-    const { emoji } = await request(`https://slack.com/api/emoji.list?token=${token}`, {
-      json: true
-    });
-
-    const newList = [];
-
-    const promises = Object.keys(emoji).map(async key => {
-      const result = await this.EmojiFeed.findOne({
-        where: {
-          key: key,
-        },
-      });
-
-      if (!result) {
-        newList.push(key)
-        return this.EmojiFeed.create({
-          key: key,
-          value: emoji[key],
-          date_added: new Date()
-        })
-      }
-    })
-
-    await Promise.all(promises)
-    console.log(newList)
-    if (newList.length) {
-      this.postNewEmojis(newList)
+  async handleNewEmojis() {
+    const newEmojis = await emojiFeedUtil.newEmojis(this.db, this.table)
+    if (newEmojis.length) {
+      this.postNewEmojis(newEmojis)
+      return;
     }
+
+    this.bot.postRawMessage(CHANNEL, {
+      attachments: [
+        {
+          title: 'No new emojis. :disappointed:',
+          color: "#9C27B0",
+          fields: [],
+        },
+      ],
+    });
   }
 
   async postNewEmojis(list) {
@@ -74,7 +72,7 @@ module.exports = class EmojiFeed extends BaseStorageModule {
   }
 
   registerSqliteModel() {
-    this.EmojiFeed = this.db.define('emoji_feed', {
+    this.table = this.db.define('emoji_feed', {
       key: { type: this.Sequelize.STRING, primaryKey: true },
       value: this.Sequelize.STRING,
       date_added: this.Sequelize.DATE
@@ -84,5 +82,10 @@ module.exports = class EmojiFeed extends BaseStorageModule {
 
   help() {
     return 'The bot should respond with pong. For debugging purposes';
+  }
+
+
+  aliases() {
+    return ['new-emojis'];
   }
 };
