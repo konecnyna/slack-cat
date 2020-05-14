@@ -30,7 +30,7 @@ class EmojiFeedUtil {
 
       if (!result) {
         emojiList.push(key)
-        return this.EmojiFeed.create({
+        return table.create({
           key: key,
           value: emoji[key],
           date_added: new Date()
