@@ -13,7 +13,7 @@ module.exports = class EmojiFeed extends BaseStorageModule {
     new CronJob(
       "00 20 16 * * *",
       () => {
-        this.checkNewEmojis()
+        this.cron()
       },
       null,
       true,
@@ -28,8 +28,14 @@ module.exports = class EmojiFeed extends BaseStorageModule {
       return;
     }
 
-    const list = await emojiFeedUtil.checkNewEmojis()
-    if (newList.length) {
+    if (data.args.includes('--force')) {
+      await this.cron();
+    }
+  }
+
+  async cron() {
+    const list = await emojiFeedUtil.checkNewEmojis(this.table)
+    if (list.length) {
       this.postNewEmojis(list)
     }
   }

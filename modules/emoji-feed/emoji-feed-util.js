@@ -14,7 +14,7 @@ class EmojiFeedUtil {
     });
   }
 
-  async checkNewEmojis() {
+  async checkNewEmojis(table) {
     const { emoji } = await request(`https://slack.com/api/emoji.list?token=${token}`, {
       json: true
     });
@@ -22,7 +22,7 @@ class EmojiFeedUtil {
     const emojiList = [];
 
     const promises = Object.keys(emoji).map(async key => {
-      const result = await this.EmojiFeed.findOne({
+      const result = await table.findOne({
         where: {
           key: key,
         },
