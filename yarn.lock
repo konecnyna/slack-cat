@@ -2311,10 +2311,10 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-jira-client@^6.4.1:
-  version "6.15.0"
-  resolved "https://registry.yarnpkg.com/jira-client/-/jira-client-6.15.0.tgz#3a86418fde22d5f24a0e9a039dc877acf027fe8d"
-  integrity sha512-FCblm7oUU1SavIx6e/eyV9cZpKPyQiRTGLmwsqudThG5nKUs0JE5vVO7JOAfSTtGEocoeIQKqQRnpoulhBVgwA==
+jira-client@^6.17.0:
+  version "6.17.0"
+  resolved "https://registry.yarnpkg.com/jira-client/-/jira-client-6.17.0.tgz#946648a8e8c192bcc6340cc22b4c2d6534fa1656"
+  integrity sha512-7Pw90QT9P/p7GjBFe9oEUtjJmBXiRwPaVDLIPvfdzdQ6gkwsSqFDIn8nSqYvzxGdPBJLER7XWt3cTE4FeqDCfQ==
   dependencies:
     "@babel/runtime" "^7.6.0"
     request "^2.88.0"
