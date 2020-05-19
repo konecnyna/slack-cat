@@ -32,7 +32,7 @@
     "express": "^4.15.2",
     "google-spreadsheet": "^3.0.11",
     "google-translate-api": "^2.3.0",
-    "jira-client": "^6.4.1",
+    "jira-client": "^6.17.0",
     "memory-cache": "^0.2.0",
     "moment": "^2.21.0",
     "mta-gtfs": "^1.1.0",

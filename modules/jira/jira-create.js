@@ -26,12 +26,13 @@ module.exports = class JiraCreate {
         }
       }
 
-      if (shouldAssign) {
-        const user = await this.findUser(jira, currentUserEmail)
-        if (user && user.length) {
-          payload['fields']['assignee'] = { name: user[0].name }
-        }
-      }
+      // TODO : Feex.
+      // if (shouldAssign) {
+      //   const user = await this.findUser(jira, currentUserEmail)
+      //   if (user && user.length) {
+      //     payload['fields']['assignee'] = { name: user[0].name }
+      //   }
+      // }
 
       return await jira.addNewIssue(payload)
     } catch (e) {
