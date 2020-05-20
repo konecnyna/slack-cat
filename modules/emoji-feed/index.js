@@ -36,14 +36,14 @@ module.exports = class EmojiFeed extends BaseStorageModule {
   async cron() {
     const list = await emojiFeedUtil.checkNewEmojis(this.table)
     if (list.length) {
-      this.postNewEmojis(list)
+      this.postNewEmojis(CHANNEL, list)
     }
   }
 
   async handleNewEmojis(data) {
     const newEmojis = await emojiFeedUtil.newEmojis(this.db, this.table)
     if (newEmojis.length) {
-      this.postNewEmojis(newEmojis)
+      this.postNewEmojis(data.channel, newEmojis)
       return;
     }
 
@@ -58,7 +58,7 @@ module.exports = class EmojiFeed extends BaseStorageModule {
     });
   }
 
-  async postNewEmojis(list) {
+  async postNewEmojis(channel, list) {
     const fields = list.map(key => {
       return {
         value: `${key} - :${key}:`,
@@ -66,7 +66,7 @@ module.exports = class EmojiFeed extends BaseStorageModule {
       }
     })
 
-    this.bot.postRawMessage(CHANNEL, {
+    this.bot.postRawMessage(channel, {
       attachments: [
         {
           title: 'New emojis:',
