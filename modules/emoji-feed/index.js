@@ -51,6 +51,7 @@ module.exports = class EmojiFeed extends BaseStorageModule {
           title: 'No new emojis. :disappointed:',
           color: "#9C27B0",
           fields: [],
+          footer: `See the feed <#${CHANNEL}>`,
         },
       ],
     });
