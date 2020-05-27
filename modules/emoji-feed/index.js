@@ -61,8 +61,8 @@ module.exports = class EmojiFeed extends BaseStorageModule {
   async postNewEmojis(channel, list) {
     const fields = list.map(key => {
       return {
-        value: `${key} - :${key}:`,
-        short: true
+        value: `:${key}: ${key}`,
+        short: false
       }
     })
 
