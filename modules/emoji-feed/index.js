@@ -1,12 +1,10 @@
 
 'use strict';
-const request = require('request-promise');
-const token = config.getKey('slack_access_token_oauth')
+const CHANNEL = config.getKey('emoji_feed_channel')
 
 const { emojiFeedUtil } = require('./emoji-feed-util');
 const CronJob = require('cron').CronJob
 
-const CHANNEL = "CV689JSKF";
 module.exports = class EmojiFeed extends BaseStorageModule {
   constructor(bot) {
     super(bot);
