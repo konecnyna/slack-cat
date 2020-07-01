@@ -5,19 +5,7 @@ const { key } = config.getKey('giphy')
 
 module.exports = class Summon extends BaseModule {
   async handle(data) {
-    let searchText = data.user_text;
-    if (data.cmd.includes("reaction")) {
-      searchText = `${searchText} reaction`
-    }
-
-    let image = "";
-    let noSpaceText = data.user_text.replace(" ", "%20");
-    if (data.cmd.includes("summon")) {
-      image = await getImages(noSpaceText, data.args.includes("--random"));
-    } else {
-      image = await this.getData(searchText);
-    }
-
+    const { source, image } = await this.getMessageData(data)
     this.bot.postRawMessage(data.channel, {
       icon_emoji: ':frame_with_picture:',
       username: 'ImageCat',
@@ -31,10 +19,32 @@ module.exports = class Summon extends BaseModule {
             }
           ],
           image_url: image,
-          footer: `Source: https://www.bing.com/images/search?q=${noSpaceText}&FORM=HDRSC2`
+          footer: source
         }
       ]
     });
+  }
+
+  async getMessageData(data) {
+    let searchText = data.user_text;
+    if (data.cmd.includes("reaction")) {
+      searchText = `${searchText} reaction`
+    }
+
+    let image = "";
+    const noSpaceText = searchText.replace(" ", "%20");
+    const isSummon = data.cmd.includes("summon");
+    const isRandom = data.args.includes("--random");
+    if (isSummon) {
+      image = await getImages(noSpaceText, isRandom);
+    } else {
+      image = await this.getData(noSpaceText, isRandom);
+    }
+    const source = isSummon ? `Source: https://www.bing.com/images/search?q=${noSpaceText}&FORM=HDRSC2` : "Giphy";
+    return {
+      image: image,
+      source: source
+    }
   }
 
   aliases() {
@@ -44,23 +54,18 @@ module.exports = class Summon extends BaseModule {
   help() {
     return 'Usage: `?gif <gif search term>` or `?summon <image query>`\nFlags `--random`';
   }
-
-  getRandomUrl(body, data) {
-    const urls = this.getUrls(body, data);
-    return urls[Math.floor(Math.random() * urls.length - 1)];
-  }
-
-  async getData(searchTerm) {
+  async getData(searchTerm, random) {
     const giphy = {
-      url: "https://api.giphy.com/v1/gifs/random",
+      url: "https://api.giphy.com/v1/gifs/search",
       qs: {
         api_key: key,
         rating: "pg",
-        tag: searchTerm
+        q: searchTerm,
+        limit: random ? 10 : 1
       },
       json: true
     };
     const { data } = await request(giphy);
-    return data.image_url;
+    return data.random().images.downsized_large.url;
   }
 };
