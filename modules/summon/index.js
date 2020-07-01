@@ -1,19 +1,27 @@
 'use strict';
 const request = require('request-promise');
+const { getImages } = require('./google-images-client')
 const { key } = config.getKey('giphy')
 const botParams = {
   icon_emoji: ':frame_with_picture:',
   username: 'ImageCat',
 };
 
-module.exports = class GoogleImages extends BaseModule {
+module.exports = class Summon extends BaseModule {
   async handle(data) {
     let searchText = data.user_text;
     if (data.cmd.includes("reaction")) {
       searchText = `${searchText} reaction`
     }
-    const gif = await this.getData(data.user_text);
-    this.bot.postMessageWithParams(data.channel, gif, botParams);
+
+    let image = "";
+    if (data.cmd.includes("summon")) {
+      image = await getImages(data.user_text, args.includes("--random"));
+    } else {
+      image = await this.getData(data.user_text);
+    }
+
+    this.bot.postMessageWithParams(data.channel, image, botParams);
   }
 
   aliases() {
