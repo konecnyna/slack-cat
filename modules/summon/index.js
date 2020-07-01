@@ -20,8 +20,19 @@ module.exports = class Summon extends BaseModule {
     this.bot.postRawMessage(data.channel, {
       icon_emoji: ':frame_with_picture:',
       username: 'ImageCat',
-      image_url: image,
-      footer: `Source: https://www.bing.com/images/search?q=${data.user_text}&FORM=HDRSC2`
+      attachments: [
+        {
+          color: '#008373',
+          fields: [
+            {
+              title: `Top Result: ${data.user_text}`,
+              short: false
+            }
+          ],
+          image_url: image,
+          footer: `Source: https://www.bing.com/images/search?q=${data.user_text}&FORM=HDRSC2`
+        }
+      ]
     });
   }
 
