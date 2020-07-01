@@ -16,7 +16,7 @@ module.exports = class Summon extends BaseModule {
 
     let image = "";
     if (data.cmd.includes("summon")) {
-      image = await getImages(data.user_text, args && args.includes("--random"));
+      image = await getImages(data.user_text, data.args.includes("--random"));
     } else {
       image = await this.getData(data.user_text);
     }
