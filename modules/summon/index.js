@@ -2,10 +2,6 @@
 const request = require('request-promise');
 const { getImages } = require('./images-client')
 const { key } = config.getKey('giphy')
-const botParams = {
-  icon_emoji: ':frame_with_picture:',
-  username: 'ImageCat',
-};
 
 module.exports = class Summon extends BaseModule {
   async handle(data) {
@@ -21,7 +17,12 @@ module.exports = class Summon extends BaseModule {
       image = await this.getData(data.user_text);
     }
 
-    this.bot.postMessageWithParams(data.channel, image, botParams);
+    this.bot.postRawMessage(data.channel, {
+      icon_emoji: ':frame_with_picture:',
+      username: 'ImageCat',
+      image_url: image,
+      footer: `Source: https://www.bing.com/images/search?q=${data.user_text}&FORM=HDRSC2`
+    });
   }
 
   aliases() {
