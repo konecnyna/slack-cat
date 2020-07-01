@@ -12,6 +12,7 @@ module.exports = class Summon extends BaseModule {
       attachments: [
         {
           color: '#008373',
+          fields: [],
           image_url: image,
           footer: source
         }
