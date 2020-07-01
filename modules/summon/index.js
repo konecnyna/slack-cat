@@ -1,6 +1,6 @@
 'use strict';
 const request = require('request-promise');
-const { getImages } = require('./google-images-client')
+const { getImages } = require('./images-client')
 const { key } = config.getKey('giphy')
 const botParams = {
   icon_emoji: ':frame_with_picture:',
