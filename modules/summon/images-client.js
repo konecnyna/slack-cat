@@ -14,7 +14,7 @@ const getImages = async (query, random) => {
   const images = extractImages(data);
 
   if (random) {
-    images.slice(0, 15).random();
+    return images.slice(0, 20).random();
   }
   return images[0];
 }
