@@ -11,10 +11,11 @@ module.exports = class Summon extends BaseModule {
     }
 
     let image = "";
+    let noSpaceText = data.user_text.replace(" ", "%20");
     if (data.cmd.includes("summon")) {
-      image = await getImages(data.user_text, data.args.includes("--random"));
+      image = await getImages(noSpaceText, data.args.includes("--random"));
     } else {
-      image = await this.getData(data.user_text);
+      image = await this.getData(searchText);
     }
 
     this.bot.postRawMessage(data.channel, {
@@ -30,7 +31,7 @@ module.exports = class Summon extends BaseModule {
             }
           ],
           image_url: image,
-          footer: `Source: https://www.bing.com/images/search?q=${data.user_text}&FORM=HDRSC2`
+          footer: `Source: https://www.bing.com/images/search?q=${noSpaceText}&FORM=HDRSC2`
         }
       ]
     });
