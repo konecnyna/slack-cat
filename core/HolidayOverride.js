@@ -7,7 +7,7 @@ const overrides = [
     month: 7,
     days: [2, 3, 4],
     botParams: {
-      username: 'AmericaCat',
+      username: 'AmeriCat',
       icon_emoji: ':flag-us:',
       icon_url: ''
     }
