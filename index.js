@@ -107,7 +107,7 @@ class SlackCat {
     });
   }
 
-  runDebugCommand() {
+  async runDebugCommand() {
     // Reaction debug msg
     const MockBot = require(path.join(__dirname + "/core", "mock-bot.js"));
     let server;
@@ -130,16 +130,18 @@ class SlackCat {
     }
 
     if (args.includes("member_joined_channel")) {
-      router.handle(testMemberJoin);
+      await router.handle(testMemberJoin);
     } else if (process.argv.includes("--reaction")) {
       testReaction.reaction = args[2].replace(new RegExp(":", "g"), "");
       console.log("Executing reaction: " + testReaction.reaction);
-      router.handle(testReaction);
+      await router.handle(testReaction);
     } else {
       // Regular debug message
       testMsg.text = args.splice(2, args.length - 1).join(" ");
-      router.handle(testMsg);
+      await router.handle(testMsg);
     }
+
+    process.exit()
   }
 }
 
