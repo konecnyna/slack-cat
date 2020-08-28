@@ -8,7 +8,6 @@ const MoudleLoader = require("./core/module-loader");
 const SlackCatBot = require("./core/slack-cat-bot.js");
 const { RTMClient } = require("@slack/rtm-api");
 const Sequelize = require("sequelize");
-
 // Global Base Modules.
 global.BaseModule = require("./core/base-module.js");
 global.BaseStorageModule = require("./core/base-storage-module.js");
@@ -109,39 +108,45 @@ class SlackCat {
 
   async runDebugCommand() {
     // Reaction debug msg
-    const MockBot = require(path.join(__dirname + "/core", "mock-bot.js"));
-    let server;
+    try {
+      const MockBot = require(path.join(__dirname + "/core", "mock-bot.js"));
+      let server;
 
-    // Copy array.
-    const args = process.argv.slice(0);
-    if (args.includes("--with-server")) {
-      server = new Server();
+      // Copy array.
+      const args = process.argv.slice(0);
+      if (args.includes("--with-server")) {
+        server = new Server();
+      }
+
+      const bot = new MockBot();
+      const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
+      const modules = moduleLoader.getModules();
+
+      // Fix me :(((((((((((
+      bot.setModules(modules);
+      const router = new Router(bot, modules, server);
+      if (server) {
+        server.start();
+      }
+
+      if (args.includes("member_joined_channel")) {
+        await router.handle(testMemberJoin);
+      } else if (process.argv.includes("--reaction")) {
+        testReaction.reaction = args[2].replace(new RegExp(":", "g"), "");
+        console.log("Executing reaction: " + testReaction.reaction);
+        await router.handle(testReaction);
+      } else {
+        // Regular debug message
+        testMsg.text = args.splice(2, args.length - 1).join(" ");
+        await router.handle(testMsg);
+      }
+    } catch (e) {
+      console.trace(e);
+      // Use debug cmd to fail tests on ci. Obvi a hack. 
+      process.exitCode = 1
+    } finally {
+      process.exit()
     }
-
-    const bot = new MockBot();
-    const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
-    const modules = moduleLoader.getModules();
-
-    // Fix me :(((((((((((
-    bot.setModules(modules);
-    const router = new Router(bot, modules, server);
-    if (server) {
-      server.start();
-    }
-
-    if (args.includes("member_joined_channel")) {
-      await router.handle(testMemberJoin);
-    } else if (process.argv.includes("--reaction")) {
-      testReaction.reaction = args[2].replace(new RegExp(":", "g"), "");
-      console.log("Executing reaction: " + testReaction.reaction);
-      await router.handle(testReaction);
-    } else {
-      // Regular debug message
-      testMsg.text = args.splice(2, args.length - 1).join(" ");
-      await router.handle(testMsg);
-    }
-
-    process.exit()
   }
 }
 
