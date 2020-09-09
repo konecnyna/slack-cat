@@ -29,6 +29,10 @@ module.exports = class MixerCat extends BaseStorageModule {
     }
   }
 
+  async handle(data) {
+    this.pairPeople(data.channel)
+  }
+
   async handleMemberJoin(data) {
     const welcomeMessage = this.getConfig().welcome_message
 
@@ -91,7 +95,7 @@ module.exports = class MixerCat extends BaseStorageModule {
   }
 
   getType() {
-    return [BaseModule.TYPES.SERVICE, BaseModule.TYPES.MEMBER_JOINED_CHANNEL]
+    return [BaseModule.TYPES.MODULE, BaseModule.TYPES.SERVICE, BaseModule.TYPES.MEMBER_JOINED_CHANNEL]
   }
 
   getConfig() {
