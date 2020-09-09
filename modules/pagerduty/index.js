@@ -118,8 +118,8 @@ module.exports = class PagerDuty extends BaseModule {
 
   help() {
     return (
-      "Usage `?oncallteam team_name`\nValid team_names : " +
-      config.getKey("pager_duty_api")["teams"].map(obj => obj.team_name)
+      "Usage `?oncall team_name`\nValid team names: " +
+      config.getKey("pager_duty_api")["teams"].map(obj => `• ${obj.team_name}\n`)
     );
   }
 };
