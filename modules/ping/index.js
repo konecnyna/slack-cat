@@ -1,5 +1,5 @@
 'use strict';
-var exec = require('child_process').exec;
+const exec = require('child_process').exec;
 
 module.exports = class Ping extends BaseModule {
   handle(data) {

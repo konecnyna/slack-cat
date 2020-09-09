@@ -13,44 +13,24 @@ module.exports = class MockBot {
   postMessage(channelId, msg) {
     this.msg = msg
     // Set default bot params.
-    if (this.callback) {
-      this.callback(msg)
-    } else {
-      console.log(msg)
-    }
+    this.handlePostMessage(msg);
   }
 
   postMessageToUser(userId, msg) {
-    if (this.callback) {
-      this.callback(msg)
-    } else {
-      console.log(msg)
-    }
+    this.handlePostMessage(msg)
   }
 
   postMessageToUsers(userList, msg) {
-    if (this.callback) {
-      this.callback(msg)
-    } else {
-      console.log("Group message: ", userList, msg)
-    }
+    this.handlePostMessage(msg)
   }
 
   postMessageToThread(id, text, ts, params) {
-    if (this.callback) {
-      this.callback(text)
-    } else {
-      console.log(text)
-    }
+    this.handlePostMessage(msg)
   }
 
   postMessageWithParams(channelId, msg, params) {
     this.msg = msg
-    if (this.callback) {
-      this.callback(msg)
-    } else {
-      console.log(msg)
-    }
+    this.handlePostMessage(msg)
   }
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
@@ -86,10 +66,7 @@ module.exports = class MockBot {
       args || {}
     )
 
-    if (this.callback) {
-      this.callback(params)
-    }
-    console.log(JSON.stringify(params, null, 2))
+    this.handlePostMessage(JSON.stringify(params, null, 2))
   }
 
   getChannelById(channel) {
@@ -97,11 +74,6 @@ module.exports = class MockBot {
       id: "123",
       members: ['1123', '123123123']
     }
-  }
-
-  // Prob a better way of doing this? Handle all the request/async functions.
-  setCallback(callback) {
-    this.callback = callback
   }
 
   postRawMessage(channel_id, args) {
@@ -113,10 +85,7 @@ module.exports = class MockBot {
       args || {}
     )
 
-    if (this.callback) {
-      return this.callback(params)
-    }
-    console.log(JSON.stringify(params, null, 2))
+    this.handlePostMessage(JSON.stringify(params, null, 2))
   }
 
   getUserNameFromId(user_id) {
@@ -160,5 +129,10 @@ module.exports = class MockBot {
 
     const slackUser = await this.getUserNameFromId(matches[1].toUpperCase())
     return slackUser.user.name;
+  }
+
+  handlePostMessage(msg) {
+    console.log(msg)
+    process.exit();
   }
 }
