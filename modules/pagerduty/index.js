@@ -25,7 +25,7 @@ module.exports = class PagerDuty extends BaseModule {
     }
 
     if (!data.user_text.length) {
-      bot.postMessageWithParams(data.channel, `Looks like you forgot your team name!\n${this.help()}`, {
+      this.bot.postMessageWithParams(data.channel, `Looks like you forgot your team name!\n${this.help()}`, {
         icon_url: ICON,
         username: USER_NAME,
       });
