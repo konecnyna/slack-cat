@@ -1,12 +1,6 @@
 const request = require('request-promise');
 const ICON = 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png';
 const USER_NAME = 'PagerDutyCat';
-const ERRORS = {
-  badInput: {
-    code: "badInput",
-    text: "Looks like you forgot your team name! Try `?oncall --help` to know more."
-  }
-};
 
 const HEADER = {
   Authorization: 'Token token=' + config.getKey('pager_duty_api').key,
@@ -63,12 +57,6 @@ module.exports = class PagerDutyUtil {
     });
   }
 
-  postBadInputError(bot, data) {
-    bot.postMessageWithParams(data.channel, ERRORS.badInput.text, {
-      icon_url: ICON,
-      username: USER_NAME,
-    });
-  }
 
   async listServices() {
     const options = {

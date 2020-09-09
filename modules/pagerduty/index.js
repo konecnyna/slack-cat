@@ -2,6 +2,8 @@
 const pdUtil = new (require("./pager-duty-util"))();
 const PdDialog = require("./pager-duty-dialog");
 const CronJob = require("cron").CronJob;
+const ICON = 'http://emojis.slackmojis.com/emojis/images/1467306358/628/pagerduty.png';
+const USER_NAME = 'PagerDutyCat';
 
 module.exports = class PagerDuty extends BaseModule {
   constructor(bot) {
@@ -23,14 +25,18 @@ module.exports = class PagerDuty extends BaseModule {
     }
 
     if (!data.user_text.length) {
-      pdUtil.postBadInputError(this.bot, data);
+      bot.postMessageWithParams(data.channel, `Looks like you forgot your team name!\n${this.help()}`, {
+        icon_url: ICON,
+        username: USER_NAME,
+      });
       return;
     }
 
     const { teams } = config.getKey("pager_duty_api");
     const result = teams.find(it => it.team_name === data.user_text.trim());
     if (!result) {
-      this.bot.postMessage(data.channel, "Couldn't find that team!");
+      const teams = config.getKey("pager_duty_api")["teams"].map(obj => `• ${obj.team_name} <#${obj.channel_id}>`);
+      this.bot.postMessage(data.channel, `Couldn't find that team! Teams list:\n${teams.join("\n")}`);
       return;
     }
 
@@ -50,7 +56,6 @@ module.exports = class PagerDuty extends BaseModule {
 
   async postToChannel(policy_id, channel) {
     const scheduleGroups = await pdUtil.getData(policy_id);
-
     const title = scheduleGroups[0].escalation_policy.summary;
     const fields = scheduleGroups.map(escalation => {
       return {
@@ -117,9 +122,7 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   help() {
-    return (
-      "Usage `?oncall team_name`\nValid team names: " +
-      config.getKey("pager_duty_api")["teams"].map(obj => `• ${obj.team_name}\n`)
-    );
+    const teams = config.getKey("pager_duty_api")["teams"].map(obj => `• ${obj.team_name} <#${obj.channel_id}>`);
+    return ("Usage `?oncall team_name`\nValid team names:\n" + teams.join("\n"));
   }
 };
