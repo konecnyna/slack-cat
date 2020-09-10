@@ -39,32 +39,32 @@ module.exports = class MixerCat extends BaseStorageModule {
     if (welcomeMessage === null) {
       return
     }
-
     const userData = await this.bot.userDataPromise(data.user)
     this.bot.postMessageToUser(userData.user.id, welcomeMessage)
   }
 
   async pairPeople(channel) {
-    const channelData = await this.bot.getChannelById(channel)
-    const members = channelData.members.filter(it => {
-      return it !== this.bot.botInfo.id
-    })
+    try {
+      const members = await this.bot.getChannelMembers(channel)
+      const filteredMembers = members.filter(it => {
+        return it !== this.bot.botInfo.id
+      })
 
-    if (!members) {
-      return false
+      const matches = await pair.pairMembers(filteredMembers, this.MixerCatModel)
+      matches.forEach(async it => {
+        if (it.length && it.length >= 2) {
+          this.bot.postMessageToUsers(
+            it,
+            this.getConfig().match_message || `${DEFAULT_PAIR_MESSAGE}`
+          )
+        }
+      })
+
+      this.bot.postMessage(channel, DONE_PAIRING_MESSAGE)
+    } catch (e) {
+      this.bot.postMessage(channel, ` 🚨 Pairing failed! 🚨\nError: ${e.message}`)
+      console.trace(e);
     }
-
-    const matches = await pair.pairMembers(members, this.MixerCatModel)
-    matches.forEach(async it => {
-      if (it.length && it.length >= 2) {
-        this.bot.postMessageToUsers(
-          it,
-          this.getConfig().match_message || `${DEFAULT_PAIR_MESSAGE}`
-        )
-      }
-    })
-
-    this.bot.postMessage(channel, DONE_PAIRING_MESSAGE)
   }
 
   async getExtraInfo(it) {

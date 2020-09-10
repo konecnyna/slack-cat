@@ -183,6 +183,18 @@ module.exports = class SlackCatBot {
       .catch(console.error)
   }
 
+  getChannelMembers(channel) {
+    return this.web.conversations
+      .members({
+        channel: channel,
+        limit: 500
+      })
+      .then(res => {
+        return res.members
+      })
+      .catch(console.error)
+  }
+
   getChannelById(channel) {
     return this.web.channels
       .info({
