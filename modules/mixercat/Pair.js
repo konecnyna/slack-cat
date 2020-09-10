@@ -51,20 +51,21 @@ module.exports = class Pair {
         where: {
           [Op.or]: [{ member_one: userId }, { member_two: userId }],
         },
-      })
-      .map(it => {
-        const member_one = it.get('member_one');
-        const member_two = it.get('member_two');
-        if (member_one === userId) {
-          return member_two;
-        }
-
-        return member_one;
       });
+
+    const membersPairs = previousPairs.map(it => {
+      const member_one = it.get('member_one');
+      const member_two = it.get('member_two');
+      if (member_one === userId) {
+        return member_two;
+      }
+
+      return member_one;
+    });
 
     return users.filter(it => {
       return (
-        !previousPairs.includes(it) &&
+        !membersPairs.includes(it) &&
         it !== userId &&
         this.matchedUsers[it] !== true
       );
