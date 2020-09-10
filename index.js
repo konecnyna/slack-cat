@@ -144,8 +144,6 @@ class SlackCat {
       console.trace(e);
       // Use debug cmd to fail tests on ci. Obvi a hack. 
       process.exitCode = 1
-    } finally {
-      process.exit()
     }
   }
 }

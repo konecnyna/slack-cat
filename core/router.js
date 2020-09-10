@@ -25,28 +25,28 @@ module.exports = class Router {
     }
   }
 
-  handle(data) {
+  async handle(data) {
     // Websocket starting up...
     if (data.type === 'hello') {
-      return
+      return;
     }
 
     try {
       if (data.type === 'member_joined_channel') {
-        this.handleMemberJoin(data)
+        await this.handleMemberJoin(data)
       }
 
       // Handle reactions
       if (data.type === 'reaction_added') {
-        this.handleReaction(data)
+        await this.handleReaction(data)
       }
 
       // Handle message edits
       if (data.type === 'message' && data.message && data.message.edited) {
-        this.handleMessageEdited(data)
+        await this.handleMessageEdited(data)
       }
 
-      this.handleMsg(data)
+      await this.handleMsg(data)
     } catch (e) {
       console.error(`Command ${data.cmd} threw an error!`, e.message);
     }
@@ -86,10 +86,9 @@ module.exports = class Router {
     Object.keys(this.rawInputModules).forEach(key => {
       this.rawInputModules[key].handleRawInput(data, this.modules)
     })
-
   }
 
-  handleMsg(data) {
+  async handleMsg(data) {
     // Handle messages.
     if (
       !data.bot_id &&
@@ -98,16 +97,16 @@ module.exports = class Router {
       data.type === 'message' &&
       data.text.charAt(0) === '?'
     ) {
-      this.handleCmdMessage(data)
+      await this.handleCmdMessage(data)
       return
     }
 
     if (data.type === 'message') {
-      this.handleRawInput(data)
+      await this.handleRawInput(data)
     }
   }
 
-  handleCmdMessage(data) {
+  async handleCmdMessage(data) {
     const matches = this.addExtras(data)
     if (matches && matches[1].toLowerCase() in this.modules) {
       const module = this.modules[data.cmd]
@@ -115,15 +114,15 @@ module.exports = class Router {
         data.args != null &&
         (data.args.includes('-help') || data.args.includes('--help'))
       ) {
-        this.bot.postMessage(data.channel, module.help())
+        await this.bot.postMessage(data.channel, module.help())
         return
       }
 
-      module.handle(data)
+      await module.handle(data)
       return
     }
 
-    this.handleOverflow(data)
+    await this.handleOverflow(data)
   }
 
   handleOverflow(data) {
