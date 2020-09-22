@@ -24,7 +24,7 @@ module.exports = class MockBot {
     this.handlePostMessage(msg)
   }
 
-  postMessageToThread(id, text, ts, params) {
+  postMessageToThread(id, msg, ts, params) {
     this.handlePostMessage(msg)
   }
 
