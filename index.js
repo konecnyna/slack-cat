@@ -7,6 +7,7 @@ const Server = require("./core/server");
 const MoudleLoader = require("./core/module-loader");
 const SlackCatBot = require("./core/slack-cat-bot.js");
 const { RTMClient } = require("@slack/rtm-api");
+const SlackCatEvents = require('./core/events');
 const Sequelize = require("sequelize");
 // Global Base Modules.
 global.BaseModule = require("./core/base-module.js");
@@ -90,7 +91,10 @@ class SlackCat {
       // Fix me :(((((((((((
       bot.setModules(modules);
       router = new Router(bot, modules, server);
-      server.start();
+
+      server.start(() => {
+        SlackCatEvents.publish(SlackCatEvents.EventTypes.SetupComplete, []);
+      });
     });
 
     rtm.on("message", data => {
@@ -148,4 +152,4 @@ class SlackCat {
   }
 }
 
-module.exports = SlackCat;
+module.exports = { SlackCat, SlackCatEvents };

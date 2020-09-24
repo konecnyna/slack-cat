@@ -49,10 +49,11 @@ module.exports = class Server {
     })
   }
 
-  start() {
+  start(callback = () => { }) {
     const port = config.getKey('port') || 3000
     this.app.listen(port, () => {
       console.log(`App listening on http://localhost:${port}!`)
+      callback()
     })
   }
 }
