@@ -1,13 +1,15 @@
 const subscriptions = {}
 const EventTypes = {
-  StartingUp: {}
+  SetupComplete: {}
 }
 
 const subscribe = (eventType, callback) => {
   const id = getIdGenerator()
 
-  if (!subscriptions[eventType])
+  if (!subscriptions[eventType]) {
     subscriptions[eventType] = {}
+  }
+
 
   subscriptions[eventType][id] = callback
 
@@ -20,8 +22,10 @@ const subscribe = (eventType, callback) => {
 }
 
 const publish = (eventType, arg) => {
-  if (!subscriptions[eventType])
+  if (!subscriptions[eventType]) {
     return
+  }
+
 
   Object.keys(subscriptions[eventType]).forEach(key => subscriptions[eventType][key](arg))
 }
