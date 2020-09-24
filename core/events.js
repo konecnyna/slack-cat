@@ -2,9 +2,18 @@ const subscriptions = {}
 const EventTypes = {
   SetupComplete: {}
 }
+function getIdGenerator() {
+  let lastId = 0
+
+  return function getNextUniqueId() {
+    lastId += 1
+    return lastId
+  }
+}
+const getNextUniqueId = getIdGenerator()
 
 const subscribe = (eventType, callback) => {
-  const id = getIdGenerator()
+  const id = getNextUniqueId()
 
   if (!subscriptions[eventType]) {
     subscriptions[eventType] = {}
@@ -26,17 +35,9 @@ const publish = (eventType, arg) => {
     return
   }
 
-
   Object.keys(subscriptions[eventType]).forEach(key => subscriptions[eventType][key](arg))
 }
 
-const getIdGenerator = () => {
-  let lastId = 0
 
-  return function getNextUniqueId() {
-    lastId += 1
-    return lastId
-  }
-}
 
 module.exports = { publish, subscribe, EventTypes }
