@@ -38,7 +38,7 @@ class SlackCat {
     const dbConfig = config.getKey("db");
     if (!dbConfig) {
       global.database = new Sequelize(null, null, null, {
-        dialect: "sqlite",
+        dialect: "postgres",
         storage: dbPath, // global.
         logging: false,
         pool: poolConfig,
