@@ -35,12 +35,19 @@ class SlackCat {
       idle: 10000
     };
 
+    const args = process.argv.slice(0);
+    let logging = false;
+    if (args.includes("--verbose")) {
+      console.log("Enabling verbose logging");
+      logging = console.log
+    }
+
     const dbConfig = config.getKey("db");
     if (!dbConfig) {
       global.database = new Sequelize(null, null, null, {
         dialect: "sqlite",
         storage: dbPath, // global.
-        logging: false,
+        logging: logging,
         pool: poolConfig,
       });
       return;
@@ -50,7 +57,7 @@ class SlackCat {
     const sequelizeConfig = {
       dialect: dialect,
       port: port,
-      logging: false,
+      logging: logging,
       pool: poolConfig,
       dialectOptions: {
         ssl: ssl

@@ -17,8 +17,7 @@ const overrides = [
     days: makeRange(1, 31),
     botParams: {
       username: 'SpookyCat',
-      icon_emoji: ':jack_o_lantern:',
-      icon_url: ''
+      icon_url: 'https://i.imgur.com/K8TdD6H.png'
     }
   },
   {
