@@ -1,26 +1,21 @@
 const request = require('request');
 const util = require('util');
 
-const BASE_URL =
-  'https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=USD';
-
-const bitcoin = 'BTC';
-const ethereum = 'ETH';
-const lightCoin = 'LTC';
-
-module.exports = class Crypto extends BaseModule {
+module.exports = class Crypto extends (
+  BaseModule
+) {
   async handle(data) {
     if (data.user_text.length > 0) {
-      this.getSingleCrpto(data);
+      this.getSingleCrypto(data);
       return;
     }
 
     this.postFancyData(data);
   }
 
-  async getSingleCrpto(data) {
+  async getSingleCrypto(data) {
     try {
-      const cryptoData = await this.getCryptoPrice(data.user_text);
+      const cryptoData = await this.getSingleCryptoByTicker(data.user_text);
       const fields = [
         {
           title: data.user_text,
@@ -35,27 +30,14 @@ module.exports = class Crypto extends BaseModule {
   }
 
   async postFancyData(data) {
-    const bitcoinPrice = await this.getCryptoPrice(bitcoin);
-    const ethereumPrice = await this.getCryptoPrice(ethereum);
-    const lightCoinPrice = await this.getCryptoPrice(lightCoin);
-
-    const fields = [
-      {
-        title: 'Bitcoin:',
-        value: `$${bitcoinPrice.USD.toFixed(2)}`,
+    const cryptoPrices = await this.getTopCryptoPrices();
+    const fields = cryptoPrices.map((crypto) => {
+      return {
+        title: crypto.name,
+        value: `$${crypto.current_price}`,
         short: false,
-      },
-      {
-        title: 'Ethereum:',
-        value: `$${ethereumPrice.USD.toFixed(2)}`,
-        short: false,
-      },
-      {
-        title: 'LiteCoin:',
-        value: `$${lightCoinPrice.USD.toFixed(2)}`,
-        short: false,
-      },
-    ];
+      };
+    });
 
     this.postFancyMessage(data, fields, '#FFC107');
   }
@@ -68,16 +50,37 @@ module.exports = class Crypto extends BaseModule {
         {
           color: color,
           fields: fields,
-          footer:
-            'More symbols: https://www.cryptocompare.com/coins/list/USD/1',
+          footer: 'More symbols: https://www.coingecko.com/en',
         },
       ],
     });
   }
 
-  getCryptoPrice(id) {
+  getTopCryptoPrices() {
     var options = {
-      url: util.format(BASE_URL, id.toUpperCase()),
+      url:
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=3&page=1&sparkline=false&price_change_percentage=24h',
+    };
+
+    return new Promise((resolve, reject) => {
+      request(options, (error, response, body) => {
+        if (error) {
+          reject(error);
+          console.error('error', error);
+          return;
+        }
+
+        resolve(JSON.parse(body));
+      });
+    });
+  }
+
+  getSingleCryptoByTicker(id) {
+    var options = {
+      url: util.format(
+        'https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=USD',
+        id.toUpperCase()
+      ),
     };
 
     return new Promise((resolve, reject) => {
@@ -94,6 +97,6 @@ module.exports = class Crypto extends BaseModule {
   }
 
   help() {
-    return 'Get duh latest crypto info. `?crypto <symbol name>`. List of symbols: https://www.cryptocompare.com/coins/list/USD/1';
+    return 'Get duh latest crypto info. `?crypto <symbol name>`. List of symbols: https://www.coingecko.com/en';
   }
 };
