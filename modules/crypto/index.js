@@ -1,6 +1,8 @@
 const request = require('request');
 const util = require('util');
 
+const COIN_GECKO_URL = 'https://www.coingecko.com/en';
+
 module.exports = class Crypto extends (
   BaseModule
 ) {
@@ -25,7 +27,10 @@ module.exports = class Crypto extends (
       ];
       this.postFancyMessage(data, fields, '#4CAF50');
     } catch (e) {
-      this.bot.postMessage(data.channel, `${data.user_text} not found. :(`);
+      this.bot.postMessage(
+        data.channel,
+        `${data.user_text} not found. See coins: ${COIN_GECKO_URL}`
+      );
     }
   }
 
@@ -50,7 +55,7 @@ module.exports = class Crypto extends (
         {
           color: color,
           fields: fields,
-          footer: 'More symbols: https://www.coingecko.com/en',
+          footer: `More symbols: ${COIN_GECKO_URL}`,
         },
       ],
     });
@@ -97,6 +102,6 @@ module.exports = class Crypto extends (
   }
 
   help() {
-    return 'Get duh latest crypto info. `?crypto <symbol name>`. List of symbols: https://www.coingecko.com/en';
+    return `Get duh latest crypto info. \`?crypto <symbol name>\`. List of symbols: ${COIN_GECKO_URL}`;
   }
 };
