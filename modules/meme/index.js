@@ -1,57 +1,72 @@
 'use strict';
-const request = require('request');
-const regex = /"(.*?)"/g;
-
+const axios = require('axios');
 const secrets = config.getKey('apiflip');
+
+const templates = {
+  "odns": "61579",
+  "khan": "2743696"
+}
 
 module.exports = class Meme extends BaseModule {
   async handle(data) {
-    if (!data.user_text) {
-      return;
-    }
-    
-    let group;
-    const text = [];
-    while(group = regex.exec(data.user_text)) {
-      text.push(group[1]);      
-      if (text.length === 2) {
-        break;
-      }
+    const { cmd, channel, user_text } = data;
+    if (!user_text) {
+      return this.bot.postMessageToThread(channel, this.help());
     }
 
-    const url = await this.imgflip({
-      template_id: '2743696',
-      username: secrets.username,
-      password: secrets.password,
-      text0: text[0], 
-      text1: text[1],
-    });
+    if (cmd === "odns") {
+      const odnsUrl = await this.handleOdns(user_text);
+      return this.bot.postMessage(channel, odnsUrl);
+    }
+    const captions = this.getCaptions(user_text);
+    if (!captions) {
+      return this.bot.postMessageToThread(channel, this.help());
+    }
 
-    this.bot.postMessage(data.channel, url);
+    const url = await this.getMemeImage(templates["khan"], captions.top, captions.bottom);
+    this.bot.postMessage(channel, url);
   }
 
-async imgflip(params) {  
-  return new Promise((resolve, reject) => {
-    try {
-      request.post({
-        url: `https://api.imgflip.com/caption_image`,    
-        form: params    
-      }, (error, response, body) => {
-        resolve(JSON.parse(body).data.url);
-      });
-    } catch (e) {
-      reject(e);
+  getCaptions(user_text) {
+    const group = new RegExp(/"(.*)"\s"(.*)"/, 'gm').exec(user_text)
+    if (!group) {
+      return null;
     }
-    
-  }); 
-}
-  
+
+    return {
+      top: group[1] || " ",
+      bottom: group[2] || " "
+    }
+  }
+
+  async handleOdns(user_text) {
+    return this.getMemeImage(templates["odns"], "One does not simply", user_text)
+  }
+
+  async getMemeImage(template_id, topText, bottomText) {
+    console.log(topText, bottomText)
+    const params = {
+      template_id,
+      username: secrets.username,
+      password: secrets.password,
+      text0: topText || " ",
+      text1: bottomText || " ",
+    };
+
+    try {
+      const { data } = await axios.post("https://api.imgflip.com/caption_image", null, { params });
+      return data.data.url;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
 
   help() {
     return '?meme <meme_name> "top_text" "bottom_text"';
   }
 
   aliases() {
-    return ['khan'];
+    return ['khan', 'odns'];
   }
 };
