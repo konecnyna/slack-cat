@@ -159,9 +159,9 @@ const radars = [
 const formatUrl = (value) => `https://s.w-x.co/staticmaps/wu/wxtype/county_loc/${value}/animate.png`
 module.exports = class Radar extends BaseModule {
   async handle(data) {
-    const { channel_id } = data;
+    const { channel } = data;
     if (!data.user_text) {
-      return this.sendRadarMessage(channel_id, "https://s.w-x.co/staticmaps/wu/wxtype/none/usa/animate.png")
+      return this.sendRadarMessage(channel, "https://s.w-x.co/staticmaps/wu/wxtype/none/usa/animate.png")
     }
 
     const input = data.user_text.toUpperCase();
@@ -169,11 +169,11 @@ module.exports = class Radar extends BaseModule {
       return it.text.includes(input);
     })
     if (userRadar) {
-      return this.sendRadarMessage(channel_id, formatUrl(userRadar.value))
+      return this.sendRadarMessage(channel, formatUrl(userRadar.value))
     }
 
     this.bot.postMessage(
-      channel_id,
+      channel,
       `Couldn't find ${data.user_text}.\nMaps:\n\`\`\`${radars.map(it => it.text).join('\n')}\`\`\``
     );
   }
