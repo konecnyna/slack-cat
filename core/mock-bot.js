@@ -37,6 +37,16 @@ module.exports = class MockBot {
     }
   }
 
+  overrideBotParams() {
+    const holidayOverride = new HolidayOverride()
+    const override = holidayOverride.getOverride()
+    if (override) {
+      this.botParams = override
+    } else {
+      this.botParams = this.defaultParams
+    }
+  }
+
   postMessage(channelId, msg) {
     this.msg = msg
     // Set default bot params.
