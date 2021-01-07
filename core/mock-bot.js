@@ -8,6 +8,33 @@ module.exports = class MockBot {
     this.botInfo = {
       id: 420
     }
+    this.setupBotParams();
+  }
+
+  setupBotParams() {
+    const name = config.getKey('bot_name')
+    this.icon_emoji = config.getKey('bot_emoji')
+    this.icon_url = config.getKey('bot_icon_url')
+
+    this.botParams = {
+      username: name || 'SlackCat'
+    }
+
+    if (this.icon_url) {
+      // url takes prority.
+      this.botParams['icon_url'] = this.icon_url
+    } else {
+      this.botParams['icon_emoji'] = this.icon_emoji || ':cat:'
+    }
+
+    // Override slackcat for some fun holidays!
+    this.defaultParams = this.botParams
+    if (config.getKey('holiday_override')) {
+      this.overrideBotParams()
+      setInterval(() => {
+        this.overrideBotParams()
+      }, 60 * 1000 * 1)
+    }
   }
 
   postMessage(channelId, msg) {
@@ -65,6 +92,13 @@ module.exports = class MockBot {
       },
       args || {}
     )
+    if (params['icon_emoji'] === undefined && params['icon_url'] === undefined) {
+      if (this.icon_url) {
+        params['icon_url'] = this.icon_url
+      } else {
+        params['icon_emoji'] = this.icon_emoji
+      }
+    }
 
     this.handlePostMessage(JSON.stringify(params, null, 2))
   }
@@ -74,18 +108,6 @@ module.exports = class MockBot {
       id: "123",
       members: ['1123', '123123123']
     }
-  }
-
-  postRawMessage(channel_id, args) {
-    var params = extend(
-      {
-        channel: channel_id,
-        username: this.name
-      },
-      args || {}
-    )
-
-    this.handlePostMessage(JSON.stringify(params, null, 2))
   }
 
   getUserNameFromId(user_id) {
