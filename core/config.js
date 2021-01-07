@@ -1,9 +1,7 @@
 'use strict';
-const fs = require('fs');
-
 
 module.exports = class Config {
-  constructor(configPath) {
+  constructor() {
     try {
       const contents = process.env.SECRETS;
       this.config = JSON.parse(contents);

@@ -14,18 +14,18 @@ module.exports = class SlackCatBot {
 
   setupBotParams() {
     const name = config.getKey('bot_name')
-    const icon_emoji = config.getKey('bot_emoji')
-    const icon_url = config.getKey('bot_icon_url')
+    this.icon_emoji = config.getKey('bot_emoji')
+    this.icon_url = config.getKey('bot_icon_url')
 
     this.botParams = {
       username: name || 'SlackCat'
     }
 
-    if (icon_url) {
+    if (this.icon_url) {
       // url takes prority.
-      this.botParams['icon_url'] = icon_url
+      this.botParams['icon_url'] = this.icon_url
     } else {
-      this.botParams['icon_emoji'] = icon_emoji || ':cat:'
+      this.botParams['icon_emoji'] = this.icon_emoji || ':cat:'
     }
 
     // Override slackcat for some fun holidays!
@@ -115,12 +115,10 @@ module.exports = class SlackCatBot {
       params || this.botParams
     )
 
-
     return await this.web.chat.postMessage(params)
   }
 
   async postMessageToThreadOrUpdate(id, text, ts, params) {
-
     return await this.postMessageToThread(id, text, ts, params)
   }
 
@@ -132,6 +130,14 @@ module.exports = class SlackCatBot {
       },
       args || {}
     )
+
+    if (params['icon_emoji'] === undefined && params['icon_url'] === undefined) {
+      if (this.icon_url) {
+        params['icon_url'] = this.icon_url
+      } else {
+        params['icon_emoji'] = this.icon_emoji
+      }
+    }
 
     return this.web.chat.postMessage(params)
   }
