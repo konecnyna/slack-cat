@@ -7,7 +7,7 @@ module.exports = class Config {
       this.config = JSON.parse(contents);
     } catch (e) {
       this.config = {};
-      console.error('Running without config.json', e);
+      console.error('Running without config.json', e.message);
     }
   }
 
