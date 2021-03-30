@@ -202,7 +202,7 @@ module.exports = class SlackCatBot {
   }
 
   getChannelById(channel) {
-    return this.web.channels
+    return this.web.conversations
       .info({
         channel: channel
       })

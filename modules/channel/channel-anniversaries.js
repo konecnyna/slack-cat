@@ -6,7 +6,7 @@ module.exports = class ChannelAnniversaries {
   }
 
   async getAnniversaries() {
-    const { channels } = await this.web.channels.list();
+    const { channels } = await this.web.conversations.list();
     return channels.filter(channel => {
       return this.isDateAYearToday(channel)
     });
@@ -19,7 +19,7 @@ module.exports = class ChannelAnniversaries {
   }
 
   async getChannelAnniversary(channelId) {
-    const { channel } = await this.web.channels.info({ channel: channelId })
+    const { channel } = await this.web.conversations.info({ channel: channelId })
     const days = moment().diff(channel.created * 1000, 'day');
     return {
       date: moment(channel.created * 1000).format("MMMM DD YYYY"),
