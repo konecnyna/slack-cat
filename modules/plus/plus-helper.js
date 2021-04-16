@@ -49,8 +49,7 @@ module.exports = class PlusHelper {
     const userData = await this.context.bot.getUserNameFromId(data.user);
     this.context.bot.postMessageToThread(
       data.channel,
-      `Don't be a meanie ${
-      userData.user.display_name
+      `Don't be a meanie ${userData.user.display_name
         ? userData.user.display_name
         : userData.user.name
       }`,
@@ -81,6 +80,15 @@ module.exports = class PlusHelper {
 
 
     return await pluses.get('pluses');
+  }
+
+  async plusEvent(userSlackId) {
+    await this.getPlusEventModel().create(
+      {
+        slackid: userSlackId,
+        pluses: 1
+      }
+    );
   }
 
 
@@ -121,7 +129,9 @@ module.exports = class PlusHelper {
   getPlusModel() {
     return database.modelManager.getModel("pluses_table")
   }
+
+  getPlusEventModel() {
+    return database.modelManager.getModel("plus_events")
+  }
+
 };
-
-
-

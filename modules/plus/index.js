@@ -71,6 +71,7 @@ module.exports = class Plus extends BaseStorageModule {
       const pluses = await this.plusHelper.plusUser(
         data.user_text.toLowerCase()
       );
+      await this.plusHelper.plusEvent(data.user_text.toLowerCase());
       this.bot.postMessageToThread(
         data.channel,
         `${data.user_text} now has ${pluses} pluses!`,
@@ -98,6 +99,7 @@ module.exports = class Plus extends BaseStorageModule {
         }
         const userName = await this.getUserNameFromId(group[1]);
         const total = await this.plusHelper.plusUser(group[1]);
+        await this.plusHelper.plusEvent(group[1]);
         if (!plusMap[userName]) {
           plusMap[userName] = {
             occurrences: 0
@@ -151,8 +153,7 @@ module.exports = class Plus extends BaseStorageModule {
   }
 
   getReactionKey(data) {
-    return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${
-      data.item.reaction
+    return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${data.item.reaction
       }`;
   }
 
@@ -175,6 +176,16 @@ module.exports = class Plus extends BaseStorageModule {
     this.PlusModelNew = this.db.define('pluses_table', {
       slackid: { type: this.Sequelize.STRING, primaryKey: true },
       pluses: this.Sequelize.INTEGER,
+    }, { timestamps: false });
+
+    this.PlusEventModel = this.db.define('plus_events', {
+      slackid: this.Sequelize.STRING,
+      pluses: this.Sequelize.INTEGER,
+      creationTimestamp: {
+        type: this.Sequelize.DATE,
+        allowNull: false,
+        defaultValue: this.Sequelize.NOW
+      }
     }, { timestamps: false });
   }
 
