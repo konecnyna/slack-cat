@@ -1,7 +1,7 @@
 'use strict';
 const publicIp = require('public-ip');
 const request = require('request-promise');
-const token = config.getKey('slack_access_token_oauth')
+const token = config.getKey('slack_access_token_oauth');
 
 const ROUTE_PATH = 'learns';
 
@@ -32,7 +32,7 @@ module.exports = class LearnsList {
 
   async createPage(res, learnData) {
     const { emoji } = await this.getEmojisList();
-    this.emojiMap = emoji || {}
+    this.emojiMap = emoji || {};
 
     res.set({ 'content-type': 'text/html; charset=utf-8' });
 
@@ -66,12 +66,11 @@ ${await this.createBody(learnData)}
         <img src="https://i.gifer.com/7VE.gif"/>
       </div>
     </div>
-      `
+      `;
     }
     const cards = [];
     let learns = [];
     let title = null;
-
 
     learnData.forEach(async (row, index) => {
       if (title === null) {
@@ -101,9 +100,10 @@ ${await this.createBody(learnData)}
     return cards.join('');
   }
 
-
   async getEmojisList() {
-    const response = await request(`https://slack.com/api/emoji.list?token=${token}`);
+    const response = await request(
+      `https://slack.com/api/emoji.list?token=${token}`
+    );
     return JSON.parse(response);
   }
 
@@ -121,7 +121,7 @@ ${await this.createBody(learnData)}
 
   makeTitle(title) {
     if (/:([\w-_]+):/g.test(title)) {
-      return `${this.parseEmojiRegex(title)} (${title})`
+      return `${this.parseEmojiRegex(title)} (${title})`;
     }
     return title;
   }
@@ -139,7 +139,7 @@ ${await this.createBody(learnData)}
     }
 
     if (/:([\w-_]+):/g.test(learn)) {
-      return this.parseEmojiRegex(learn)
+      return this.parseEmojiRegex(learn);
     }
 
     if (learn.length === 0) {
@@ -156,22 +156,25 @@ ${await this.createBody(learnData)}
 
     for (const match of matches) {
       if (this.emojiMap[match[1]]) {
-        body = body.replace(match[0], `<img src=${this.emojiMap[match[1]]} width="32"/>`);
+        body = body.replace(
+          match[0],
+          `<img src=${this.emojiMap[match[1]]} width="32"/>`
+        );
       }
     }
     return body;
   }
 
   async getLearns(data) {
-    const ip = config.getKey('host') || await publicIp.v4();
+    const ip = config.getKey('host') || (await publicIp.v4());
     const user = await this.bot.getUserNameFromText(data.user_text);
     let args = data.user_text ? `?text=${data.user_text}` : '';
     if (user) {
-      args = `?text=${user}`
+      args = `?text=${user}`;
     }
     await this.bot.postMessage(
       data.channel,
-      `http://${ip}:${config.getKey('port') || 3000}/${ROUTE_PATH}${args}`
+      `http://${ip}/${ROUTE_PATH}${args}`
     );
   }
 };
