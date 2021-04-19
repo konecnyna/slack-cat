@@ -27,8 +27,6 @@ const SOURCE_MSG = [
   },
 ];
 
-
-
 module.exports = class About extends BaseModule {
   async handle(data) {
     if (data.cmd === 'help' || data.cmd === 'commands' || data.cmd === 'cmds') {
@@ -58,8 +56,7 @@ module.exports = class About extends BaseModule {
   }
 
   async getHelpMessages() {
-    const ip = config.getKey('host') || await publicIp.v4();
-    const port = config.getKey('port');
+    const ip = config.getKey('host') || (await publicIp.v4());
     return [
       {
         title: 'Usage:',
@@ -80,9 +77,9 @@ module.exports = class About extends BaseModule {
       },
       {
         title: 'Help:',
-        value: `List of commands - \`?cmds\` or http://${ip}:${port}/help\nHelp - \`?<module_name> --help\``,
+        value: `List of commands - \`?cmds\` or http://${ip}/help\nHelp - \`?<module_name> --help\``,
         short: false,
-      }
+      },
     ];
   }
 
