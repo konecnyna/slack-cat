@@ -8,7 +8,7 @@ const USER_NAME = 'PagerDutyCat';
 module.exports = class PagerDuty extends BaseModule {
   constructor(bot) {
     super(bot);
-    const { teams } = config.getKey("pager_duty_api");
+    const teams = this.provideTeams()
     if (teams) {
       this.setupCron(teams);
       this.pdDialog = new PdDialog(bot, pdUtil);
@@ -32,7 +32,7 @@ module.exports = class PagerDuty extends BaseModule {
       return;
     }
 
-    const { teams } = config.getKey("pager_duty_api");
+    const teams = this.provideTeams()
     const result = teams.find(it => it.team_name === data.user_text.trim());
     if (!result) {
       const teams = config.getKey("pager_duty_api")["teams"].map(obj => `• ${obj.team_name} <#${obj.channel_id}>`);
@@ -44,7 +44,7 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   async handleCron() {
-    const { teams } = config.getKey("pager_duty_api");
+    const teams = this.provideTeams()
     teams
       .filter(team => {
         return team.channel_id && !team.cron;
@@ -119,6 +119,11 @@ module.exports = class PagerDuty extends BaseModule {
       BaseModule.TYPES.MODULE,
       BaseModule.TYPES.DIALOG
     ];
+  }
+
+  provideTeams() {
+    const { teams } = config.getKey("pager_duty_api");
+    return teams;
   }
 
   help() {
