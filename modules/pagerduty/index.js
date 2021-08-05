@@ -11,8 +11,9 @@ module.exports = class PagerDuty extends BaseModule {
     const teams = this.provideTeams()
     if (teams) {
       this.setupCron(teams);
-      this.pdDialog = new PdDialog(bot, pdUtil);
     }
+
+    this.pdDialog = new PdDialog(bot, pdUtil);
   }
 
   async handle(data) {
