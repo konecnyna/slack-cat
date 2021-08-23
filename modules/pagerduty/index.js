@@ -36,8 +36,13 @@ module.exports = class PagerDuty extends BaseModule {
     const teams = this.provideTeams()
     const result = teams.find(it => it.team_name === data.user_text.trim());
     if (!result) {
-      const teams = config.getKey("pager_duty_api")["teams"].map(obj => `• ${obj.team_name} <#${obj.channel_id}>`);
-      this.bot.postMessage(data.channel, `Couldn't find that team! Teams list:\n${teams.join("\n")}`);
+      const teamNames = teams.map(
+        (obj) => `• ${obj.team_name} <#${obj.channel_id}>`
+      );
+      this.bot.postMessage(
+        data.channel,
+        `Couldn't find that team! Teams list:\n${teamNames.join('\n')}`
+      );
       return;
     }
 
@@ -128,7 +133,9 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   help() {
-    const teams = config.getKey("pager_duty_api")["teams"].map(obj => `• ${obj.team_name} <#${obj.channel_id}>`);
-    return ("Usage `?oncall team_name`\nValid team names:\n" + teams.join("\n"));
+    const teams = provideTeams().map(
+      (obj) => `• ${obj.team_name} <#${obj.channel_id}>`
+    );
+    return 'Usage `?oncall team_name`\nValid team names:\n' + teams.join('\n');
   }
 };
