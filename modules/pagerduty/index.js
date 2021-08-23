@@ -133,7 +133,7 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   help() {
-    const teams = provideTeams().map(
+    const teams = this.provideTeams().map(
       (obj) => `• ${obj.team_name} <#${obj.channel_id}>`
     );
     return 'Usage `?oncall team_name`\nValid team names:\n' + teams.join('\n');
