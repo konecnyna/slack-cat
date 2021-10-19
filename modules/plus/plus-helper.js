@@ -66,6 +66,8 @@ module.exports = class PlusHelper {
   }
 
   async plusUser(userSlackId) {
+    console.log("this.context.db", this.context.db)
+    console.log("this.context.db.literal", this.context.db.literal)
     const pluses = await this.context.upsert(
       this.getPlusModel(),
       { where: { slackid: userSlackId } },
@@ -78,9 +80,9 @@ module.exports = class PlusHelper {
       }
     );
 
-
-
-    return await pluses.get('pluses');
+    const ourplusses = await pluses.get('pluses');
+    console.log("plusses", ourplusses)
+    return ourplusses
   }
 
 
@@ -119,7 +121,10 @@ module.exports = class PlusHelper {
   }
 
   getPlusModel() {
-    return database.modelManager.getModel("pluses_table")
+    const pluses_model = database.modelManager.getModel("pluses_table");
+    console.log("pluses_model", pluses_model);
+    return pluses_model;
+//    return database.modelManager.getModel("pluses_table")
   }
 };
 
