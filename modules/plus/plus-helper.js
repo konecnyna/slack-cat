@@ -1,6 +1,3 @@
-
-const data = require('./memebers')
-
 module.exports = class PlusHelper {
   constructor(context) {
     this.context = context;
