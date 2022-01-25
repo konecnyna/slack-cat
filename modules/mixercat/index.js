@@ -45,7 +45,7 @@ module.exports = class MixerCat extends BaseStorageModule {
 
   async pairPeople(channel) {
     try {
-      const members = await this.getChannelUserIds();
+      const members = await this.getChannelUserIds(channel);
       const filteredMembers = members.filter((it) => {
         return it !== this.bot.botInfo.id;
       });
@@ -74,7 +74,7 @@ module.exports = class MixerCat extends BaseStorageModule {
     }
   }
 
-  async getChannelUserIds() {
+  async getChannelUserIds(channel) {
     return await this.bot.getChannelMembers(channel);
   }
 
