@@ -71,8 +71,6 @@ module.exports = class Router {
   }
 
   handleMessageEdited(data) {
-    this.handle(data);
-
     const handleMsg = data.message;
     handleMsg['event_ts'] = data.event_ts;
     handleMsg['ts'] = data.ts;
