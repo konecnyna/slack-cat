@@ -22,7 +22,7 @@
   "homepage": "https://github.com/konecnyna/slack-cat#readme",
   "dependencies": {
     "@slack/rtm-api": "^6.0.0",
-    "@slack/web-api": "^6.4.0",
+    "@slack/web-api": "^6.6.0",
     "axios": "^0.22.0",
     "body-parser": "^1.19.0",
     "cron": "^1.8.2",
