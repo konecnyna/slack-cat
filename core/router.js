@@ -71,11 +71,9 @@ module.exports = class Router {
   }
 
   handleMessageEdited(data) {
-    const handleMsg = data.message;
-    handleMsg['event_ts'] = data.event_ts;
-    handleMsg['ts'] = data.ts;
-    handleMsg['channel'] = data.channel;
-    this.handleMsg(handleMsg);
+    Object.keys(this.messageEditedModules).forEach((key) => {
+      this.messageEditedModules[key].handleReaction(data, this.modules);
+    });
   }
 
   handleMemberJoin(data) {
