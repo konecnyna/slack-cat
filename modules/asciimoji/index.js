@@ -13,7 +13,7 @@ module.exports = class Asciimoji extends BaseModule {
     while (input.letterArray.length > 0) {
       let chunk = input.letterArray.splice(0, wrap ? 5 : 1000); // deal with it 😎
       let line = '';
-      chunk.map(letter => {
+      chunk.map((letter) => {
         let msg = this.getLetter(letter);
         line = this.addToLine(line, msg);
       });
@@ -37,24 +37,27 @@ module.exports = class Asciimoji extends BaseModule {
       match = emojiRegex.exec(userText);
     }
 
-    if (!emojis.length || emojis.length != 2) {
+    if (!emojis.length || emojis.length < 1) {
       return null;
     }
 
-    userText = userText.replaceAll(emojis[0], '');
-    userText = userText.replaceAll(emojis[1], '');
+    const textEmoji = emojis[0];
+    const bgEmoji = emojis[1] || ':transparent:';
+
+    userText = userText.replaceAll(textEmoji, '');
+    userText = userText.replaceAll(bgEmoji, '');
     const letterArray = userText.trim().toLowerCase().split('');
-    this.padMessage(letterArray)
+    this.padMessage(letterArray);
     return {
-      emoji_one: emojis[0],
-      emoji_two: emojis[1],
-      letterArray: letterArray
-    }
+      emoji_one: textEmoji,
+      emoji_two: bgEmoji,
+      letterArray: letterArray,
+    };
   }
 
   padMessage(letterArray) {
-    letterArray.unshift(" ")
-    letterArray.push(" ")
+    letterArray.unshift(' ');
+    letterArray.push(' ');
   }
 
   getLetter(letter) {
@@ -84,7 +87,6 @@ module.exports = class Asciimoji extends BaseModule {
 
     return lineArray.join('');
   }
-
 
   aliases() {
     return [`text`, `ascii`];
