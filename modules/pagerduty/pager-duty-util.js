@@ -103,4 +103,26 @@ module.exports = class PagerDutyUtil {
       return null
     }
   }
+
+  async responsePlay(incidentId, email, responsePlayId) {
+    let emailHeader = HEADER
+    emailHeader['From'] = email
+
+    const incident = {
+      "incident": {
+        "id": `${incidentId}`,
+        "type": "incident_reference"
+      }
+    }
+
+    const options = {
+      url: `https://api.pagerduty.com/response_plays/${responsePlayId}/run`,
+      headers: emailHeader,
+      body: incident,
+      method: "POST",
+      json: true
+    };
+
+    return await request(options);
+  }
 }
