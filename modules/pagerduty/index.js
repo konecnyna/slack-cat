@@ -34,7 +34,7 @@ module.exports = class PagerDuty extends BaseModule {
     }
 
     const teams = this.provideTeams()
-    const result = teams.find(it => it.team_name === data.user_text.trim());
+    const result = teams.find(it => it.team_name.toLowerCase() === data.user_text.trim().toLowerCase());
     if (!result) {
       const teamNames = teams.map(
         (obj) => `• ${obj.team_name} <#${obj.channel_id}>`
