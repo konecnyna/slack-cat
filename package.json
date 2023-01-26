@@ -1,6 +1,6 @@
 {
   "name": "slack-cat",
-  "version": "2.2.10",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,33 +17,33 @@
     "url": "https://github.com/konecnyna/slack-cat/issues"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "homepage": "https://github.com/konecnyna/slack-cat#readme",
   "dependencies": {
     "@slack/rtm-api": "^6.0.0",
-    "@slack/web-api": "^6.6.0",
+    "@slack/web-api": "^6.8.0",
     "axios": "^0.22.0",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "cron": "^1.8.2",
     "dark-sky": "^1.1.5",
-    "debug": "^4.3.2",
+    "debug": "^4.3.4",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "google-spreadsheet": "^3.1.15",
+    "express": "^4.18.2",
+    "google-spreadsheet": "^3.3.0",
     "google-translate-api": "^2.3.0",
     "jira-client": "^6.22.0",
     "memory-cache": "^0.2.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "mta-gtfs": "^1.1.0",
-    "pg": "^8.7.1",
+    "pg": "^8.8.0",
     "public-ip": "^4.0.4",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "request-promise-native": "^1.0.9",
     "require-dir": "^1.2.0",
-    "sequelize": "^6.6.5",
-    "sqlite3": "^5.0.2"
+    "sequelize": "^6.28.0",
+    "sqlite3": "^5.1.4"
   },
   "devDependencies": {
     "babel": "^6.23.0",
