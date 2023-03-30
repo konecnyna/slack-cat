@@ -61,17 +61,38 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   async postToChannel(policy_id, channel) {
-    const scheduleGroups = await pdUtil.getData(policy_id);
-    const title = scheduleGroups[0].escalation_policy.summary;
-    const fields = scheduleGroups.map(escalation => {
-      return {
-        level: escalation.escalation_level,
-        title: "Level " + escalation.escalation_level,
-        value: escalation.user.summary,
-        short: false
-      };
-    });
-    pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
+    try {
+      const scheduleGroups = await pdUtil.getData(policy_id);
+      const title = scheduleGroups[0].escalation_policy.summary;
+      const fields = scheduleGroups.map(escalation => {
+        return {
+          level: escalation.escalation_level,
+          title: "Level " + escalation.escalation_level,
+          value: escalation.user.summary,
+          short: false
+        };
+      });
+      pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
+    } catch (e) {
+      this.bot.postRawMessage(channel, {
+        icon_url: pdUtil.slackIcon,
+        username: pdUtil.slackUserName,
+        attachments: [
+          {
+            color: '#D32F2F',
+            author_icon: 'https://i.imgur.com/HKOY97q.png',
+            title: title,
+            fields:
+            {
+              title: '🚨 Error 🚨 ',
+              value: `Failed to find policy id: ${policy_id}`,
+              short: false,
+            },
+            footer: ':fire: lets hope nothings on fire :fire:',
+          },
+        ],
+      })
+    }
   }
 
   isValidConfig() {
