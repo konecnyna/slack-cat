@@ -10,6 +10,8 @@ const HEADER = {
 
 
 module.exports = class PagerDutyUtil {
+  slackIcon = ICON
+  slackUserName = USER_NAME
 
   async getData(escalationPolicyId) {
     const scheduleGroups = await this.getScheduleGroups(escalationPolicyId);
