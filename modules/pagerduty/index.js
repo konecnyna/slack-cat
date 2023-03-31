@@ -82,29 +82,26 @@ module.exports = class PagerDuty extends BaseModule {
 
   setupCron(teams) {
     teams.filter(it => it.cron).map(team => {
-      this.postToChannel(team.policy_id, team.channel_id);
-      // new CronJob(
-      //   team.cron,
-      //   () => {
-      //     this.postToChannel(team.policy_id, team.channel_id);
-      //   },
-      //   null,
-      //   true,
-      //   "America/New_York"
-      // );
+      new CronJob(
+        team.cron,
+        () => {
+          this.postToChannel(team.policy_id, team.channel_id);
+        },
+        null,
+        true,
+        "America/New_York"
+      );
     });
 
-    // new CronJob(
-    //   "00 00 10 * * 1,2,3,4,5",
-    //   () => {
-    //     this.handleCron();
-    //   },
-    //   null,
-    //   true,
-    //   "America/New_York"
-    // );
-
-    this.handleCron();
+    new CronJob(
+      "00 00 10 * * 1,2,3,4,5",
+      () => {
+        this.handleCron();
+      },
+      null,
+      true,
+      "America/New_York"
+    );
   }
 
   createRoutes(app) {

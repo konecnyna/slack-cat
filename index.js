@@ -125,7 +125,7 @@ class SlackCat {
 
       // Copy array.
       const args = process.argv.slice(0);
-      const hasServer = args.includes("--with-server")
+      const hasServer = args.includes("--with-server") || args.includes("--keep-alive")
       if (hasServer) {
         server = new Server();
       }
@@ -154,6 +154,7 @@ class SlackCat {
       }
 
       if (!hasServer) {
+        console.log()
         process.exit();
       }
     } catch (e) {

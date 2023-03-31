@@ -116,7 +116,7 @@ module.exports = class SlackCatBot {
     try {
       return await this.web.chat.postMessage(params);
     } catch (e) {
-      console.error("postMessage", e.getMessage());
+      console.error("postMessage", e.message);
     }
   }
 
