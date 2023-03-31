@@ -57,11 +57,7 @@ module.exports = class SlackCatBot {
       this.botParams,
     );
 
-    try {
-      return await this.web.chat.postMessage(params);
-    } catch (e) {
-      console.error("postMessage", e.getMessage());
-    }
+    return await this.postMessageNoFail(params);
   }
 
   async postMessageWithParams(id, text, extras) {
@@ -73,11 +69,8 @@ module.exports = class SlackCatBot {
       extras,
     );
 
-    try {
-      return await this.web.chat.postMessage(params);
-    } catch (e) {
-      console.error("postMessage", e.getMessage());
-    }
+
+    return await this.postMessageNoFail(params);
   }
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
@@ -115,7 +108,16 @@ module.exports = class SlackCatBot {
       params || this.botParams,
     );
 
-    return await this.web.chat.postMessage(params);
+
+    return await this.postMessageNoFail(params);
+  }
+
+  async postMessageNoFail(params) {
+    try {
+      return await this.web.chat.postMessage(params);
+    } catch (e) {
+      console.error("postMessage", e.getMessage());
+    }
   }
 
   async postMessageToThreadOrUpdate(id, text, ts, params) {
@@ -141,7 +143,8 @@ module.exports = class SlackCatBot {
       }
     }
 
-    return this.web.chat.postMessage(params);
+
+    return this.postMessageNoFail(params)
   }
 
   async getUserNameFromId(user_id) {
@@ -169,10 +172,10 @@ module.exports = class SlackCatBot {
         users: userId,
       })
       .then((res) => {
-        this.web.chat.postMessage({
+        this.postMessageNoFail({
           channel: res.channel.id,
           text: msg,
-        });
+        })
       })
       .catch(console.error);
   }
@@ -183,10 +186,10 @@ module.exports = class SlackCatBot {
         users: userList.join(","),
       })
       .then((res) => {
-        this.web.chat.postMessage({
+        this.postMessageNoFail({
           channel: res.channel.id,
           text: msg,
-        });
+        })
       })
       .catch(console.error);
   }

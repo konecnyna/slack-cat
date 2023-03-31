@@ -165,6 +165,5 @@ module.exports = class MockBot {
 
   handlePostMessage(msg) {
     console.log(msg)
-    process.exit();
   }
 }

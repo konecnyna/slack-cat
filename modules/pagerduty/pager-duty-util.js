@@ -10,8 +10,6 @@ const HEADER = {
 
 
 module.exports = class PagerDutyUtil {
-  slackIcon = ICON
-  slackUserName = USER_NAME
 
   async getData(escalationPolicyId) {
     const scheduleGroups = await this.getScheduleGroups(escalationPolicyId);
@@ -44,19 +42,40 @@ module.exports = class PagerDutyUtil {
   }
 
   postFieldsToChannel(bot, channel, title, fields) {
-    bot.postRawMessage(channel, {
-      icon_url: ICON,
-      username: USER_NAME,
-      attachments: [
-        {
-          color: '#048A24',
-          author_icon: 'https://i.imgur.com/HKOY97q.png',
-          title: title,
-          fields: Object.values(fields).sort((a, b) => { return b.level - a.level }),
-          footer: ':fire: lets hope nothings on fire :fire:',
-        },
-      ],
-    });
+    try {
+      bot.postRawMessage(channel, {
+        icon_url: ICON,
+        username: USER_NAME,
+        attachments: [
+          {
+            color: '#048A24',
+            author_icon: 'https://i.imgur.com/HKOY97q.png',
+            title: title,
+            fields: Object.values(fields).sort((a, b) => { return b.level - a.level }),
+            footer: ':fire: lets hope nothings on fire :fire:',
+          },
+        ],
+      });
+    } catch (e) {
+      this.bot.postRawMessage(channel, {
+        icon_url: ICON,
+        username: USER_NAME,
+        attachments: [
+          {
+            color: '#D32F2F',
+            author_icon: 'https://i.imgur.com/HKOY97q.png',
+            title: title,
+            fields:
+            {
+              title: '🚨 Error 🚨 ',
+              value: `Failed to find policy id: ${policy_id}`,
+              short: false,
+            },
+            footer: ':fire: lets hope nothings on fire :fire:',
+          },
+        ],
+      })
+    }
   }
 
 

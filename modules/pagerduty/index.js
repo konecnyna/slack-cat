@@ -61,38 +61,17 @@ module.exports = class PagerDuty extends BaseModule {
   }
 
   async postToChannel(policy_id, channel) {
-    try {
-      const scheduleGroups = await pdUtil.getData(policy_id);
-      const title = scheduleGroups[0].escalation_policy.summary;
-      const fields = scheduleGroups.map(escalation => {
-        return {
-          level: escalation.escalation_level,
-          title: "Level " + escalation.escalation_level,
-          value: escalation.user.summary,
-          short: false
-        };
-      });
-      pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
-    } catch (e) {
-      this.bot.postRawMessage(channel, {
-        icon_url: pdUtil.slackIcon,
-        username: pdUtil.slackUserName,
-        attachments: [
-          {
-            color: '#D32F2F',
-            author_icon: 'https://i.imgur.com/HKOY97q.png',
-            title: title,
-            fields:
-            {
-              title: '🚨 Error 🚨 ',
-              value: `Failed to find policy id: ${policy_id}`,
-              short: false,
-            },
-            footer: ':fire: lets hope nothings on fire :fire:',
-          },
-        ],
-      })
-    }
+    const scheduleGroups = await pdUtil.getData(policy_id);
+    const title = scheduleGroups[0].escalation_policy.summary;
+    const fields = scheduleGroups.map(escalation => {
+      return {
+        level: escalation.escalation_level,
+        title: "Level " + escalation.escalation_level,
+        value: escalation.user.summary,
+        short: false
+      };
+    });
+    pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
   }
 
   isValidConfig() {
@@ -103,26 +82,29 @@ module.exports = class PagerDuty extends BaseModule {
 
   setupCron(teams) {
     teams.filter(it => it.cron).map(team => {
-      new CronJob(
-        team.cron,
-        () => {
-          this.postToChannel(team.policy_id, team.channel_id);
-        },
-        null,
-        true,
-        "America/New_York"
-      );
+      this.postToChannel(team.policy_id, team.channel_id);
+      // new CronJob(
+      //   team.cron,
+      //   () => {
+      //     this.postToChannel(team.policy_id, team.channel_id);
+      //   },
+      //   null,
+      //   true,
+      //   "America/New_York"
+      // );
     });
 
-    new CronJob(
-      "00 00 10 * * 1,2,3,4,5",
-      () => {
-        this.handleCron();
-      },
-      null,
-      true,
-      "America/New_York"
-    );
+    // new CronJob(
+    //   "00 00 10 * * 1,2,3,4,5",
+    //   () => {
+    //     this.handleCron();
+    //   },
+    //   null,
+    //   true,
+    //   "America/New_York"
+    // );
+
+    this.handleCron();
   }
 
   createRoutes(app) {

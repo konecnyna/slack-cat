@@ -125,7 +125,8 @@ class SlackCat {
 
       // Copy array.
       const args = process.argv.slice(0);
-      if (args.includes("--with-server")) {
+      const hasServer = args.includes("--with-server")
+      if (hasServer) {
         server = new Server();
       }
 
@@ -150,6 +151,10 @@ class SlackCat {
         // Regular debug message
         testMsg.text = args.splice(2, args.length - 1).join(" ");
         await router.handle(testMsg);
+      }
+
+      if (!hasServer) {
+        process.exit();
       }
     } catch (e) {
       console.trace(e);
