@@ -6,7 +6,7 @@ const Router = require("./core/router.js");
 const Server = require("./core/server");
 const MoudleLoader = require("./core/module-loader");
 const SlackCatBot = require("./core/slack-cat-bot.js");
-const { RTMClient } = require("@slack/rtm-api");
+const { RTMClient, LogLevel } = require("@slack/rtm-api");
 const SlackCatEvents = require('./core/events');
 const Sequelize = require("sequelize");
 // Global Base Modules.
@@ -76,7 +76,7 @@ class SlackCat {
     );
   }
 
-  start() {
+  async start() {
     // Run debug cmds.
     if (process.argv.length > 2) {
       global.DEBUG = true;
@@ -84,10 +84,12 @@ class SlackCat {
       return;
     }
 
-    const rtm = new RTMClient(config.getKey("slack_access_token"));
     let router;
-
-    rtm.start();
+    let rtmConfig = {}
+    if (process.env.NODE_ENV === "debug") {
+      rtmConfig['logLevel'] = LogLevel.DEBUG
+    }
+    const rtm = new RTMClient(config.getKey("slack_access_token"), rtmConfig);
 
     rtm.on("authenticated", data => {
       const bot = new SlackCatBot(data);
@@ -97,7 +99,6 @@ class SlackCat {
 
       bot.setModules(modules);
       router = new Router(bot, modules, server);
-
       server.start(() => {
         SlackCatEvents.publish(SlackCatEvents.EventTypes.SetupComplete, []);
       });
@@ -114,6 +115,9 @@ class SlackCat {
     rtm.on("member_joined_channel", data => {
       router.handle(data);
     });
+
+
+    await rtm.start();
   }
 
   async runDebugCommand() {
