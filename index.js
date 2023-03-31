@@ -95,7 +95,6 @@ class SlackCat {
       const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
       const modules = moduleLoader.getModules();
 
-      // Fix me :(((((((((((
       bot.setModules(modules);
       router = new Router(bot, modules, server);
 
@@ -154,7 +153,7 @@ class SlackCat {
       }
 
       if (!hasServer) {
-        console.log()
+        console.log("Server is staying alive. Please use ctrl + c to exit process.")
         process.exit();
       }
     } catch (e) {
