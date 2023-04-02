@@ -81,13 +81,13 @@ module.exports = class PagerDuty extends BaseModule {
           {
             color: '#D32F2F',
             author_icon: 'https://i.imgur.com/HKOY97q.png',
-            title: title,
-            fields:
-            {
-              title: '🚨 Error 🚨 ',
-              value: `Failed to find policy id: ${policy_id}`,
-              short: false,
-            },
+            title: "🚨 Error 🚨",
+            fields: [
+              {
+                title: `Failed to find policy id: ${policy_id}`,
+                value: `${e.message}`,
+                short: false,
+              }],
             footer: ':fire: lets hope nothings on fire :fire:',
           },
         ],
