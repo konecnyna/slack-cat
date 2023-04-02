@@ -74,7 +74,13 @@ module.exports = class PagerDuty extends BaseModule {
       });
       pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
     } catch (e) {
-      this.bot.postRawMessage(channel, {
+      const errorChannel = this.provideErrorChannel()
+      if (!errorChannel) {
+        console.log(e``)
+        return;
+      }
+
+      this.bot.postRawMessage(errorChannel, {
         icon_url: pdUtil.slackIcon,
         username: pdUtil.slackUserName,
         attachments: [
@@ -151,6 +157,10 @@ module.exports = class PagerDuty extends BaseModule {
   provideTeams() {
     const { teams } = config.getKey("pager_duty_api");
     return teams;
+  }
+
+  provideErrorChannel() {
+    return null;
   }
 
   help() {
