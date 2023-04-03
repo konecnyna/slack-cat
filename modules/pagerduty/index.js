@@ -60,8 +60,14 @@ module.exports = class PagerDuty extends BaseModule {
       });
   }
 
-  async postToChannel(policy_id, channel) {
+  async postToChannel(policy_id, channelId) {
     try {
+      const { channel } = await web.conversations.info({ channel: channelId })
+      if (channel.is_archived) {
+        console.log(`Channel archived: ${channel.name} (${channel.id})`)
+        return;
+      }
+
       const scheduleGroups = await pdUtil.getData(policy_id);
       const title = scheduleGroups[0].escalation_policy.summary;
       const fields = scheduleGroups.map(escalation => {
@@ -72,7 +78,7 @@ module.exports = class PagerDuty extends BaseModule {
           short: false
         };
       });
-      pdUtil.postFieldsToChannel(this.bot, channel, title, fields);
+      pdUtil.postFieldsToChannel(this.bot, channelId, title, fields);
     } catch (e) {
       const errorChannel = this.provideErrorChannel()
       if (!errorChannel) {
