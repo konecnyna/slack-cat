@@ -76,7 +76,7 @@ module.exports = class PagerDuty extends BaseModule {
     } catch (e) {
       const errorChannel = this.provideErrorChannel()
       if (!errorChannel) {
-        console.log(e``)
+        console.trace(e)
         return;
       }
 

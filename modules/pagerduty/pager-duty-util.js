@@ -44,19 +44,23 @@ module.exports = class PagerDutyUtil {
   }
 
   postFieldsToChannel(bot, channel, title, fields) {
-    bot.postRawMessage(channel, {
-      icon_url: ICON,
-      username: USER_NAME,
-      attachments: [
-        {
-          color: '#048A24',
-          author_icon: 'https://i.imgur.com/HKOY97q.png',
-          title: title,
-          fields: Object.values(fields).sort((a, b) => { return b.level - a.level }),
-          footer: ':fire: lets hope nothings on fire :fire:',
-        },
-      ],
-    });
+    try {
+      bot.postRawMessage(channel, {
+        icon_url: ICON,
+        username: USER_NAME,
+        attachments: [
+          {
+            color: '#048A24',
+            author_icon: 'https://i.imgur.com/HKOY97q.png',
+            title: title,
+            fields: Object.values(fields).sort((a, b) => { return b.level - a.level }),
+            footer: ':fire: lets hope nothings on fire :fire:',
+          },
+        ],
+      });
+    } catch (e) {
+      console.trace(e)
+    }
   }
 
 
