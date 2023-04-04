@@ -36,6 +36,11 @@ module.exports = class Crypto extends (
 
   async postFancyData(data) {
     const cryptoPrices = await this.getTopCryptoPrices();
+    if (!cryptoPrices.length) {
+      console.log("failed to reterive top crypto")
+      return
+    }
+
     const fields = cryptoPrices.map((crypto) => {
       return {
         title: crypto.name,
@@ -63,29 +68,33 @@ module.exports = class Crypto extends (
 
   getTopCryptoPrices() {
     var options = {
-      url:
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=3&page=1&sparkline=false&price_change_percentage=24h',
+      'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
+      url: 'https://min-api.cryptocompare.com/data/top/totalvolfull?limit=5&tsym=USD',
+      json: true
     };
 
     return new Promise((resolve, reject) => {
       request(options, (error, response, body) => {
-        if (error) {
-          reject(error);
-          console.error('error', error);
+        if (error || response.statusCode !== 200) {
+          console.log('error', error, response.statusCode);
+          resolve([]);
           return;
         }
+        resolve(body["Data"].map(coin => {
 
-        resolve(JSON.parse(body));
+          return {
+            name: coin["CoinInfo"]["Name"],
+            current_price: coin["DISPLAY"]["USD"]["PRICE"].replace("$", "").trim()
+          }
+        }));
       });
     });
   }
 
   getSingleCryptoByTicker(id) {
     var options = {
-      url: util.format(
-        'https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=USD',
-        id.toUpperCase()
-      ),
+      url: `https://min-api.cryptocompare.com/data/price?fsym=${id.toUpperCase()}&tsyms=USD`,
+      json: true
     };
 
     return new Promise((resolve, reject) => {
@@ -96,7 +105,7 @@ module.exports = class Crypto extends (
           return;
         }
 
-        resolve(JSON.parse(body));
+        resolve(body);
       });
     });
   }
