@@ -21,13 +21,13 @@ const {
 } = require("./core/models/MockMessageData");
 
 class SlackCat {
-  constructor(pathToModules, configPath, dbPath) {
+  constructor(pathToModules, configPath, dbPath, verboseDbLogging = false) {
     this.pathToModules = pathToModules;
     global.config = new Config(configPath);
-    this.initDatabase(dbPath);
+    this.initDatabase(dbPath, verboseDbLogging);
   }
 
-  initDatabase(dbPath) {
+  initDatabase(dbPath, verboseDbLogging) {
     const poolConfig = {
       max: 5,
       min: 0,
@@ -35,19 +35,12 @@ class SlackCat {
       idle: 10000
     };
 
-    const args = process.argv.slice(0);
-    let logging = false;
-    if (args.includes("--verbose")) {
-      console.log("Enabling verbose logging");
-      logging = console.log
-    }
-
     const dbConfig = config.getKey("db");
     if (!dbConfig) {
       global.database = new Sequelize(null, null, null, {
         dialect: "sqlite",
         storage: dbPath, // global.
-        logging: logging,
+        logging: verboseDbLogging,
         pool: poolConfig,
       });
       return;
@@ -57,7 +50,7 @@ class SlackCat {
     const sequelizeConfig = {
       dialect: dialect,
       port: port,
-      logging: logging,
+      logging: verboseDbLogging,
       pool: poolConfig,
       dialectOptions: {
         ssl: ssl
