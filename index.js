@@ -83,18 +83,21 @@ class SlackCat {
     rtm.start();
 
     rtm.on("authenticated", data => {
-      const bot = new SlackCatBot(data);
-      const server = new Server();
-      const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
-      const modules = moduleLoader.getModules();
+      console.log('Incoming RTM authenticated event');
+      if (!router) {
+        const bot = new SlackCatBot(data);
+        const server = new Server();
+        const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
+        const modules = moduleLoader.getModules();
 
-      // Fix me :(((((((((((
-      bot.setModules(modules);
-      router = new Router(bot, modules, server);
+        // Fix me :(((((((((((
+        bot.setModules(modules);
+        router = new Router(bot, modules, server);
 
-      server.start(() => {
-        SlackCatEvents.publish(SlackCatEvents.EventTypes.SetupComplete, []);
-      });
+        server.start(() => {
+          SlackCatEvents.publish(SlackCatEvents.EventTypes.SetupComplete, []);
+        });
+      }
     });
 
     rtm.on("message", data => {
