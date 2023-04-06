@@ -63,8 +63,6 @@ module.exports = class PlusHelper {
   }
 
   async plusUser(userSlackId) {
-    console.log("this.context.db", this.context.db)
-    console.log("this.context.db.literal", this.context.db.literal)
     const pluses = await this.context.upsert(
       this.getPlusModel(),
       { where: { slackid: userSlackId } },
