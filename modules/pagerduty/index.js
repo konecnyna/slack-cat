@@ -62,7 +62,7 @@ module.exports = class PagerDuty extends BaseModule {
 
   async postToChannel(policy_id, channelId) {
     try {
-      const { channel } = await web.conversations.info({ channel: channelId })
+      const { channel } = await this.bot.web.conversations.info({ channel: channelId })
       if (channel.is_archived) {
         console.log(`Channel archived: ${channel.name} (${channel.id})`)
         return;

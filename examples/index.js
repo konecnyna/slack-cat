@@ -9,4 +9,4 @@ SlackCatEvents.subscribe(SlackCatEvents.EventTypes.SetupComplete, (args) => {
 })
 
 // No modules in example.
-new SlackCat('', configPath, dbPath).start();
+new SlackCat('', configPath, dbPath, true).start();

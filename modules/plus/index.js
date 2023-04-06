@@ -1,5 +1,5 @@
 'use strict';
-const reactionHandler = require("./reaction-handler");
+const { handlePlus, handleEggplantReaction } = require("./reaction-handler");
 const plusHandler = require("./plus-handler");
 
 const userPattern = new RegExp(/\<@([^\s|\<]+)\>/, 'g');
@@ -132,7 +132,7 @@ module.exports = class Plus extends BaseStorageModule {
 
   async handleReaction(data) {
     if (data.reaction === 'eggplant' && cache.get(this.getReactionKey(data)) === null) {
-      const msg = reactionHandler.eggplantReaction(data);
+      const msg = handleEggplantReaction(data);
       cache.put(this.getReactionKey(data), '', 5 * 60 * 1000, () => { });
       this.bot.postMessageToThread(
         data.item.channel,
@@ -144,15 +144,15 @@ module.exports = class Plus extends BaseStorageModule {
 
     if (data.reaction === 'heavy_plus_sign') {
       const userName = await this.bot.getUserNameFromId(data.item_user);
-      const msg = await reactionHandler.handlePlus(data, userName, this.plusHelper);
+      if (!userName) { return }
+      const msg = await handlePlus(data, userName, this.plusHelper);
       if (!msg) { return }
       this.bot.postMessageToThread(data.item.channel, msg, data.item.ts);
     }
   }
 
   getReactionKey(data) {
-    return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${
-      data.item.reaction
+    return `${data.item_user}${data.item.ts}${data.user}${data.item.channel}${data.item.reaction
       }`;
   }
 
