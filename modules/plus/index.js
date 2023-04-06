@@ -144,6 +144,7 @@ module.exports = class Plus extends BaseStorageModule {
 
     if (data.reaction === 'heavy_plus_sign') {
       const userName = await this.bot.getUserNameFromId(data.item_user);
+      if (!userName) { return }
       const msg = await handlePlus(data, userName, this.plusHelper);
       if (!msg) { return }
       this.bot.postMessageToThread(data.item.channel, msg, data.item.ts);

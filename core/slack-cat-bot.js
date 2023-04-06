@@ -60,7 +60,7 @@ module.exports = class SlackCatBot {
     try {
       return await this.web.chat.postMessage(params);
     } catch (e) {
-      console.error("postMessage", e.getMessage());
+      console.error("postMessage", e);
     }
   }
 
@@ -76,7 +76,7 @@ module.exports = class SlackCatBot {
     try {
       return await this.web.chat.postMessage(params);
     } catch (e) {
-      console.error("postMessage", e.getMessage());
+      console.error("postMessage", e);
     }
   }
 
@@ -145,9 +145,13 @@ module.exports = class SlackCatBot {
   }
 
   async getUserNameFromId(user_id) {
-    return await this.web.users.info({
-      user: user_id,
-    });
+    try {
+      return await this.web.users.info({
+        user: user_id,
+      });
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   async resolveUserNameFromId(user_id) {
