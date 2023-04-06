@@ -90,6 +90,7 @@ class SlackCat {
     rtm.start();
 
     rtm.on("authenticated", data => {
+      console.log('Incoming RTM authenticated event');
       if (!router) {
         const bot = new SlackCatBot(data);
         const server = new Server();
