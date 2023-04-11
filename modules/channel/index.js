@@ -44,22 +44,22 @@ module.exports = class Channel extends BaseModule {
   }
 
   async sendAnniversaryMsg(channelId, diff) {
-    let msg =
-      `Happy digital creation day to you <#${channelId}>! We're all so proud of you for reaching ${diff} year${
-        diff > 1 ? "s" : ""
-      } old.\n\nThis cake is not a lie... :cake:`;
-    this.postMessage(channelId, msg);
+    const title = "Happy digital creation day!";
+    const body = `We're all so proud of you (<#${channelId}>) for reaching ${diff} year${diff > 1 ? "s" : ""} old.\n\nThis cake is not a lie... :cake:`;
+    this.postMessage(channelId, title, body);
   }
 
-  postMessage(channelId, msg) {
+  postMessage(channelId, title, body) {
     this.bot.postRawMessage(channelId, {
       icon_emoji: ":birthday:",
       username: "AnniversaryCat",
       attachments: [
         {
           color: "#FEB3DD",
-          author_name: msg,
-        },
+          title: title,
+          value: body,
+          short: false,
+        }
       ],
     });
   }
