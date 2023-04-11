@@ -8,7 +8,7 @@ module.exports = class ChannelAnniversaries {
   async getAnniversaries() {
     const { channels } = await this.web.conversations.list();
     return channels.filter(channel => {
-      return this.isDateAYearToday(channel)
+      return !channel.is_archived && this.isDateAYearToday(channel)
     });
   }
 
