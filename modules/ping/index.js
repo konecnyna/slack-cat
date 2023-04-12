@@ -3,8 +3,6 @@ const exec = require('child_process').exec;
 
 module.exports = class Ping extends BaseModule {
   handle(data) {
-
-    throw Error("RING DING MF!!!")
     if (data.args && data.args.includes('--args')) {
       this.bot.postMessage(data.channel, 'pong with --args args!!!');
       return;
