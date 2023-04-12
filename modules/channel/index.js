@@ -56,8 +56,13 @@ module.exports = class Channel extends BaseModule {
       attachments: [
         {
           color: "#FEB3DD",
-          title: title,
-          value: body,
+          fields: [
+            {
+              title: title,
+              value: body,
+              short: false
+            }
+          ],
           short: false,
         }
       ],
