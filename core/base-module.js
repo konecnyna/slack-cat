@@ -2,16 +2,10 @@
 const axios = require('axios');
 const qs = require('querystring');
 
-class Err extends Error {
-  constructor(message) {
+module.exports = class BaseModule extends Error {
+  constructor(bot, message) {
     super(message);
     this.classLogName = this.constructor.name;
-  }
-}
-
-module.exports = class BaseModule extends Err {
-  constructor(bot, message) {
-    super(message)
     if (new.target === BaseModule) {
       throw new TypeError('Cannot construct Abstract instances directly');
     }
