@@ -46,8 +46,7 @@ module.exports = class PlusHelper {
     const userData = await this.context.bot.getUserNameFromId(data.user);
     this.context.bot.postMessageToThread(
       data.channel,
-      `Don't be a meanie ${
-      userData.user.display_name
+      `Don't be a meanie ${userData.user.display_name
         ? userData.user.display_name
         : userData.user.name
       }`,
@@ -76,7 +75,6 @@ module.exports = class PlusHelper {
     );
 
     const ourplusses = await pluses.get('pluses');
-    console.log("plusses", ourplusses)
     return ourplusses
   }
 
@@ -98,9 +96,8 @@ module.exports = class PlusHelper {
     })
 
     if (test) {
-      console.log(name, id)
       const plusesAmount = await test.get('pluses')
-      const pluses = await this.context.upsert(
+      await this.context.upsert(
         newTable,
         { where: { slackid: id } },
         {
@@ -116,10 +113,7 @@ module.exports = class PlusHelper {
   }
 
   getPlusModel() {
-    const pluses_model = database.modelManager.getModel("pluses_table");
-    console.log("pluses_model", pluses_model);
-    return pluses_model;
-//    return database.modelManager.getModel("pluses_table")
+    return database.modelManager.getModel("pluses_table");
   }
 };
 
