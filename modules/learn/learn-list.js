@@ -127,6 +127,10 @@ ${await this.createBody(learnData)}
   }
 
   createListItem(learn) {
+    if (!learn || !learn.length) {
+      return "NO TEXT - THIS IS A BAD ENTRY."
+    }
+
     learn = learn.replace('<', '');
     learn = learn.replace('>', '');
 
@@ -142,9 +146,7 @@ ${await this.createBody(learnData)}
       return this.parseEmojiRegex(learn);
     }
 
-    if (learn.length === 0) {
-      learn = 'NO TEXT - THIS IS A BAD ENTRY.';
-    }
+
     return learn;
   }
 
