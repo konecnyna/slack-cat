@@ -39,9 +39,10 @@ module.exports = class PagerDuty extends BaseModule {
       const teamNames = teams.map(
         (obj) => `• ${obj.team_name} <#${obj.channel_id}>`
       );
-      this.bot.postMessage(
+      this.bot.postMessageToThread(
         data.channel,
-        `Couldn't find that team! Teams list:\n${teamNames.join('\n')}`
+        `Couldn't find that team! Teams list:\n${teamNames.join('\n')}`,
+        data.ts
       );
       return;
     }
