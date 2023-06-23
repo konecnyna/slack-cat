@@ -105,6 +105,7 @@ module.exports = class SlackCatBot {
   }
 
   async postMessageToThread(id, text, ts, params) {
+    const stackTrace = new Error(`Error posting to channel ${id}`)
     params = extend(
       {
         text: text,
@@ -114,8 +115,12 @@ module.exports = class SlackCatBot {
       },
       params || this.botParams,
     );
-
-    return await this.web.chat.postMessage(params);
+    try {
+      return await this.web.chat.postMessage(params);
+    } catch (error) {
+      console.log(stackTrace.stack)
+      console.log(error)
+    }
   }
 
   async postMessageToThreadOrUpdate(id, text, ts, params) {
@@ -123,6 +128,8 @@ module.exports = class SlackCatBot {
   }
 
   postRawMessage(channel_id, args) {
+    const stackTrace = new Error(`Error posting to channel ${channel_id}`)
+
     var params = extend(
       {
         channel: channel_id,
@@ -141,7 +148,13 @@ module.exports = class SlackCatBot {
       }
     }
 
-    return this.web.chat.postMessage(params);
+    try {
+      return this.web.chat.postMessage(params);
+    } catch (error) {
+      console.log(stackTrace.stack)
+      console.log(error)
+    }
+
   }
 
   async getUserNameFromId(user_id) {
