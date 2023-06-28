@@ -57,11 +57,7 @@ module.exports = class SlackCatBot {
       this.botParams,
     );
 
-    try {
-      return await this.web.chat.postMessage(params);
-    } catch (e) {
-      console.error("postMessage", e);
-    }
+    return this.postMessage(params)
   }
 
   async postMessageWithParams(id, text, extras) {
@@ -73,11 +69,7 @@ module.exports = class SlackCatBot {
       extras,
     );
 
-    try {
-      return await this.web.chat.postMessage(params);
-    } catch (e) {
-      console.error("postMessage", e);
-    }
+    return this.postMessage(params)
   }
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
@@ -105,7 +97,6 @@ module.exports = class SlackCatBot {
   }
 
   async postMessageToThread(id, text, ts, params) {
-    const stackTrace = new Error(`Error posting to channel ${id}`)
     params = extend(
       {
         text: text,
@@ -115,12 +106,8 @@ module.exports = class SlackCatBot {
       },
       params || this.botParams,
     );
-    try {
-      return await this.web.chat.postMessage(params);
-    } catch (error) {
-      console.log(stackTrace.stack)
-      console.log(error)
-    }
+
+    return this.postMessage(params)
   }
 
   async postMessageToThreadOrUpdate(id, text, ts, params) {
@@ -128,8 +115,6 @@ module.exports = class SlackCatBot {
   }
 
   postRawMessage(channel_id, args) {
-    const stackTrace = new Error(`Error posting to channel ${channel_id}`)
-
     var params = extend(
       {
         channel: channel_id,
@@ -148,23 +133,17 @@ module.exports = class SlackCatBot {
       }
     }
 
-    try {
-      return this.web.chat.postMessage(params);
-    } catch (error) {
-      console.log(stackTrace.stack)
-      console.log(error)
-    }
-
+    return this.postMessage(params)
   }
 
   async getUserNameFromId(user_id) {
-    try {
-      return await this.web.users.info({
-        user: user_id,
+    const stackTrace = new Error()
+    return await this.web.users
+      .info({ user: user_id })
+      .catch((error) => {
+        console.log(stackTrace.stack)
+        console.log(error)
       });
-    } catch (e) {
-      console.error(e)
-    }
   }
 
   async resolveUserNameFromId(user_id) {
@@ -175,12 +154,20 @@ module.exports = class SlackCatBot {
   }
 
   userDataPromise(user_id) {
-    return this.web.users.info({
-      user: user_id,
-    });
+    const stackTrace = new Error()
+
+    return this.web.users
+      .info({ user: user_id })
+      .catch((error) => {
+        console.log(stackTrace.stack)
+        console.log(error)
+      });;
   }
 
+
   postMessageToUser(userId, msg) {
+    const stackTrace = new Error()
+
     return this.web.conversations
       .open({
         users: userId,
@@ -191,10 +178,14 @@ module.exports = class SlackCatBot {
           text: msg,
         });
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.log(stackTrace.stack)
+        console.log(error)
+      });
   }
 
   postMessageToUsers(userList, msg) {
+    const stackTrace = new Error()
     return this.web.conversations
       .open({
         users: userList.join(","),
@@ -205,10 +196,14 @@ module.exports = class SlackCatBot {
           text: msg,
         });
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.log(stackTrace.stack)
+        console.log(error)
+      });
   }
 
   getChannelMembers(channel) {
+    const stackTrace = new Error()
     // limit under 1000 will result in pagination.
     return this.web.conversations
       .members({
@@ -218,10 +213,14 @@ module.exports = class SlackCatBot {
       .then((res) => {
         return res.members;
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.log(stackTrace.stack)
+        console.log(error)
+      });
   }
 
   getChannelById(channel) {
+    const stackTrace = new Error()
     return this.web.conversations
       .info({
         channel: channel,
@@ -229,11 +228,25 @@ module.exports = class SlackCatBot {
       .then((res) => {
         return res.channel;
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.log(stackTrace.stack)
+        console.log(error)
+      });
   }
 
   setModules(modules) {
     this.modules = modules;
+  }
+
+  postMessage(params) {
+    const stackTrace = new Error()
+    return this.web.chat
+      .postMessage(params)
+      .catch((error) => {
+        console.log(stackTrace.stack)
+        console.log(error)
+      });
+
   }
 
   async getUserNameDisplayNameFromId(id) {
