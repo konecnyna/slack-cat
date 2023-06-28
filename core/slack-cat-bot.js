@@ -57,7 +57,7 @@ module.exports = class SlackCatBot {
       this.botParams,
     );
 
-    return this.postMessage(params)
+    return this.postWrappedMessage(params)
   }
 
   async postMessageWithParams(id, text, extras) {
@@ -69,7 +69,7 @@ module.exports = class SlackCatBot {
       extras,
     );
 
-    return this.postMessage(params)
+    return this.postWrappedMessage(params)
   }
 
   postFancyMessage(channel_id, icon_emoji, color, title, body, botParams) {
@@ -107,7 +107,7 @@ module.exports = class SlackCatBot {
       params || this.botParams,
     );
 
-    return this.postMessage(params)
+    return this.postWrappedMessage(params)
   }
 
   async postMessageToThreadOrUpdate(id, text, ts, params) {
@@ -133,7 +133,7 @@ module.exports = class SlackCatBot {
       }
     }
 
-    return this.postMessage(params)
+    return this.postWrappedMessage(params)
   }
 
   async getUserNameFromId(user_id) {
@@ -238,7 +238,7 @@ module.exports = class SlackCatBot {
     this.modules = modules;
   }
 
-  postMessage(params) {
+  postWrappedMessage(params) {
     const stackTrace = new Error()
     return this.web.chat
       .postMessage(params)
