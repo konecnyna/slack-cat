@@ -78,7 +78,8 @@ class SlackCat {
     }
 
     if (config.getKey("use_events_api") === 'true') {
-      const bot = new SlackCatBot(data);
+      // TODO: how to get bot data now
+      const bot = new SlackCatBot({});
       const server = new Server();
       const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
       const modules = moduleLoader.getModules();
