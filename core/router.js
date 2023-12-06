@@ -22,6 +22,7 @@ module.exports = class Router {
 
     if (this.server) {
       this.setupCallback();
+      this.setupEventWebhook();
     }
   }
 
@@ -158,6 +159,12 @@ module.exports = class Router {
         }
       });
     });
+  }
+
+  setupEventWebhook() {
+    this.server.initEventsEndpoint((body) => {
+      this.handle(body.event);
+    })
   }
 
   addExtras(data) {

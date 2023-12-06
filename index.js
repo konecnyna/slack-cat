@@ -77,40 +77,55 @@ class SlackCat {
       return;
     }
 
-    const rtm = new RTMClient(config.getKey("slack_access_token"));
-    let router;
+    if (config.getKey("use_events_api") === 'true') {
+      const bot = new SlackCatBot(data);
+      const server = new Server();
+      const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
+      const modules = moduleLoader.getModules();
 
-    rtm.start();
+      // Fix me :(((((((((((
+      bot.setModules(modules);
+      const router = new Router(bot, modules, server);
 
-    rtm.on("authenticated", data => {
-      console.log('Incoming RTM authenticated event');
-      if (!router) {
-        const bot = new SlackCatBot(data);
-        const server = new Server();
-        const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
-        const modules = moduleLoader.getModules();
+      server.start(() => {
+        SlackCatEvents.publish(SlackCatEvents.EventTypes.SetupComplete, []);
+      });
+    } else {
+      const rtm = new RTMClient(config.getKey("slack_access_token"));
+      let router;
 
-        // Fix me :(((((((((((
-        bot.setModules(modules);
-        router = new Router(bot, modules, server);
+      rtm.start();
 
-        server.start(() => {
-          SlackCatEvents.publish(SlackCatEvents.EventTypes.SetupComplete, []);
-        });
-      }
-    });
+      rtm.on("authenticated", data => {
+        console.log('Incoming RTM authenticated event');
+        if (!router) {
+          const bot = new SlackCatBot(data);
+          const server = new Server();
+          const moduleLoader = new MoudleLoader(bot, server, this.pathToModules);
+          const modules = moduleLoader.getModules();
 
-    rtm.on("message", data => {
-      router.handle(data);
-    });
+          // Fix me :(((((((((((
+          bot.setModules(modules);
+          router = new Router(bot, modules, server);
 
-    rtm.on("reaction_added", data => {
-      router.handle(data);
-    });
+          server.start(() => {
+            SlackCatEvents.publish(SlackCatEvents.EventTypes.SetupComplete, []);
+          });
+        }
+      });
 
-    rtm.on("member_joined_channel", data => {
-      router.handle(data);
-    });
+      rtm.on("message", data => {
+        router.handle(data);
+      });
+
+      rtm.on("reaction_added", data => {
+        router.handle(data);
+      });
+
+      rtm.on("member_joined_channel", data => {
+        router.handle(data);
+      });
+    }
   }
 
   async runDebugCommand() {
